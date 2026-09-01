@@ -76,7 +76,6 @@ export type {
 	TextPackResource,
 	TextPackTargets,
 	TextPackTaskResourceBinding,
-	TextPackTaskResourceBindingOwnerPackage,
 	TextPackTaskResourceBindingRole,
 } from "./types.js";
 export {

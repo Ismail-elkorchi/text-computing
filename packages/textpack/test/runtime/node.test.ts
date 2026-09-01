@@ -26,7 +26,6 @@ const manifest: TextPackManifest = {
 	version: "1.0.0",
 	packageName: "@ismail-elkorchi/textpack-runtime-node",
 	targets: { languages: ["en"] },
-	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [{ id: "dataset-node", kind: "dataset" }],
 	capabilitySlots: [
 		{

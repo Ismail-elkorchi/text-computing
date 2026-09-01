@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack",
 	"version": "0.1.0",
-	"description": "Text resource package.",
+	"description": "Capability Pack manifests, composition, claims, and explicit resource handles.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {

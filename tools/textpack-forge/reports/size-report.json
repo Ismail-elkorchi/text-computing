@@ -15,7 +15,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 47465660,
-      "outputChecksum": "sha256:f84aa5be616c8490d32b32d5064d681b267ef7f0836e6792048f40bb774b9326",
+      "outputChecksum": "sha256:09ee875f85ff9584e0ff5026acf6a050876466137f5904b2af5db17f0b96145f",
       "packageDir": "packages/textpacks/textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
       "physicalStorage": [
@@ -1516,7 +1516,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 38010412,
-      "outputChecksum": "sha256:cb9e3c25573be6065aaf2accb9ad2cb3bc861fd6ad67930bcd2129090371122f",
+      "outputChecksum": "sha256:f3ed06322ef036ed149e5c2e76da526fdfc975b9bbe3103c3d1c83713ce5fdee",
       "packageDir": "packages/textpacks/textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
       "physicalStorage": [
@@ -3244,7 +3244,7 @@
     {
       "artifactBackedSizeBytes": 0,
       "npmShippedSizeBytes": 15741685,
-      "outputChecksum": "sha256:9cf9d65e7abf5c8a6ca9354a9fc261ce4686eccaca580c566ee99a3eb3686068",
+      "outputChecksum": "sha256:f57ad273796e33e821d40abc9a37965a69eedefe00a1e2e90aa4c765b67fbf29",
       "packageDir": "packages/textpacks/textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",
       "physicalStorage": [

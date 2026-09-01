@@ -334,7 +334,6 @@ test("unsupported task errors include slot and policy context", async () => {
 			version: "0.1.0",
 			packageName: "@example/textpack-fr-unsupported-search",
 			targets: { languages: ["fr"], scripts: ["Latn"] },
-			engines: {},
 			resources: [],
 			components: [
 				{
@@ -382,7 +381,6 @@ test("artifact-backed tasks fail before execution until locally materialized", a
 			version: "0.1.0",
 			packageName: "@example/textpack-fr-artifact-backed-search",
 			targets: { languages: ["fr"], scripts: ["Latn"] },
-			engines: {},
 			resources: [],
 			capabilitySlots: [
 				{
@@ -477,7 +475,6 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 			version: "0.1.0",
 			packageName: "@example/textpack-en-kb-phrase-test",
 			targets: { languages: ["en"], scripts: ["Latn"] },
-			engines: {},
 			resources: [
 				{
 					id: "en-segmentation-profile",
@@ -510,7 +507,6 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 							resourceId: "en-segmentation-profile",
 							schemaId: "textdata.segmentation-profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textdata",
 						},
 					],
 				},
@@ -525,7 +521,6 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 							resourceId: "en-normalization-profile",
 							schemaId: "textnorm.profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textnorm",
 						},
 					],
 				},
@@ -540,7 +535,6 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 							resourceId: "en-kb",
 							schemaId: "textkb.knowledge-base.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textkb",
 						},
 					],
 				},
@@ -676,7 +670,6 @@ test("document morphology deduplicates and limits analyses independently per for
 			version: "0.1.0",
 			packageName: "@example/textpack-morphology-per-form-test",
 			targets: { languages: ["en"], scripts: ["Latn"] },
-			engines: {},
 			resources: [
 				{
 					id: "en-segmentation-profile",
@@ -711,7 +704,6 @@ test("document morphology deduplicates and limits analyses independently per for
 							resourceId: "en-segmentation-profile",
 							schemaId: "textdata.segmentation-profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textdata",
 						},
 					],
 				},
@@ -726,7 +718,6 @@ test("document morphology deduplicates and limits analyses independently per for
 							resourceId: "en-normalization-profile",
 							schemaId: "textnorm.profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textnorm",
 						},
 					],
 				},
@@ -741,7 +732,6 @@ test("document morphology deduplicates and limits analyses independently per for
 							resourceId: "en-morphology",
 							schemaId: "textlex.morphology.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},

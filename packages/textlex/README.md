@@ -2,7 +2,7 @@
 
 Deterministic lexical, morphology-row, gazetteer, term, trie, phrase, fuzzy, and lookup engines for text-computing packages.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ```ts
 import { buildLexicon, lookup } from "@ismail-elkorchi/textlex";

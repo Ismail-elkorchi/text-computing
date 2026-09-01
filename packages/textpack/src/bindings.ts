@@ -3,7 +3,6 @@ import type {
 	TextPackCapabilitySlotStatus,
 	TextPackGapNote,
 	TextPackTaskResourceBinding,
-	TextPackTaskResourceBindingOwnerPackage,
 	TextPackTaskResourceBindingRole,
 } from "./types.js";
 
@@ -27,7 +26,6 @@ export interface TextPackTaskBindingSource {
 
 export interface TextPackTaskBindingQuery {
 	readonly slot: string;
-	readonly ownerPackage?: TextPackTaskResourceBindingOwnerPackage;
 	readonly schemaId?: string | readonly string[];
 	readonly role?:
 		| TextPackTaskResourceBindingRole
@@ -77,8 +75,6 @@ function packLabel(pack: TextPackTaskBindingSource): string {
 
 function bindingLabel(query: TextPackTaskBindingQuery): string {
 	const parts = [`slot ${query.slot}`];
-	if (query.ownerPackage !== undefined)
-		parts.push(`owner ${query.ownerPackage}`);
 	if (query.schemaId !== undefined) {
 		parts.push(
 			`schema ${Array.isArray(query.schemaId) ? query.schemaId.join(", ") : query.schemaId}`,
@@ -140,8 +136,6 @@ function matchesBinding(
 	const schemaIds = stringSet(query.schemaId);
 	const roles = roleSet(query.role);
 	return (
-		(query.ownerPackage === undefined ||
-			binding.ownerPackage === query.ownerPackage) &&
 		matchesSet(binding.schemaId, schemaIds) &&
 		matchesSet(binding.role, roles) &&
 		(query.required === undefined || binding.required === query.required) &&

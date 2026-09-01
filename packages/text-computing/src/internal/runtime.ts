@@ -303,7 +303,6 @@ async function createMergedMorphologyIndex(
 ): Promise<MorphologyIndex> {
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: "morphology",
-		ownerPackage: "@ismail-elkorchi/textlex",
 		schemaId: "textlex.morphology.v1",
 		role: "primary",
 	});
@@ -512,7 +511,6 @@ export function createTextComputingNlp(
 		qualityProfilesPromise ??= Promise.all(
 			taskResourceIdsFromBindings(pack, {
 				slot: "quality",
-				ownerPackage: "@ismail-elkorchi/textquality",
 				schemaId: "textquality.profile.v1",
 				role: "quality",
 			}).map((resourceId) =>

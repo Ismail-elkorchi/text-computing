@@ -4,7 +4,7 @@ Deterministic processor graph, planning, execution, streaming, cache, and pack-c
 
 `textpipeline` owns orchestration. Task algorithms live in processors supplied by callers, lower runtime packages, or later processor packages that implement the final `TextProcessor` contract.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ## Install
 

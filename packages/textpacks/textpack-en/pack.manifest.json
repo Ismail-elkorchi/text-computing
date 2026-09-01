@@ -1,7 +1,7 @@
 {
 	"schemaVersion": "1",
 	"id": "pack:en",
-	"name": "English Developer Textpack",
+	"name": "English Capability Pack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-en",
 	"targets": {
@@ -14,9 +14,6 @@
 		"modalities": [
 			"typed"
 		]
-	},
-	"engines": {
-		"@ismail-elkorchi/textpack": "^0.1.0"
 	},
 	"resources": [
 		{
@@ -942,22 +939,37 @@
 					"role": "profile",
 					"resourceId": "en-core-basic-segmentation",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
+				},
+				{
+					"role": "profile",
+					"resourceId": "en-core-language-profile",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-core-abbreviations",
 					"schemaId": "textlex.abbreviation-table.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-core-function-words",
 					"schemaId": "textlex.stoplist.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "en-core-orthography",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "en-core-punctuation",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1011,78 +1023,67 @@
 					"role": "index",
 					"resourceId": "wikidata-en-aliases-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-en-entities-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-en-relations-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wikidata-en-kb-canonical",
 					"schemaId": "textkb.knowledge-base.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wordnet-en-kb-canonical",
 					"schemaId": "textkb.knowledge-base.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-en-aliases",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-en-entities",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-en-relations",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-en-relations",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-en-senses",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-en-synsets",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1105,6 +1106,21 @@
 				"bcp47-language-subtags",
 				"bcp47-language-registry-summary"
 			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "bcp47-language-registry-summary",
+					"schemaId": "textfacts.language-registry.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "bcp47-language-subtags",
+					"schemaId": "textfacts.language-registry.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
 			]
@@ -1128,57 +1144,49 @@
 					"role": "index",
 					"resourceId": "en-esdb-default-wordlists-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wordnet-en-lexical-entries-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "en-esdb-wordlist-lexicon-canonical",
 					"schemaId": "textlex.lexicon.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "en-scowl-inflection-lexicon-canonical",
 					"schemaId": "textlex.lexicon.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wordnet-en-lexicon-canonical",
 					"schemaId": "textlex.lexicon.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-esdb-default-profiles",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-esdb-default-wordlists",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-en-lexical-entries",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1203,6 +1211,33 @@
 				"cldr-48-script-data",
 				"cldr-48-core-summary"
 			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "cldr-48-core-summary",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-likely-subtags",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-locale-aliases",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-script-data",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
 			]
@@ -1222,29 +1257,25 @@
 					"role": "index",
 					"resourceId": "en-scowl-inflection-entries-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "en-scowl-inflection-morphology-canonical",
 					"schemaId": "textlex.morphology.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-scowl-inflection-entries",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-scowl-pos-inventory",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1269,15 +1300,13 @@
 					"role": "profile",
 					"resourceId": "en-normalization-profile",
 					"schemaId": "textnorm.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "en-normalization-rules",
 					"schemaId": "textnorm.rules.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1322,99 +1351,85 @@
 					"role": "evidence",
 					"resourceId": "en-core-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "en-esdb-wordlist-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "en-normalization-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "en-scowl-inflection-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "en-segmentation-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "wikidata-en-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "wordnet-en-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "en-core-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "en-esdb-wordlist-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "en-normalization-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "en-scowl-inflection-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "en-segmentation-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "wikidata-en-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "wordnet-en-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1441,8 +1456,7 @@
 					"role": "profile",
 					"resourceId": "en-esdb-wordlist-search-profile",
 					"schemaId": "textsearch.analyzer-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textsearch"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1468,22 +1482,19 @@
 					"role": "profile",
 					"resourceId": "en-grapheme-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				},
 				{
 					"role": "profile",
 					"resourceId": "en-sentence-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				},
 				{
 					"role": "profile",
 					"resourceId": "en-word-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1513,6 +1524,33 @@
 				"unicode-17-scripts",
 				"unicode-17-core-summary"
 			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "unicode-17-core-summary",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-blocks",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-property-value-aliases",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-scripts",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
 			]
@@ -1551,7 +1589,7 @@
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
+		"lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

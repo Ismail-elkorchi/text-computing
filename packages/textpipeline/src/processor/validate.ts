@@ -66,7 +66,7 @@ export function validateProcessorRequirement(
 		diagnostics.push(
 			diagnostic(
 				"TEXTPIPELINE_INVALID_REQUIREMENT_RESOURCE_KIND",
-				"processor requirement resourceKind must be a final ResourceKind.",
+				"processor requirement resourceKind must be a supported ResourceKind.",
 				`${path}.resourceKind`,
 			),
 		);

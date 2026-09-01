@@ -11,7 +11,6 @@ import {
 	type TextPackMaterializedTable,
 	type TextPackResource,
 	type TextPackResourceReader,
-	type TextPackTaskResourceBindingOwnerPackage,
 	type TextPackTaskResourceBindingRole,
 	taskResourceIdsFromBindings,
 } from "@ismail-elkorchi/textpack";
@@ -22,7 +21,6 @@ export interface TextDataRowsFromPackOptions {
 	readonly schemaIds?: readonly string[];
 	readonly slot?: string;
 	readonly role?: TextPackTaskResourceBindingRole;
-	readonly ownerPackage?: TextPackTaskResourceBindingOwnerPackage;
 }
 
 export interface TextDataTableResource {
@@ -118,9 +116,6 @@ export async function corpusRowsFromPack(
 ): Promise<readonly TextDataTableResource[]> {
 	const resourceIds = capabilityResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "corpus",
-		...(options.ownerPackage === undefined
-			? {}
-			: { ownerPackage: options.ownerPackage }),
 		schemaId: options.schemaIds ?? ["textdata.corpus.rows.v1"],
 		role: options.role ?? "table",
 		...(options.resourceIds === undefined
@@ -144,7 +139,6 @@ export async function segmentationResourcesFromPack(
 	];
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "segmentation",
-		ownerPackage: options.ownerPackage ?? "@ismail-elkorchi/textdata",
 		schemaId: schemaIds,
 		...(options.role === undefined ? {} : { role: options.role }),
 		...(options.resourceIds === undefined

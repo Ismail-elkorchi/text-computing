@@ -11,7 +11,6 @@
 		"version",
 		"packageName",
 		"targets",
-		"engines",
 		"resources",
 		"capabilitySlots"
 	],
@@ -22,7 +21,6 @@
 		"version": { "type": "string", "minLength": 1 },
 		"packageName": { "type": "string", "minLength": 1 },
 		"targets": { "$ref": "#/definitions/targets" },
-		"engines": { "$ref": "#/definitions/stringMap" },
 		"resources": {
 			"type": "array",
 			"items": { "$ref": "#/definitions/resource" }
@@ -82,10 +80,6 @@
 			"minItems": 1,
 			"uniqueItems": true,
 			"items": { "type": "string", "minLength": 1 }
-		},
-		"stringMap": {
-			"type": "object",
-			"additionalProperties": { "type": "string", "minLength": 1 }
 		},
 		"targets": {
 			"type": "object",
@@ -428,13 +422,7 @@
 		"taskResourceBinding": {
 			"type": "object",
 			"additionalProperties": false,
-			"required": [
-				"role",
-				"resourceId",
-				"schemaId",
-				"required",
-				"ownerPackage"
-			],
+			"required": ["role", "resourceId", "schemaId", "required"],
 			"properties": {
 				"role": {
 					"enum": [
@@ -451,19 +439,7 @@
 				},
 				"resourceId": { "type": "string", "minLength": 1 },
 				"schemaId": { "type": "string", "minLength": 1 },
-				"required": { "type": "boolean" },
-				"ownerPackage": {
-					"enum": [
-						"@ismail-elkorchi/textdata",
-						"@ismail-elkorchi/textlex",
-						"@ismail-elkorchi/textkb",
-						"@ismail-elkorchi/textnorm",
-						"@ismail-elkorchi/textsearch",
-						"@ismail-elkorchi/textquality",
-						"@ismail-elkorchi/textcorpus",
-						"@ismail-elkorchi/textparallel"
-					]
-				}
+				"required": { "type": "boolean" }
 			}
 		},
 		"capabilities": {

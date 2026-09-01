@@ -32,7 +32,6 @@ function manifest(runtimeName: string) {
 		version: "1.0.0",
 		packageName: `@ismail-elkorchi/textpack-runtime-${runtimeName}`,
 		targets: { languages: ["en"] },
-		engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 		resources: [
 			{
 				id: `dataset-${runtimeName}-file-backed`,

@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/text-computing",
 	"version": "0.1.0",
-	"description": "Single-entrypoint SDK for Text Computing NLP workflows.",
+	"description": "Application-facing TypeScript runtime for deployable, inspectable NLP workflows.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {

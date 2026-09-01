@@ -221,22 +221,11 @@ export type TextPackTaskResourceBindingRole =
 	| "projection"
 	| "metadata";
 
-export type TextPackTaskResourceBindingOwnerPackage =
-	| "@ismail-elkorchi/textdata"
-	| "@ismail-elkorchi/textlex"
-	| "@ismail-elkorchi/textkb"
-	| "@ismail-elkorchi/textnorm"
-	| "@ismail-elkorchi/textsearch"
-	| "@ismail-elkorchi/textquality"
-	| "@ismail-elkorchi/textcorpus"
-	| "@ismail-elkorchi/textparallel";
-
 export interface TextPackTaskResourceBinding {
 	readonly role: TextPackTaskResourceBindingRole;
 	readonly resourceId: string;
 	readonly schemaId: string;
 	readonly required: boolean;
-	readonly ownerPackage: TextPackTaskResourceBindingOwnerPackage;
 }
 
 export interface TextPackCapabilitySlot {
@@ -278,7 +267,6 @@ export interface TextPackManifest {
 	readonly version: string;
 	readonly packageName: string;
 	readonly targets: TextPackTargets;
-	readonly engines: Readonly<Record<string, string>>;
 	readonly resources: readonly TextPackResource[];
 	readonly components?: readonly TextPackComponent[];
 	readonly artifacts?: readonly TextPackArtifactDescriptor[];

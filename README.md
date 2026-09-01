@@ -1,64 +1,87 @@
-# text-computing
+# Text Computing
 
-`text-computing` is an alpha workspace for deterministic, resource-backed text
-computing. The project prioritizes reproducibility, inspectable evidence, and
-audited data over hidden host behavior or model services.
+Text Computing is an alpha TypeScript platform for deploying, integrating,
+auditing, and operating NLP systems. It makes capabilities explicit: an
+application loads a versioned pack, runs declared tasks through one API, and
+receives text-aligned results with evidence about the resources and capability
+tier used.
 
-## Packages
+Model creation is an upstream concern rather than a platform boundary. Models,
+tokenizers, rules, and data may originate in any suitable ecosystem; the
+runtime cares that deployable artifacts have declared formats, versions,
+checksums, provenance, licenses, runtime bindings, and evaluation evidence.
 
-- `@ismail-elkorchi/textfacts` — deterministic, Unicode-pinned text facts.
-- `@ismail-elkorchi/textdoc` — document annotation container package.
-- `@ismail-elkorchi/textpack` — text resource package.
-- `@ismail-elkorchi/textlex` — lexical resources and deterministic lookup engines.
-- `@ismail-elkorchi/textfst` — finite-state automata and transducers for text processing.
-- `@ismail-elkorchi/textrules` — deterministic rules package.
-- `@ismail-elkorchi/textnorm` — resource-backed text normalization with final views and span maps.
-- `@ismail-elkorchi/textclassical` — deterministic classical statistical NLP package.
-- `@ismail-elkorchi/textpipeline` — deterministic processor contract package with stable trace output.
-- `@ismail-elkorchi/textdata` — deterministic dataset, stream, split, and annotation-format reader/writer package.
-- `@ismail-elkorchi/textcorpus` — corpus feature package.
-- `@ismail-elkorchi/textsearch` — search analyzer, index, query, ranking, filter, facet, highlight, and suggestion package.
-- `@ismail-elkorchi/textkb` — knowledge resources, entity linking, sense linking, terminology KB lookup, ontology, thesaurus, and semantic relation package.
-- `@ismail-elkorchi/textquality` — text quality, noisy-text quality, OCR/ATR diagnostics, readability, style, corpus quality, annotation quality, and integrity package.
-- `@ismail-elkorchi/textparallel` — parallel corpus, alignment, translation memory, bilingual terminology, bilingual lexicon, and rule-based transfer package.
-- `@ismail-elkorchi/text-computing` — single developer-facing SDK over runtime engines and generated textpack data packages.
+The project has three product concepts.
 
-## Developer entrypoint
+## Text Computing
 
-Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint. Generated `textpack-*` packages are data-only inputs.
+`@ismail-elkorchi/text-computing` is the application-facing runtime. It owns
+loading, task selection, document analysis, evidence, and portable resource I/O
+across Node.js, Bun, Deno, browsers, and Workers.
 
 ```ts
-import { createNodeResourceReader, load } from "@ismail-elkorchi/text-computing/node";
+import {
+  createNodeResourceReader,
+  load,
+} from "@ismail-elkorchi/text-computing/node";
 import fr from "@ismail-elkorchi/textpack-fr";
 
 const nlp = await load(fr, { reader: createNodeResourceReader() });
-const doc = await nlp("L'Etat francais reconnait Paris.");
+const doc = await nlp("L'Etat francais reconnait Paris.", {
+  preset: "lookup",
+});
+
+console.log(doc.tokens);
+console.log(doc.evidence);
 ```
 
-## Generated textpacks
+Applications start here. The lower-level engine workspaces are implementation
+modules and expert extension APIs, not separate product surfaces that ordinary
+users must assemble.
 
-The forge builds three self-contained alpha language data packages:
+## Capability Packs
 
-- `@ismail-elkorchi/textpack-en` — English resources for ordinary document NLP.
-- `@ismail-elkorchi/textpack-fr` — French resources for ordinary document NLP, including its declared share-alike data.
-- `@ismail-elkorchi/textpack-ar` — Arabic MSA resources for ordinary document NLP.
+Capability Packs are immutable, data-only inputs to the runtime. A pack can
+ship or reference language resources, rules, tokenizers, indexes, model
+artifacts, and evaluation records without embedding loaders or executable task
+facades. The current concrete format is `textpack`.
 
-Capability slices and source transforms are internal forge build units, not npm packages. Large corpus, parallel, and UD annotation datasets remain explicit acquisition inputs instead of default language-package payloads.
+Every capability slot separates availability from inference depth. Shipping an
+artifact does not claim that a task runs; a `model-backed` claim requires an
+executing adapter and held-out task evidence.
 
-Generated textpacks are non-publishable by default. Forge reports establish
-source provenance, license policy, deterministic generation, schema conformance,
-and runnable resource bindings. They do not establish general linguistic
-accuracy. A `task-supported` slot means the declared deterministic task is
-runnable for the pack's stated scope; it does not mean contextual model parity or
-production readiness. Descriptor-only packs are `artifact-backed`, not
-`task-supported`.
+The forge currently emits three self-contained language packs:
 
-The current packs are useful for controlled real-text workloads involving
-Unicode segmentation, normalization, lexical and morphology lookup, search
-analysis, explicit-mention KB linking, and rule-based quality diagnostics. They
-are not replacements for contextual NER, statistical tagging, dependency
-parsing, or neural NLP systems. See [Evaluation and readiness](docs/evaluation.md)
-for measured results and limitations.
+- `@ismail-elkorchi/textpack-en`
+- `@ismail-elkorchi/textpack-fr`
+- `@ismail-elkorchi/textpack-ar`
+
+Large corpora, parallel data, and annotation datasets remain explicit
+acquisition inputs instead of default deployment payloads.
+
+## Textpack Forge
+
+Textpack Forge is the audited build-time supply chain for Capability Packs. It
+pins source snapshots, verifies checksums and licensing policy, runs
+deterministic transforms, builds lookup stores, evaluates declared capability
+claims, and emits data-only packages plus provenance and quality reports.
+
+Normal builds do not download sources. Acquisition and snapshot updates are
+explicit operations, so deployed NLP behavior does not depend on hidden network
+access or mutable upstream state.
+
+## Current readiness
+
+The current packs support controlled English, French, and Modern Standard
+Arabic workloads involving Unicode segmentation, normalization, lexical and
+morphology lookup, search analysis, explicit-mention KB linking, and rule-based
+quality diagnostics. They do not currently provide contextual NER, statistical
+tagging, dependency parsing, coreference, embeddings, or neural inference.
+
+See [Evaluation and readiness](docs/evaluation.md) for measured task,
+real-text, latency, and memory results. See the
+[platform architecture](docs/specs/text-computing-platform.md) for the
+normative boundaries between the three concepts.
 
 ## Development
 
@@ -71,16 +94,5 @@ npm run -s schema:validate
 npm run -s test:nlp
 ```
 
-`test:nlp` executes held-out task cases, a frozen 300-document external real-text
-robustness sample, warm latency checks, and isolated cold-start memory/time gates
-through the public SDK. Forge resource counts do not substitute for these gates.
-
-## Repository structure
-
-- [`.changeset/`](.changeset/) — release change note configuration and entries.
-- [`docs/specs/`](docs/specs/) — public specifications and repository-level contracts.
-- [`docs/rfcs/`](docs/rfcs/) — public design proposals before acceptance.
-- [`docs/decisions/`](docs/decisions/) — accepted public technical decisions.
-- [`fixtures/`](fixtures/) — repository-level fixture inputs, expected outputs, reports, generated artifacts, and quarantined inputs.
-- [`schemas/`](schemas/) — repository-level JSON Schemas.
-- [`packages/textpacks/`](packages/textpacks/) — the three generated language distribution outputs.
+Contribution routes and forge commands are documented in
+[CONTRIBUTING.md](CONTRIBUTING.md).

@@ -3,8 +3,8 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-en",
 	"packageDir": "packages/textpacks/textpack-en",
-	"name": "English Developer Textpack",
-	"description": "Self-contained English resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"name": "English Capability Pack",
+	"description": "Audited English capabilities for deployable document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
 	"publishable": true,
 	"publishabilityEvidence": {
 		"productionGradeSourceCoverage": "Self-contained English distribution with foundation, core, normalization, segmentation, lexicon, lookup morphology, WordNet and Wikidata KB, search, and quality resources.",

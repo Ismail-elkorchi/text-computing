@@ -4,7 +4,7 @@ Inspectable non-neural parallel-text workflows for final `TextDocument` values.
 
 `textparallel` represents aligned documents and corpora, aligns sentences and words, builds and searches local translation memories, extracts bilingual terminology, induces bilingual lexicon candidates, compares aligned collocations, and runs rule-backed shallow transfer from caller-provided lexicons, FSTs, and rules.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ## Install
 

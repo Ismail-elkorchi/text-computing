@@ -12,7 +12,6 @@ const manifest: TextPackManifest = {
 	version: "1.0.0",
 	packageName: "@ismail-elkorchi/textpack-runtime-browser",
 	targets: { languages: ["en"] },
-	engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 	resources: [{ id: "dataset-browser", kind: "dataset" }],
 	capabilitySlots: [
 		{

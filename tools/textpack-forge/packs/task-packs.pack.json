@@ -90,9 +90,6 @@
 					"regions": ["EG"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "ar-core-language-profile",
@@ -243,9 +240,6 @@
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "ar-tatoeba-corpus-sentences",
@@ -392,9 +386,6 @@
 					"languages": ["ar"],
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -578,9 +569,6 @@
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "ar-normalization-rules",
@@ -728,9 +716,6 @@
 					"languages": ["ar"],
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -984,9 +969,6 @@
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "ar-search-profile",
@@ -1090,9 +1072,6 @@
 					"languages": ["ar"],
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -1305,9 +1284,6 @@
 					"regions": ["US"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "en-core-language-profile",
@@ -1484,9 +1460,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "en-tatoeba-corpus-sentences",
@@ -1632,9 +1605,6 @@
 					"languages": ["en"],
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -1783,9 +1753,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "en-normalization-rules",
@@ -1912,9 +1879,6 @@
 					"languages": ["en"],
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -2330,9 +2294,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "en-segmentation-boundary-properties",
@@ -2485,9 +2446,6 @@
 					"languages": ["en"],
 					"scripts": ["Latn"],
 					"modalities": ["typed", "social"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -2687,9 +2645,6 @@
 					"regions": ["AU", "CA", "GB", "US"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "en-esdb-default-wordlists",
@@ -2856,9 +2811,6 @@
 					"regions": ["FR"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "fr-core-language-profile",
@@ -3009,9 +2961,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "fr-tatoeba-corpus-sentences",
@@ -3154,9 +3103,6 @@
 					"languages": ["fr"],
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -3339,9 +3285,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "fr-normalization-rules",
@@ -3506,9 +3449,6 @@
 					"languages": ["fr"],
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -3777,9 +3717,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "fr-segmentation-boundary-properties",
@@ -3988,9 +3925,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "fr-ud-gsd-upos",
@@ -4182,9 +4116,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "fr-unimorph-paradigms",
@@ -4330,9 +4261,6 @@
 					"languages": ["ar"],
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -4500,9 +4428,6 @@
 					"languages": ["en"],
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{
@@ -4689,9 +4614,6 @@
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "wikidata-fr-entities",
@@ -4860,9 +4782,6 @@
 					"scripts": ["Arab"],
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "wordnet-ar-lexical-entries",
@@ -5027,9 +4946,6 @@
 					"languages": ["en"],
 					"scripts": ["Latn"],
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{

@@ -50,9 +50,6 @@ const manifest: TextPackManifest = {
 		domains: ["test"],
 		modalities: ["typed"],
 	},
-	engines: {
-		"@ismail-elkorchi/textpack": "^0.1.0",
-	},
 	resources: [
 		{
 			id: "stoplist-en-test",
@@ -111,7 +108,6 @@ const manifest: TextPackManifest = {
 					resourceId: "lexicon-en-test",
 					schemaId: "textlex.lexicon.rows.v1",
 					required: true,
-					ownerPackage: "@ismail-elkorchi/textlex",
 				},
 			],
 			prerequisites: ["core"],
@@ -219,6 +215,14 @@ assert.throws(
 		}),
 	/tier must be resource-only/u,
 );
+assert.throws(
+	() =>
+		validateManifest({
+			...manifest,
+			engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
+		}),
+	/engines is not a supported textpack field/u,
+);
 
 const normalized = validateManifest(manifest);
 assert.equal(normalized.name, "Test Pack");
@@ -231,7 +235,6 @@ assert.deepEqual(normalizedLexiconSlot?.bindings, [
 		resourceId: "lexicon-en-test",
 		schemaId: "textlex.lexicon.rows.v1",
 		required: true,
-		ownerPackage: "@ismail-elkorchi/textlex",
 	},
 ]);
 assert.deepEqual(normalizedLexiconSlot?.prerequisites, ["core"]);
@@ -245,9 +248,6 @@ const recipeManifest = validateManifest({
 	targets: {
 		languages: ["fr"],
 		scripts: ["Latn"],
-	},
-	engines: {
-		"@ismail-elkorchi/textpack": "^0.1.0",
 	},
 	resources: [],
 	components: [
@@ -337,7 +337,7 @@ assert.throws(
 			...manifest,
 			unexpectedField: true,
 		}),
-	/manifest\.unexpectedField is not a final textpack field/,
+	/manifest\.unexpectedField is not a supported textpack field/,
 );
 assert.throws(
 	() =>
@@ -403,7 +403,6 @@ assert.throws(
 							resourceId: "lexicon-en-test",
 							schemaId: "textlex.lexicon.rows.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},
@@ -427,13 +426,13 @@ assert.throws(
 							resourceId: "lexicon-en-test",
 							schemaId: "textlex.lexicon.rows.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textfacts",
+							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},
 			],
 		}),
-	/ownerPackage must be one of/,
+	/ownerPackage is not a supported textpack field/,
 );
 assert.throws(
 	() =>
@@ -451,7 +450,6 @@ assert.throws(
 							resourceId: "missing",
 							schemaId: "textlex.lexicon.rows.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},
@@ -475,7 +473,6 @@ assert.throws(
 							resourceId: "lexicon-en-test",
 							schemaId: "textlex.lexicon.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},
@@ -499,7 +496,6 @@ assert.throws(
 							resourceId: "gazetteer-en-test",
 							schemaId: "textlex.lexicon.rows.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},
@@ -530,7 +526,6 @@ assert.equal(getResource<string>(pack, "stoplist-en-test"), "a\nan\nthe\n");
 assert.deepEqual(
 	capabilityResourceIdsFromBindings(pack, {
 		slot: "lexicon",
-		ownerPackage: "@ismail-elkorchi/textlex",
 		schemaId: "textlex.lexicon.rows.v1",
 		role: "table",
 	}),
@@ -539,14 +534,12 @@ assert.deepEqual(
 assert.equal(
 	requireSingleCapabilityResourceBinding(pack, {
 		slot: "lexicon",
-		ownerPackage: "@ismail-elkorchi/textlex",
 	}).resourceId,
 	"lexicon-en-test",
 );
 assert.equal(
 	requireCapabilityResourceBindings(pack, {
 		slot: "lexicon",
-		ownerPackage: "@ismail-elkorchi/textlex",
 	}).length,
 	1,
 );
@@ -566,7 +559,6 @@ assert.deepEqual(capabilities(runnableLexiconPack), {
 assert.deepEqual(
 	taskResourceIdsFromBindings(runnableLexiconPack, {
 		slot: "lexicon",
-		ownerPackage: "@ismail-elkorchi/textlex",
 		schemaId: "textlex.lexicon.rows.v1",
 		role: "table",
 	}),
@@ -575,7 +567,6 @@ assert.deepEqual(
 assert.deepEqual(
 	requireTaskResourceBindings(runnableLexiconPack, {
 		slot: "lexicon",
-		ownerPackage: "@ismail-elkorchi/textlex",
 		resourceId: "lexicon-en-test",
 	}).map((binding) => binding.resourceId),
 	["lexicon-en-test"],
@@ -584,7 +575,6 @@ assert.throws(
 	() =>
 		requireTaskResourceBindings(pack, {
 			slot: "lexicon",
-			ownerPackage: "@ismail-elkorchi/textlex",
 		}),
 	/slot lexicon is sampled, not task-runnable/,
 );
@@ -592,7 +582,6 @@ assert.throws(
 	() =>
 		requireTaskResourceBindings(runnableLexiconPack, {
 			slot: "lexicon",
-			ownerPackage: "@ismail-elkorchi/textlex",
 			resourceId: "stoplist-en-test",
 		}),
 	/not bound for slot lexicon/,
@@ -612,7 +601,6 @@ const ambiguousPack = createPack(
 								resourceId: "stoplist-en-test",
 								schemaId: "textlex.stoplist.v1",
 								required: true,
-								ownerPackage: "@ismail-elkorchi/textlex",
 							},
 						],
 					}
@@ -625,7 +613,6 @@ assert.throws(
 	() =>
 		requireSingleTaskResourceBinding(ambiguousPack, {
 			slot: "lexicon",
-			ownerPackage: "@ismail-elkorchi/textlex",
 			role: "table",
 		}),
 	/ambiguous task resource bindings/,
@@ -1136,7 +1123,6 @@ function bindingPack(
 							resourceId: "shared-binding-resource",
 							schemaId,
 							required,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},
@@ -1162,14 +1148,12 @@ assert.throws(
 	() =>
 		requireTaskResourceBindings(optionalBindingPack, {
 			slot: "morphology",
-			ownerPackage: "@ismail-elkorchi/textlex",
 		}),
 	/no task resource bindings/u,
 );
 assert.equal(
 	requireSingleTaskResourceBinding(optionalBindingPack, {
 		slot: "morphology",
-		ownerPackage: "@ismail-elkorchi/textlex",
 		resourceId: "shared-binding-resource",
 	}).resourceId,
 	"shared-binding-resource",
@@ -1227,7 +1211,6 @@ const profiledOptionalBindingPack = createPack(
 						resourceId: "profiled-morphology-resource",
 						schemaId: "textlex.morphology.v1",
 						required: false,
-						ownerPackage: "@ismail-elkorchi/textlex",
 					},
 				],
 			},
@@ -1238,7 +1221,6 @@ const profiledOptionalBindingPack = createPack(
 assert.deepEqual(
 	capabilityResourceIdsFromBindings(profiledOptionalBindingPack, {
 		slot: "morphology",
-		ownerPackage: "@ismail-elkorchi/textlex",
 	}),
 	["profiled-morphology-resource"],
 );
@@ -1246,7 +1228,6 @@ assert.throws(
 	() =>
 		requireCapabilityResourceBindings(profiledOptionalBindingPack, {
 			slot: "morphology",
-			ownerPackage: "@ismail-elkorchi/textlex",
 			required: true,
 		}),
 	/no task resource bindings/u,
@@ -1271,7 +1252,6 @@ for (const packs of [
 	assert.deepEqual(
 		taskResourceIdsFromBindings(mixedCapabilityComposite, {
 			slot: "morphology",
-			ownerPackage: "@ismail-elkorchi/textlex",
 		}),
 		["shared-binding-resource"],
 	);

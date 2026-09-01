@@ -9,7 +9,6 @@ export function demoPack() {
 			version: "1.0.0",
 			packageName: "@ismail-elkorchi/textpack-demo",
 			targets: { languages: ["en"], modalities: ["typed"] },
-			engines: { "@ismail-elkorchi/textpipeline": "0.1.0" },
 			resources: [
 				{
 					id: "lexicon:demo",

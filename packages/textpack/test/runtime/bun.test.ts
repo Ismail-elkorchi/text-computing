@@ -14,7 +14,6 @@ test("textpack final API works in Bun", () => {
 		version: "1.0.0",
 		packageName: "@ismail-elkorchi/textpack-runtime-bun",
 		targets: { languages: ["en"] },
-		engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 		resources: [{ id: "dataset-bun", kind: "dataset" }],
 		capabilitySlots: [
 			{

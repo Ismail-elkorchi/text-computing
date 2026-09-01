@@ -323,7 +323,6 @@ function kbCapabilitySlots(resourceId: string) {
 					resourceId,
 					schemaId: "textkb.knowledge-base.v1",
 					required: true,
-					ownerPackage: "@ismail-elkorchi/textkb" as const,
 				},
 			],
 		},

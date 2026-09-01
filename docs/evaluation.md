@@ -8,10 +8,12 @@ are Unicode segmentation, normalization, resource-backed lexical and morphology
 lookup, search analysis, explicit-mention KB linking, and rule-based quality
 diagnostics.
 
-It is not broadly competitive with contextual NLP suites for NER, statistical
-POS tagging, dependency parsing, coreference, embeddings, or neural inference.
-Its competitive strengths are reproducibility, Unicode/version pinning,
+The current runtime is not a substitute for contextual NLP suites for NER,
+statistical POS tagging, dependency parsing, coreference, embeddings, or neural
+inference. Its present strengths are reproducibility, Unicode/version pinning,
 inspectable evidence, explicit resource ownership, and audited data generation.
+The platform architecture permits model-backed Capability Packs, but none may be
+claimed until a compatible executor and held-out task evidence ship together.
 
 ## Committed gates
 
@@ -65,8 +67,8 @@ cold lookup well inside the same budget used by the other languages.
 - Browser and edge deployments must serve pack assets with byte-range support
   for efficient indexed lookup. Node uses direct file ranges.
 - Corpus workbenches, parallel text, syntax datasets, and pipeline orchestration
-  remain expert-package concerns and are intentionally absent from the ordinary
-  SDK.
+  remain expert extension concerns and are intentionally absent from the
+  application-facing runtime.
 
 Before a stable release, the project needs larger independently annotated
 accuracy corpora, genre/domain slices, explicit accuracy thresholds, broader

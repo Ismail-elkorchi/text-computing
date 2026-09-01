@@ -1,15 +1,19 @@
 # AGENTS Runbook
 
-## Repository Inventory
+## Product Architecture
+- Text Computing: `packages/text-computing/` is the application-facing runtime.
+- Capability Packs: `packages/textpack/` defines the structural contract and
+  `packages/textpacks/` contains generated data-only capability packages.
+- Textpack Forge: `tools/textpack-forge/` owns acquisition, audited transforms,
+  generated package output, and reports.
+
+## Implementation Map
 - `.changeset/`: release change note configuration and entries.
 - `docs/specs/`, `docs/rfcs/`, `docs/decisions/`: public specifications, proposals, and decision records.
 - `fixtures/`: repository-level fixture material.
 - `schemas/`: repository-level JSON Schemas.
-- `tools/textpack-forge/`: source acquisition, audited transforms, generated textpack package output, and generated reports.
-- `packages/text-computing/`: ordinary developer-facing SDK entrypoint.
-- `packages/textpack/`: structural textpack manifest, composition, resource descriptor, and binding contracts.
-- `packages/textfacts/`, `packages/textdoc/`, `packages/textlex/`, `packages/textdata/`, `packages/textcorpus/`, `packages/textnorm/`, `packages/textsearch/`, `packages/textkb/`, `packages/textquality/`, `packages/textparallel/`, `packages/textfst/`, `packages/textrules/`, `packages/textclassical/`, `packages/textpipeline/`: runtime and expert engine workspaces.
-- `packages/textpacks/`: generated `textpack-*` data packages. These packages are data-only and are maintained by `tools/textpack-forge`, not by hand.
+- Other `packages/*` workspaces are runtime implementation modules and expert
+  extension APIs, not additional product concepts.
 
 ## Pre-flight (MUST)
 - Read this file.
@@ -29,8 +33,12 @@
 - Avoid adding non-essential tooling.
 - No background automation.
 - Do not delete source files unless ownership and intent are explicit.
-- Generated `textpack-*` packages must remain data-only: no loaders, task facades, runtime engines, processors, or SDK helpers.
-- `@ismail-elkorchi/text-computing` is the ordinary developer-facing NLP entrypoint. Runtime packages remain expert APIs.
+- Generated Capability Packs must remain data-only: no loaders, task facades,
+  runtime engines, processors, SDK helpers, or hidden network access.
+- `@ismail-elkorchi/text-computing` is the application-facing NLP entrypoint.
+  Engine workspaces remain implementation modules and expert APIs.
+- Pack bindings are semantic contracts. Do not couple them to repository paths
+  or implementing npm package names.
 - Do not add backward compatibility layers or dead transitional code for removed alpha APIs.
 
 ## Documentation Rule

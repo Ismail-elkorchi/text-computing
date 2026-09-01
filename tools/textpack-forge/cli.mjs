@@ -259,9 +259,6 @@ function compositeManifestFor(spec, context) {
 		version: spec.version,
 		packageName: spec.packageName,
 		targets: spec.targets,
-		engines: {
-			"@ismail-elkorchi/textpack": "^0.1.0",
-		},
 		resources: [],
 		capabilitySlots: spec.capabilitySlots,
 		license: spec.license,
@@ -282,20 +279,7 @@ function compositeManifestFor(spec, context) {
 	return manifest;
 }
 
-function lookupIndexOwnerPackage(schemaId) {
-	if (schemaId.startsWith("textkb.")) return "@ismail-elkorchi/textkb";
-	if (schemaId.startsWith("textlex.")) return "@ismail-elkorchi/textlex";
-	return undefined;
-}
-
 function attachLookupIndexBinding(manifest, sourceResourceId, indexResource) {
-	const ownerPackage = lookupIndexOwnerPackage(
-		indexResource.metadata.indexedResourceSchemaId,
-	);
-	expect(
-		ownerPackage !== undefined,
-		`${indexResource.id} cannot infer its runtime owner package.`,
-	);
 	for (const slot of manifest.capabilitySlots) {
 		const referencesSource =
 			slot.resourceIds?.includes(sourceResourceId) === true ||
@@ -312,7 +296,6 @@ function attachLookupIndexBinding(manifest, sourceResourceId, indexResource) {
 			resourceId: indexResource.id,
 			schemaId: LOOKUP_INDEX_SCHEMA_ID,
 			required: true,
-			ownerPackage,
 		};
 		slot.bindings = [...(slot.bindings ?? []), binding].sort((left, right) =>
 			distributionBindingKey(left).localeCompare(distributionBindingKey(right)),
@@ -708,7 +691,6 @@ function mergeDistributionCapabilities(values) {
 
 function distributionBindingKey(binding) {
 	return [
-		binding.ownerPackage,
 		binding.role,
 		binding.resourceId,
 		binding.schemaId,

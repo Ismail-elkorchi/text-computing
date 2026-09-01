@@ -51,13 +51,13 @@
       "path": "NOTICE.generated.md"
     },
     {
-      "byteLength": 41274,
-      "checksum": "sha256:9f5b74eb1e25f66a81c6f7710854695631b505b6c45c1d9608504ef7a6d1d58d",
+      "byteLength": 41424,
+      "checksum": "sha256:22b786f8e8f54deb546462799d59a770c282a2fdcf149868556f0097eba1b877",
       "path": "pack.manifest.json"
     },
     {
-      "byteLength": 3537,
-      "checksum": "sha256:4cfd2275c862a8f9ee4257c04741aabbb54c3a77ac4f8b70910254c8a3bbe54d",
+      "byteLength": 3535,
+      "checksum": "sha256:508e91b60edda96f4f12946de3bbd5fe5a56ebcf722d238c55cddfd109c99fcc",
       "path": "package.json"
     },
     {
@@ -66,8 +66,8 @@
       "path": "QUALITY.generated.json"
     },
     {
-      "byteLength": 3653,
-      "checksum": "sha256:ea10c215313f0eb24cd04b577a846d027a45d140e30c05edf4fd2a218c86e412",
+      "byteLength": 3644,
+      "checksum": "sha256:84119553964c89e9fd32eeebcef96ad19415c169782b66f5e19867f9017ab1b0",
       "path": "README.md"
     },
     {
@@ -316,8 +316,8 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 41530,
-      "checksum": "sha256:b84c22b9435401671685e67972f8ad1f8b0a0ef106223476aa9879f785a6af33",
+      "byteLength": 41680,
+      "checksum": "sha256:46f3b091ffbd7ea0a484210c0d95f5d6d7512aff566fbc8784fdf225e421c025",
       "path": "src/manifest.ts"
     },
     {
@@ -422,9 +422,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
+  "lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
   "mode": "source-backed",
-  "outputChecksum": "sha256:f84aa5be616c8490d32b32d5064d681b267ef7f0836e6792048f40bb774b9326",
+  "outputChecksum": "sha256:09ee875f85ff9584e0ff5026acf6a050876466137f5904b2af5db17f0b96145f",
   "packSpecPath": "tools/textpack-forge/composites/textpack-ar.composite.json",
   "packageName": "@ismail-elkorchi/textpack-ar",
   "packageVersion": "0.1.0",

@@ -49,24 +49,6 @@ function unionTargets(packs: readonly TextPack[]): TextPackTargets {
 	return Object.freeze(output) as TextPackTargets;
 }
 
-function mergeEngines(
-	packs: readonly TextPack[],
-): Readonly<Record<string, string>> {
-	const output: Record<string, string> = {};
-	for (const pack of packs) {
-		for (const [name, version] of Object.entries(pack.manifest.engines)) {
-			const existing = output[name];
-			if (existing !== undefined && existing !== version) {
-				throw new TypeError(
-					`Cannot compose incompatible engine ${name} ranges.`,
-				);
-			}
-			output[name] = version;
-		}
-	}
-	return Object.freeze(output);
-}
-
 function orderPacks(
 	packs: readonly TextPack[],
 	precedence: readonly string[] | undefined,
@@ -337,13 +319,11 @@ function uniqueBindings(
 		NonNullable<TextPackCapabilitySlot["bindings"]>[number]
 	>();
 	for (const binding of values) {
-		const key = [binding.ownerPackage, binding.role, binding.resourceId].join(
-			"\u0000",
-		);
+		const key = [binding.role, binding.resourceId].join("\u0000");
 		const existing = output.get(key);
 		if (existing !== undefined && existing.schemaId !== binding.schemaId) {
 			throw new TypeError(
-				`Cannot compose conflicting binding schemas for ${binding.ownerPackage} ${binding.role} ${binding.resourceId}.`,
+				`Cannot compose conflicting binding schemas for ${binding.role} ${binding.resourceId}.`,
 			);
 		}
 		output.set(
@@ -356,7 +336,6 @@ function uniqueBindings(
 	}
 	return [...output.values()].sort(
 		(left, right) =>
-			left.ownerPackage.localeCompare(right.ownerPackage) ||
 			left.role.localeCompare(right.role) ||
 			left.resourceId.localeCompare(right.resourceId) ||
 			left.schemaId.localeCompare(right.schemaId) ||
@@ -393,7 +372,6 @@ export function composePacks(
 		version: options.version ?? "0.0.0",
 		packageName: options.packageName ?? "@ismail-elkorchi/textpack-composite",
 		targets: unionTargets(orderedPacks),
-		engines: mergeEngines(orderedPacks),
 		resources: merged.descriptors,
 		components: mergeComponents(orderedPacks),
 		...(artifacts === undefined ? {} : { artifacts }),

@@ -1,9 +1,18 @@
 # Textpack Forge
 
-This directory contains the generated-pack pipeline for `textpack-*` packages.
+Textpack Forge is the audited build-time supply chain for Capability Packs. It
+turns pinned sources and deployable artifacts into deterministic, data-only
+runtime inputs with integrity, provenance, licensing, capability, evaluation,
+and drift evidence.
 
-The active graph separates internal source transforms from public distribution. It emits exactly
-three self-contained language packages: `textpack-en`, `textpack-fr`, and `textpack-ar`.
+Forge does not prescribe the upstream authoring environment. Model artifacts,
+tokenizers, rules, and source data can be produced by different toolchains; the
+forge boundary starts when those inputs are pinned, identified, audited,
+transformed, evaluated, and prepared for TypeScript deployment.
+
+The active graph separates internal source transforms from public distribution.
+It emits exactly three self-contained language Capability Packs: `textpack-en`,
+`textpack-fr`, and `textpack-ar`.
 
 The CLI is orchestration only. Subsystem ownership is explicit under `lib/`:
 
@@ -25,11 +34,11 @@ The CLI is orchestration only. Subsystem ownership is explicit under `lib/`:
 - large corpus, parallel, and UD annotation payloads remain explicit acquisition inputs and are not
   installed with the ordinary language packages.
 
-Generated packages are non-publishable by default. A package becomes publishable
+Generated Capability Packs are non-publishable by default. A pack becomes publishable
 only when its spec opts in and supplies production-grade source coverage,
 audited license evidence, scoped capability claims, conformance/evaluation
 evidence, and the standard generated reports. Sampled, demo, fixture-backed,
-transitional, and descriptor-only artifact packs are excluded from the public package graph.
+and descriptor-only artifacts are excluded from public distributions.
 
 Normal `forge:build`, `forge:verify`, and `forge:drift` runs do not download upstream sources.
 Snapshot acquisition is an explicit separate action. `forge:acquire` fetches only inputs selected
@@ -40,6 +49,11 @@ checksums, and snapshot locks after an intentional source refresh.
 `forge:license-audit` validates source policy classes, package-name suffixes,
 publishability posture, default-distribution eligibility, and build-unit license
 policy.
+
+Capability bindings emitted by Forge contain semantic slot, role, schema, and
+resource information only. They do not name the workspace package that
+implements an executor, so internal refactors cannot change a pack's runtime
+contract.
 
 Declared TSV outputs use one v1 indexed-table store when their resource spec declares
 `lookupKeyColumns`. The logical source descriptor and its `lookup-index` view share that physical

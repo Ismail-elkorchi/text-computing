@@ -64,7 +64,7 @@ function textResourceReader(records: Readonly<Record<string, string>>) {
 	};
 }
 
-test("runs the final section 20 parallel workflow", () => {
+test("runs the declared parallel workflow", () => {
 	const source = sourceDocument();
 	const target = targetDocument();
 	const sentenceLinks = alignSentences(source, target);
@@ -145,7 +145,6 @@ test("parallel textpack resources materialize through the adapter", async () => 
 							resourceId: "parallel-en-fr-links",
 							schemaId: "textparallel.alignment.rows.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textparallel" as const,
 						},
 					],
 				},

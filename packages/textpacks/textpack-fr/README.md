@@ -1,11 +1,11 @@
 # @ismail-elkorchi/textpack-fr
 
-Generated self-contained French language textpack.
+Generated self-contained French Capability Pack.
 
-This package is a generated data package. It exports structural textpack data only.
-Use `@ismail-elkorchi/text-computing` for developer-facing NLP task APIs.
+This package is a generated, data-only Capability Pack in the textpack format.
+Use `@ismail-elkorchi/text-computing` for application-facing NLP task APIs.
 It is generated from pinned source snapshots by `tools/textpack-forge`.
-All resources are included directly; installing this package does not install component textpacks.
+All resources are included directly; installing this package does not install component packs.
 
 
 ```ts

@@ -49,9 +49,6 @@
 				"targets": {
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "cldr-48-likely-subtags",
@@ -158,9 +155,6 @@
 				"targets": {
 					"modalities": ["typed"]
 				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
-				},
 				"resources": [
 					{
 						"id": "bcp47-language-subtags",
@@ -239,9 +233,6 @@
 				"packageName": "@ismail-elkorchi/textpack-unicode-17",
 				"targets": {
 					"modalities": ["typed"]
-				},
-				"engines": {
-					"@ismail-elkorchi/textpack": "^0.1.0"
 				},
 				"resources": [
 					{

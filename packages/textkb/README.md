@@ -4,7 +4,7 @@ Knowledge-backed NLP for final `TextDocument` values.
 
 `textkb` creates deterministic in-memory knowledge bases, builds alias indexes, performs entity linking, links terms to KB ids, performs sense linking for word-sense resources, queries semantic relations, traverses ontology/thesaurus links, creates lexical chain features, and writes final `textdoc` annotations with KB evidence.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ## Install
 

@@ -63,7 +63,7 @@ function textResourceReader(records: Readonly<Record<string, string>>) {
 	};
 }
 
-test("analyzes document quality across section 19 dimensions", () => {
+test("analyzes document quality across declared dimensions", () => {
 	const wordlist = buildWordlist(["Acme", "quality", "Footer", "line"], {
 		id: "fixture-en-wordlist",
 		casefold: true,
@@ -146,7 +146,6 @@ test("quality profile textpack resources materialize through the adapter", async
 							resourceId: "quality-fr-profile",
 							schemaId: "textquality.profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textquality" as const,
 						},
 					],
 				},

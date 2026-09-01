@@ -5,7 +5,7 @@
 variant graphs for spelling, historical, OCR/ATR, noisy, dialectal, transliteration, punctuation,
 spacing, and casing normalization.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ```ts
 import { createDocument } from "@ismail-elkorchi/textdoc";

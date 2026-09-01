@@ -428,7 +428,6 @@ function selectedKbResourceId(
 ): string {
 	return requireSingleTaskResourceBinding(pack, {
 		slot: "kb",
-		ownerPackage: "@ismail-elkorchi/textkb",
 		schemaId: "textkb.knowledge-base.v1",
 		role: "primary",
 		...(options.resourceId === undefined
@@ -443,7 +442,6 @@ function selectedKbResourceIds(
 ): readonly string[] {
 	return taskResourceIdsFromBindings(pack, {
 		slot: "kb",
-		ownerPackage: "@ismail-elkorchi/textkb",
 		schemaId: "textkb.knowledge-base.v1",
 		role: "primary",
 		...(options.resourceId === undefined
