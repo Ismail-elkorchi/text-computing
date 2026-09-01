@@ -36,7 +36,6 @@ test("merged morphology keeps all results when maxResults is omitted", async () 
 			version: "1.0.0",
 			packageName: "@ismail-elkorchi/textpack-morphology-limit",
 			targets: { languages: ["fr"], scripts: ["Latn"] },
-			engines: { "@ismail-elkorchi/text-computing": "^0.1.0" },
 			resources: [
 				{
 					id: "morphology-a",
@@ -65,14 +64,12 @@ test("merged morphology keeps all results when maxResults is omitted", async () 
 							resourceId: "morphology-a",
 							schemaId: "textlex.morphology.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 						{
 							role: "primary",
 							resourceId: "morphology-b",
 							schemaId: "textlex.morphology.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textlex",
 						},
 					],
 				},

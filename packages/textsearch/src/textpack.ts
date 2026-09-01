@@ -116,7 +116,6 @@ export async function searchAnalyzerResourcesFromPack(
 ): Promise<readonly TextSearchPackResource[]> {
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "search",
-		ownerPackage: "@ismail-elkorchi/textsearch",
 		schemaId: options.schemaIds ?? [
 			"textsearch.analyzer-profile.v1",
 			"textsearch.analyzer-table.v1",
@@ -286,7 +285,6 @@ export async function analyzerFromPack(
 ): Promise<Analyzer> {
 	const profileBinding = requireSingleTaskResourceBinding(pack, {
 		slot: options.slot ?? "search",
-		ownerPackage: "@ismail-elkorchi/textsearch",
 		schemaId: "textsearch.analyzer-profile.v1",
 		role: options.role ?? "profile",
 		...(options.resourceId === undefined
@@ -332,7 +330,6 @@ export async function searchIndexSchemaFromPack(
 ): Promise<IndexSchema> {
 	const profileBinding = requireSingleTaskResourceBinding(pack, {
 		slot: options.slot ?? "search",
-		ownerPackage: "@ismail-elkorchi/textsearch",
 		schemaId: "textsearch.analyzer-profile.v1",
 		role: options.role ?? "profile",
 		...(options.resourceId === undefined

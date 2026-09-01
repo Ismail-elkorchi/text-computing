@@ -113,7 +113,6 @@ export async function qualityResourcesFromPack(
 ): Promise<readonly TextQualityPackResource[]> {
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "quality",
-		ownerPackage: "@ismail-elkorchi/textquality",
 		schemaId: options.schemaIds ?? [
 			"textquality.profile.v1",
 			"textquality.evidence.v1",
@@ -192,7 +191,6 @@ export async function qualityProfileFromPack(
 ): Promise<QualityProfile> {
 	const profileBinding = requireSingleTaskResourceBinding(pack, {
 		slot: options.slot ?? "quality",
-		ownerPackage: "@ismail-elkorchi/textquality",
 		schemaId: "textquality.profile.v1",
 		role: options.role ?? "quality",
 		...(options.resourceId === undefined

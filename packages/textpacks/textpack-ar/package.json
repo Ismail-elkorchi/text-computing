@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-ar",
 	"version": "0.1.0",
-	"description": "Self-contained Arabic resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"description": "Audited Arabic capabilities for deployable document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {

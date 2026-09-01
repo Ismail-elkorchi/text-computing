@@ -7,4 +7,4 @@ import { linkEntities } from "@ismail-elkorchi/textkb/link";
 import { querySemanticRelations } from "@ismail-elkorchi/textkb/semantic-relations";
 ```
 
-Only the final section 18 subpaths are public.
+Only the documented package exports are public.

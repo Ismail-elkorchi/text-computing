@@ -1,1 +1,0 @@
-lookup lexicon-es-heldout casas lemma=casa pos=NOUN

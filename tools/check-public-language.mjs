@@ -39,6 +39,13 @@ const BLOCKED_PUBLIC_LANGUAGE_TERMS = [
 const EXTERNAL_TEXT_FIXTURES = new Set([
 	"fixtures/nlp-benchmarks/external-tatoeba-v1.json",
 ]);
+const ROOT_CONCEPT_HEADINGS = [
+	"## Text Computing",
+	"## Capability Packs",
+	"## Textpack Forge",
+];
+const REMOVED_PRODUCT_SPEC =
+	"docs/specs/text-computing-runtime-packages-final-spec.md";
 
 function normalizePath(filePath) {
 	return filePath.split(path.sep).join("/");
@@ -100,6 +107,29 @@ const patterns = blockedTerms.map((term) => [term, termPattern(term)]);
 const files = await collectIncludedFiles();
 const errors = [];
 
+const rootReadme = await readFile(path.join(ROOT, "README.md"), "utf8");
+const rootHeadings = rootReadme
+	.split(/\r?\n/u)
+	.filter((line) => line.startsWith("## "));
+for (const heading of ROOT_CONCEPT_HEADINGS) {
+	const count = rootHeadings.filter(
+		(candidate) => candidate === heading,
+	).length;
+	if (count !== 1) {
+		errors.push(`README.md must contain exactly one ${heading} heading.`);
+	}
+}
+if (rootHeadings.includes("## Packages")) {
+	errors.push(
+		"README.md must present the three product concepts, not a package catalog.",
+	);
+}
+if (files.includes(REMOVED_PRODUCT_SPEC)) {
+	errors.push(
+		`${REMOVED_PRODUCT_SPEC} is an obsolete package-centric product spec.`,
+	);
+}
+
 for (const file of files) {
 	const text = authoredText(
 		file,
@@ -119,4 +149,4 @@ if (errors.length > 0) {
 	process.exit(1);
 }
 
-console.log(`Public language scan OK (${files.length} files).`);
+console.log(`Public positioning scan OK (${files.length} files).`);

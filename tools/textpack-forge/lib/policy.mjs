@@ -680,30 +680,6 @@ export function generatedGapNotes(
 		}));
 }
 
-const runtimeOwnerBySchemaPrefix = [
-	["textdata.", "@ismail-elkorchi/textdata"],
-	["textkb.", "@ismail-elkorchi/textkb"],
-	["textlex.", "@ismail-elkorchi/textlex"],
-	["textnorm.", "@ismail-elkorchi/textnorm"],
-	["textparallel.", "@ismail-elkorchi/textparallel"],
-	["textquality.", "@ismail-elkorchi/textquality"],
-	["textsearch.", "@ismail-elkorchi/textsearch"],
-];
-
-function runtimeOwnerPackageFor(slotName, resource) {
-	const schemaId = resource.schemaId ?? "";
-	if (slotName === "corpus" && schemaId.startsWith("textdata.corpus.")) {
-		return "@ismail-elkorchi/textcorpus";
-	}
-	if (slotName === "parallel" && schemaId.startsWith("textparallel.")) {
-		return "@ismail-elkorchi/textparallel";
-	}
-	for (const [prefix, ownerPackage] of runtimeOwnerBySchemaPrefix) {
-		if (schemaId.startsWith(prefix)) return ownerPackage;
-	}
-	return undefined;
-}
-
 function taskBindingRoleFor(slotName, resource) {
 	const schemaId = resource.schemaId ?? "";
 	if (schemaId === "textquality.evidence.v1") return "evidence";
@@ -739,19 +715,15 @@ function inferredTaskBindings(slot, resourcesById) {
 		if (resource === undefined || typeof resource.schemaId !== "string") {
 			continue;
 		}
-		const ownerPackage = runtimeOwnerPackageFor(slot.slot, resource);
-		if (ownerPackage === undefined) continue;
 		bindings.push({
 			role: taskBindingRoleFor(slot.slot, resource),
 			resourceId,
 			schemaId: resource.schemaId,
 			required: true,
-			ownerPackage,
 		});
 	}
 	return bindings.sort(
 		(left, right) =>
-			left.ownerPackage.localeCompare(right.ownerPackage) ||
 			left.role.localeCompare(right.role) ||
 			left.resourceId.localeCompare(right.resourceId) ||
 			left.schemaId.localeCompare(right.schemaId),

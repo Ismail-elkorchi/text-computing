@@ -2,7 +2,7 @@
 
 Unicode-pinned, deterministic facts about one text. No language packs, no corpus logic, no neural or statistical models.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ## Entrypoints
 
@@ -17,7 +17,7 @@ import { surfaceProfile, wordFrequencies, charNgrams, wordNgrams } from "@ismail
 import { stableHash64, stableHash128 } from "@ismail-elkorchi/textfacts/hash";
 ```
 
-The root entrypoint reexports the final public APIs. Required runtime targets are Node.js, Deno, Bun, browsers, and Cloudflare Workers.
+The root entrypoint reexports the public APIs. Required runtime targets are Node.js, Deno, Bun, browsers, and Cloudflare Workers.
 
 ## Example
 

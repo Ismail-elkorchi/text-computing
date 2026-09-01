@@ -1,12 +1,15 @@
 # @ismail-elkorchi/textclassical
 
-Deterministic classical statistical NLP for the text-computing runtime packages.
+Deterministic classical statistical NLP for the expert engine layer.
 
 `textclassical` owns sparse feature extraction, vectorization, classical classifiers, sequence
 taggers, n-gram language models, LDA topic models, clustering, non-neural task wrappers, extractive
 summaries, and statistical `textdoc` annotations.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. It provides useful in-process training and
+execution utilities, but it does not define where deployable models must be
+created. Applications should use `@ismail-elkorchi/text-computing` with audited
+Capability Packs.
 
 ## Install
 
@@ -23,7 +26,7 @@ import { trainSequenceTagger } from "@ismail-elkorchi/textclassical/sequence";
 import { trainNgramLanguageModel } from "@ismail-elkorchi/textclassical/lm";
 ```
 
-The package exposes only the final root entrypoint and the section 13 focused subpaths:
+The package exposes a root entrypoint and focused expert subpaths:
 `features`, `vectorize`, `classify`, `sequence`, `hmm`, `crf`, `maxent`, `perceptron`, `lm`,
 `topic`, `cluster`, `tagger`, `parser`, and `summary`.
 

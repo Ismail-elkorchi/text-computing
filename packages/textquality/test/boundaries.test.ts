@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("package metadata keeps final section 19 boundaries", () => {
+test("package metadata keeps the declared expert API boundaries", () => {
 	const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 	assert.deepEqual(
 		Object.keys(pkg.exports).sort(),

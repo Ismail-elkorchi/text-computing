@@ -1,7 +1,7 @@
 {
 	"name": "text-computing",
 	"version": "0.0.0",
-	"description": "Workspace for deterministic text computing packages.",
+	"description": "TypeScript NLP runtime, Capability Packs, and audited pack supply chain.",
 	"private": true,
 	"type": "module",
 	"sideEffects": false,

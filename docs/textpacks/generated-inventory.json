@@ -333,13 +333,13 @@
           "path": "NOTICE.generated.md"
         },
         {
-          "byteLength": 41274,
-          "checksum": "sha256:9f5b74eb1e25f66a81c6f7710854695631b505b6c45c1d9608504ef7a6d1d58d",
+          "byteLength": 41424,
+          "checksum": "sha256:22b786f8e8f54deb546462799d59a770c282a2fdcf149868556f0097eba1b877",
           "path": "pack.manifest.json"
         },
         {
-          "byteLength": 3537,
-          "checksum": "sha256:4cfd2275c862a8f9ee4257c04741aabbb54c3a77ac4f8b70910254c8a3bbe54d",
+          "byteLength": 3535,
+          "checksum": "sha256:508e91b60edda96f4f12946de3bbd5fe5a56ebcf722d238c55cddfd109c99fcc",
           "path": "package.json"
         },
         {
@@ -348,8 +348,8 @@
           "path": "QUALITY.generated.json"
         },
         {
-          "byteLength": 3653,
-          "checksum": "sha256:ea10c215313f0eb24cd04b577a846d027a45d140e30c05edf4fd2a218c86e412",
+          "byteLength": 3644,
+          "checksum": "sha256:84119553964c89e9fd32eeebcef96ad19415c169782b66f5e19867f9017ab1b0",
           "path": "README.md"
         },
         {
@@ -598,8 +598,8 @@
           "path": "src/index.ts"
         },
         {
-          "byteLength": 41530,
-          "checksum": "sha256:b84c22b9435401671685e67972f8ad1f8b0a0ef106223476aa9879f785a6af33",
+          "byteLength": 41680,
+          "checksum": "sha256:46f3b091ffbd7ea0a484210c0d95f5d6d7512aff566fbc8784fdf225e421c025",
           "path": "src/manifest.ts"
         },
         {
@@ -706,7 +706,7 @@
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
       "npmShippedSizeBytes": 47465660,
-      "outputChecksum": "sha256:f84aa5be616c8490d32b32d5064d681b267ef7f0836e6792048f40bb774b9326",
+      "outputChecksum": "sha256:09ee875f85ff9584e0ff5026acf6a050876466137f5904b2af5db17f0b96145f",
       "packClass": "language-composite",
       "packageId": "textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
@@ -1105,13 +1105,13 @@
           "path": "NOTICE.generated.md"
         },
         {
-          "byteLength": 50252,
-          "checksum": "sha256:22d529fa9aa5141058b180b371cb6c3e03f714d074f43800827a35b2cad563b5",
+          "byteLength": 50001,
+          "checksum": "sha256:171a56bef5d16852a15a9357a657c1b3803ecae14c7d8aba18d69304c95a70d7",
           "path": "pack.manifest.json"
         },
         {
-          "byteLength": 3809,
-          "checksum": "sha256:565cfd3c9be63eb2cd7c911b804389c7f6892df895e311288985c901872bde1b",
+          "byteLength": 3807,
+          "checksum": "sha256:8c35366f06061e7afe915b4196ab637392a8d4bc83788f82de28093ad28ddd79",
           "path": "package.json"
         },
         {
@@ -1120,8 +1120,8 @@
           "path": "QUALITY.generated.json"
         },
         {
-          "byteLength": 4154,
-          "checksum": "sha256:efecb1f8a0e0914efc774c585046fd091cd7f7c4c966e30c025fedb2dcef4c79",
+          "byteLength": 4145,
+          "checksum": "sha256:2597359106e16b2e66f471001ab0c119b9f6e015535f6eaa56ddb92af1f6d82b",
           "path": "README.md"
         },
         {
@@ -1405,8 +1405,8 @@
           "path": "src/index.ts"
         },
         {
-          "byteLength": 50508,
-          "checksum": "sha256:4dbe98d17c8022296c8d97cd86b328a2f6091b8a164b49047f54611150fbb937",
+          "byteLength": 50257,
+          "checksum": "sha256:1863b2afbb502c1ee05b9fc47e4dfc40aa9c8f22d2784443dfc08531719c5fd4",
           "path": "src/manifest.ts"
         },
         {
@@ -1521,7 +1521,7 @@
       ],
       "licenseExpression": "MIT AND LicenseRef-IANA-Language-Subtag-Registry AND Unicode-3.0 AND LicenseRef-ESDB-MIT-Like AND LicenseRef-Princeton-WordNet AND CC-BY-4.0 AND CC0-1.0",
       "npmShippedSizeBytes": 38010412,
-      "outputChecksum": "sha256:cb9e3c25573be6065aaf2accb9ad2cb3bc861fd6ad67930bcd2129090371122f",
+      "outputChecksum": "sha256:f3ed06322ef036ed149e5c2e76da526fdfc975b9bbe3103c3d1c83713ce5fdee",
       "packClass": "language-composite",
       "packageId": "textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
@@ -1883,13 +1883,13 @@
           "path": "NOTICE.generated.md"
         },
         {
-          "byteLength": 46665,
-          "checksum": "sha256:85a7952b3b01bc16ecbc5c21074380ea9d6965843648ce613931e14313282482",
+          "byteLength": 46402,
+          "checksum": "sha256:12eef3585413e20b1bee05ca7862b74300b73be785a0a801795361b4a4962e63",
           "path": "pack.manifest.json"
         },
         {
-          "byteLength": 3858,
-          "checksum": "sha256:ce5ac1e3e7b7ddddbca5687cd1ac901d46a3847fd4411e537ea1d95c56707e8c",
+          "byteLength": 3856,
+          "checksum": "sha256:2fc187a14bb894003e9a045945fcbe7be20fabe9ba3aba05e1bc298723b3612c",
           "path": "package.json"
         },
         {
@@ -1898,8 +1898,8 @@
           "path": "QUALITY.generated.json"
         },
         {
-          "byteLength": 4103,
-          "checksum": "sha256:e70d1660c1a9e008b203326cfff709a549eda66e48f97ad4ec7d25f89929fc7b",
+          "byteLength": 4094,
+          "checksum": "sha256:f5909e35e0c4c1a022d6f8a490539e09b4da7827b722e46a7d414c42691cef5b",
           "path": "README.md"
         },
         {
@@ -2183,8 +2183,8 @@
           "path": "src/index.ts"
         },
         {
-          "byteLength": 46921,
-          "checksum": "sha256:5fc49d1de3fdead767711adca09702f803ff9d352faafebf271993f74be8b54d",
+          "byteLength": 46658,
+          "checksum": "sha256:290f4f9be0e82b0b7ef9a220c8b9768a2c4222a047424b1543de6ed0252ab4d8",
           "path": "src/manifest.ts"
         },
         {
@@ -2295,7 +2295,7 @@
       ],
       "licenseExpression": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC0-1.0 AND CC-BY-2.0-FR AND CC-BY-SA-4.0 AND CC-BY-SA-3.0",
       "npmShippedSizeBytes": 15741685,
-      "outputChecksum": "sha256:9cf9d65e7abf5c8a6ca9354a9fc261ce4686eccaca580c566ee99a3eb3686068",
+      "outputChecksum": "sha256:f57ad273796e33e821d40abc9a37965a69eedefe00a1e2e90aa4c765b67fbf29",
       "packClass": "language-composite",
       "packageId": "textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",

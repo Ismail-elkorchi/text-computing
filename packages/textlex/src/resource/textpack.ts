@@ -104,7 +104,6 @@ function boundResources(
 	const role = options.role ?? options.defaultRole;
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: options.slot ?? options.defaultSlot,
-		ownerPackage: "@ismail-elkorchi/textlex",
 		...(options.schemaIds === undefined ? {} : { schemaId: options.schemaIds }),
 		...(role === undefined ? {} : { role }),
 		...(options.resourceIds === undefined
@@ -1598,7 +1597,6 @@ export async function morphologyIndexFromPackAsync(
 					pack,
 					requireSingleTaskResourceBinding(pack, {
 						slot: options.slot ?? "morphology",
-						ownerPackage: "@ismail-elkorchi/textlex",
 						schemaId: "textlex.morphology.v1",
 						role: options.role ?? "primary",
 					}).resourceId,
@@ -1607,7 +1605,6 @@ export async function morphologyIndexFromPackAsync(
 					pack,
 					requireSingleTaskResourceBinding(pack, {
 						slot: options.slot ?? "morphology",
-						ownerPackage: "@ismail-elkorchi/textlex",
 						schemaId: "textlex.morphology.v1",
 						role: options.role ?? "primary",
 						resourceId: options.resourceId,

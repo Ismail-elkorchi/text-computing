@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:ar",
-	"name": "Arabic Developer Textpack",
+	"name": "Arabic Capability Pack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"targets": {
@@ -19,9 +19,6 @@ export const manifest: TextPackManifest = {
 		"modalities": [
 			"typed"
 		]
-	},
-	"engines": {
-		"@ismail-elkorchi/textpack": "^0.1.0"
 	},
 	"resources": [
 		{
@@ -805,8 +802,25 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "ar-core-basic-segmentation",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
+				},
+				{
+					"role": "profile",
+					"resourceId": "ar-core-language-profile",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-core-orthography",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "ar-core-punctuation",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -856,78 +870,67 @@ export const manifest: TextPackManifest = {
 					"role": "index",
 					"resourceId": "wikidata-ar-aliases-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-ar-entities-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-ar-relations-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wikidata-ar-kb-canonical",
 					"schemaId": "textkb.knowledge-base.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wordnet-ar-kb-canonical",
 					"schemaId": "textkb.knowledge-base.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-ar-aliases",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-ar-entities",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-ar-relations",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-ar-relations",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-ar-senses",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-ar-synsets",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -950,6 +953,21 @@ export const manifest: TextPackManifest = {
 				"bcp47-language-subtags",
 				"bcp47-language-registry-summary"
 			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "bcp47-language-registry-summary",
+					"schemaId": "textfacts.language-registry.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "bcp47-language-subtags",
+					"schemaId": "textfacts.language-registry.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
 			]
@@ -968,22 +986,19 @@ export const manifest: TextPackManifest = {
 					"role": "index",
 					"resourceId": "wordnet-ar-lexical-entries-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wordnet-ar-lexicon-canonical",
 					"schemaId": "textlex.lexicon.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wordnet-ar-lexical-entries",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1005,6 +1020,33 @@ export const manifest: TextPackManifest = {
 				"cldr-48-script-data",
 				"cldr-48-core-summary"
 			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "cldr-48-core-summary",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-likely-subtags",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-locale-aliases",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-script-data",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
 			]
@@ -1026,43 +1068,37 @@ export const manifest: TextPackManifest = {
 					"role": "index",
 					"resourceId": "ar-msa-camel-morph-morphemes-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "ar-msa-camel-morphology-canonical",
 					"schemaId": "textlex.morphology.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "ar-msa-camel-morph-compatibility",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "ar-msa-camel-morph-defaults",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "ar-msa-camel-morph-features",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "ar-msa-camel-morph-morphemes",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1087,22 +1123,19 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "ar-normalization-profile",
 					"schemaId": "textnorm.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "ar-normalization-observed-codepoints",
 					"schemaId": "textnorm.rules.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "ar-normalization-rules",
 					"schemaId": "textnorm.rules.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1144,85 +1177,73 @@ export const manifest: TextPackManifest = {
 					"role": "evidence",
 					"resourceId": "ar-core-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "ar-msa-camel-morph-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "ar-normalization-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "ar-search-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "wikidata-ar-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "wordnet-ar-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "ar-core-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "ar-msa-camel-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "ar-normalization-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "ar-search-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "wikidata-ar-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "wordnet-ar-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1248,8 +1269,7 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "ar-search-profile",
 					"schemaId": "textsearch.analyzer-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textsearch"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1272,8 +1292,7 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "ar-msa-camel-segmentation-canonical",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1302,6 +1321,33 @@ export const manifest: TextPackManifest = {
 				"unicode-17-scripts",
 				"unicode-17-core-summary"
 			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "unicode-17-core-summary",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-blocks",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-property-value-aliases",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-scripts",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
 			]
@@ -1338,7 +1384,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
+		"lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

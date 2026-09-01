@@ -38,7 +38,6 @@ function smokePack(runtimeName: string) {
 			version: "1.0.0",
 			packageName: `@ismail-elkorchi/textpack-text-computing-runtime-${runtimeName}`,
 			targets: { languages: ["fr"], scripts: ["Latn"] },
-			engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 			resources: [
 				{
 					id: `segmentation-${runtimeName}`,
@@ -65,7 +64,6 @@ function smokePack(runtimeName: string) {
 							resourceId: `segmentation-${runtimeName}`,
 							schemaId: "textdata.segmentation-profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textdata",
 						},
 					],
 				},
@@ -80,7 +78,6 @@ function smokePack(runtimeName: string) {
 							resourceId: `normalization-${runtimeName}`,
 							schemaId: "textnorm.profile.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textnorm",
 						},
 					],
 				},

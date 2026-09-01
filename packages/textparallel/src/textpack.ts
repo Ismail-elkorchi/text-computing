@@ -91,7 +91,6 @@ export async function parallelTablesFromPack(
 	const limit = rowLimit(options.maxRows);
 	const resourceIds = capabilityResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "parallel",
-		ownerPackage: "@ismail-elkorchi/textparallel",
 		schemaId: options.schemaIds ?? [
 			"textparallel.alignment.v1",
 			"textparallel.alignment.rows.v1",

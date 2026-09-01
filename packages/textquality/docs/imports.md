@@ -16,4 +16,4 @@ import { annotationQualityFindings } from "@ismail-elkorchi/textquality/annotati
 import { buildQualityReport } from "@ismail-elkorchi/textquality/report";
 ```
 
-Only the final section 19 subpaths are public.
+Only the documented package exports are public.

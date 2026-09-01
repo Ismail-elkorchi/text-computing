@@ -1,8 +1,10 @@
 # `@ismail-elkorchi/textcorpus`
 
-Final runtime package for corpus stores, structured corpus queries, corpus linguistics, terminology, lexicography, stylometry features, reuse detection, and diachronic trend tables.
+Expert engine for corpus stores, structured corpus queries, corpus linguistics,
+terminology, lexicography, stylometry features, reuse detection, and diachronic
+trend tables.
 
-This is an expert runtime package. Use `@ismail-elkorchi/text-computing` as the ordinary NLP entrypoint when you want task workflows over generated `textpack-*` data packages.
+This is an expert engine module. Applications should use `@ismail-elkorchi/text-computing` with generated Capability Packs.
 
 ## Install
 

@@ -450,16 +450,16 @@ function concreteReadme(pack) {
 		)
 		.join("\n");
 	const summary = isDistributionPack(pack)
-		? `Generated self-contained ${pack.display.languageName} language textpack.`
-		: `Generated ${pack.packClass} textpack.`;
+		? `Generated self-contained ${pack.display.languageName} Capability Pack.`
+		: `Generated ${pack.packClass} Capability Pack.`;
 	return `# ${pack.packageName}
 
 ${summary}
 
-This package is a generated data package. It exports structural textpack data only.
-Use \`@ismail-elkorchi/text-computing\` for developer-facing NLP task APIs.
+This package is a generated, data-only Capability Pack in the textpack format.
+Use \`@ismail-elkorchi/text-computing\` for application-facing NLP task APIs.
 It is generated from pinned source snapshots by \`${GENERATED_BY}\`.
-${isDistributionPack(pack) ? "All resources are included directly; installing this package does not install component textpacks.\n" : ""}
+${isDistributionPack(pack) ? "All resources are included directly; installing this package does not install component packs.\n" : ""}
 
 \`\`\`ts
 import pack, { manifest, resources } from "${pack.packageName}";
@@ -1221,7 +1221,7 @@ export function inventoryFor(context) {
 
 export function inventoryMarkdown(inventory) {
 	const lines = [
-		"# Generated Textpack Inventory",
+		"# Generated Capability Pack Inventory",
 		"",
 		"Status: three self-contained source-backed language distributions; forge build units are internal and are not npm packages",
 		`Generated at: \`${inventory.generatedAt}\``,

@@ -6,7 +6,7 @@ import type { TextPackManifest } from "@ismail-elkorchi/textpack";
 export const manifest: TextPackManifest = {
 	"schemaVersion": "1",
 	"id": "pack:fr",
-	"name": "French Developer Textpack",
+	"name": "French Capability Pack",
 	"version": "0.1.0",
 	"packageName": "@ismail-elkorchi/textpack-fr",
 	"targets": {
@@ -19,9 +19,6 @@ export const manifest: TextPackManifest = {
 		"modalities": [
 			"typed"
 		]
-	},
-	"engines": {
-		"@ismail-elkorchi/textpack": "^0.1.0"
 	},
 	"resources": [
 		{
@@ -891,8 +888,25 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "fr-core-basic-segmentation",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
+				},
+				{
+					"role": "profile",
+					"resourceId": "fr-core-language-profile",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-core-orthography",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "fr-core-punctuation",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -938,50 +952,43 @@ export const manifest: TextPackManifest = {
 					"role": "index",
 					"resourceId": "wikidata-fr-aliases-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-fr-entities-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "wikidata-fr-relations-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "wikidata-fr-kb-canonical",
 					"schemaId": "textkb.knowledge-base.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-fr-aliases",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-fr-entities",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "wikidata-fr-relations",
 					"schemaId": "textkb.knowledge-base.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textkb"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1003,6 +1010,21 @@ export const manifest: TextPackManifest = {
 				"bcp47-language-subtags",
 				"bcp47-language-registry-summary"
 			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "bcp47-language-registry-summary",
+					"schemaId": "textfacts.language-registry.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "bcp47-language-subtags",
+					"schemaId": "textfacts.language-registry.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"BCP 47 subtag registry resources are available for language, script, region, variant, grandfathered, and redundant tag consumers."
 			]
@@ -1022,29 +1044,25 @@ export const manifest: TextPackManifest = {
 					"role": "index",
 					"resourceId": "fr-lexique-entries-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "fr-lexique-lexicon-canonical",
 					"schemaId": "textlex.lexicon.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-lexique-entries",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-lexique-lemmas",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1063,6 +1081,33 @@ export const manifest: TextPackManifest = {
 				"cldr-48-script-data",
 				"cldr-48-core-summary"
 			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "cldr-48-core-summary",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-likely-subtags",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-locale-aliases",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "cldr-48-script-data",
+					"schemaId": "textfacts.locale-profile.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"CLDR likely-subtag, alias, and script variant resources are available for locale and script profile consumers."
 			]
@@ -1087,64 +1132,55 @@ export const manifest: TextPackManifest = {
 					"role": "index",
 					"resourceId": "fr-lexique-entries-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "index",
 					"resourceId": "fr-unimorph-paradigms-lookup-index",
 					"schemaId": "textpack.lookup-index.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "fr-lexique-morphology-canonical",
 					"schemaId": "textlex.morphology.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "primary",
 					"resourceId": "fr-unimorph-morphology-canonical",
 					"schemaId": "textlex.morphology.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-lexique-entries",
 					"schemaId": "textlex.lexicon.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-lexique-pos-inventory",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-unimorph-feature-inventory",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-unimorph-paradigms",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-unimorph-pos-inventory",
 					"schemaId": "textlex.morphology.rows.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textlex"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1169,39 +1205,34 @@ export const manifest: TextPackManifest = {
 			],
 			"bindings": [
 				{
+					"role": "evidence",
+					"resourceId": "fr-normalization-gold-cases",
+					"schemaId": "textquality.evidence.v1",
+					"required": true
+				},
+				{
 					"role": "profile",
 					"resourceId": "fr-normalization-profile",
 					"schemaId": "textnorm.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-normalization-contraction-forms",
 					"schemaId": "textnorm.rules.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-normalization-elision-prefixes",
 					"schemaId": "textnorm.rules.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-normalization-rules",
 					"schemaId": "textnorm.rules.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textnorm"
-				},
-				{
-					"role": "evidence",
-					"resourceId": "fr-normalization-gold-cases",
-					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1245,99 +1276,85 @@ export const manifest: TextPackManifest = {
 					"role": "evidence",
 					"resourceId": "fr-core-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "fr-lexique-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "fr-normalization-gold-cases",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "fr-normalization-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "fr-segmentation-gold-cases",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "fr-segmentation-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "fr-unimorph-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "evidence",
 					"resourceId": "wikidata-fr-quality",
 					"schemaId": "textquality.evidence.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "fr-core-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "fr-lexique-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "fr-normalization-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "fr-segmentation-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "fr-unimorph-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				},
 				{
 					"role": "quality",
 					"resourceId": "wikidata-fr-quality-profile",
 					"schemaId": "textquality.profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textquality"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1363,8 +1380,7 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "fr-lexique-search-profile",
 					"schemaId": "textsearch.analyzer-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textsearch"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1391,36 +1407,31 @@ export const manifest: TextPackManifest = {
 					"role": "profile",
 					"resourceId": "fr-grapheme-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				},
 				{
 					"role": "profile",
 					"resourceId": "fr-sentence-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				},
 				{
 					"role": "profile",
 					"resourceId": "fr-token-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				},
 				{
 					"role": "profile",
 					"resourceId": "fr-word-segmentation-profile",
 					"schemaId": "textdata.segmentation-profile.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				},
 				{
 					"role": "table",
 					"resourceId": "fr-segmentation-elision-prefixes",
 					"schemaId": "textdata.segmentation-table.v1",
-					"required": true,
-					"ownerPackage": "@ismail-elkorchi/textdata"
+					"required": true
 				}
 			],
 			"readerRequired": true,
@@ -1450,6 +1461,33 @@ export const manifest: TextPackManifest = {
 				"unicode-17-scripts",
 				"unicode-17-core-summary"
 			],
+			"bindings": [
+				{
+					"role": "profile",
+					"resourceId": "unicode-17-core-summary",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-blocks",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-property-value-aliases",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "unicode-17-scripts",
+					"schemaId": "textfacts.unicode-profile.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
 			"notes": [
 				"Unicode 17 script, block, and property-value alias resources are available for Unicode profile consumers."
 			]
@@ -1487,7 +1525,7 @@ export const manifest: TextPackManifest = {
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:a5ff100bfeab62f7ae9661759a7399ad042c4d59e3b004f4aaec14ebd1d0dd32",
+		"lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
 		"generatedAt": "2026-06-12T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},

@@ -122,7 +122,6 @@ export async function normalizationResourcesFromPack(
 ): Promise<readonly TextNormPackResource[]> {
 	const resourceIds = taskResourceIdsFromBindings(pack, {
 		slot: options.slot ?? "normalization",
-		ownerPackage: "@ismail-elkorchi/textnorm",
 		schemaId: options.schemaIds ?? ["textnorm.profile.v1", "textnorm.rules.v1"],
 		...(options.role === undefined ? {} : { role: options.role }),
 		...(options.resourceIds === undefined
@@ -259,7 +258,6 @@ export async function normalizationProfileFromPack(
 ): Promise<CompiledTextNormProfile> {
 	const profileBinding = requireSingleTaskResourceBinding(pack, {
 		slot: options.slot ?? "normalization",
-		ownerPackage: "@ismail-elkorchi/textnorm",
 		schemaId: "textnorm.profile.v1",
 		role: options.role ?? "profile",
 		...(options.resourceIds === undefined

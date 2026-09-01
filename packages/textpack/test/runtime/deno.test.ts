@@ -11,7 +11,6 @@ Deno.test("textpack final API works in Deno", () => {
 		version: "1.0.0",
 		packageName: "@ismail-elkorchi/textpack-runtime-deno",
 		targets: { languages: ["en"] },
-		engines: { "@ismail-elkorchi/textpack": "^0.1.0" },
 		resources: [{ id: "dataset-deno", kind: "dataset" }],
 		capabilitySlots: [
 			{

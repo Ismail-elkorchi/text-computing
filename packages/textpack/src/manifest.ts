@@ -22,7 +22,6 @@ import {
 	type TextPackResource,
 	type TextPackTargets,
 	type TextPackTaskResourceBinding,
-	type TextPackTaskResourceBindingOwnerPackage,
 	type TextPackTaskResourceBindingRole,
 	textPackCapabilityTiers,
 	textPackModalities,
@@ -134,17 +133,6 @@ const taskResourceBindingRoles = new Set([
 	"projection",
 	"metadata",
 ]);
-const taskResourceBindingOwnerPackages = new Set([
-	"@ismail-elkorchi/textdata",
-	"@ismail-elkorchi/textlex",
-	"@ismail-elkorchi/textkb",
-	"@ismail-elkorchi/textnorm",
-	"@ismail-elkorchi/textsearch",
-	"@ismail-elkorchi/textquality",
-	"@ismail-elkorchi/textcorpus",
-	"@ismail-elkorchi/textparallel",
-]);
-
 function rejectUnknownKeys(
 	record: Readonly<Record<string, unknown>>,
 	allowedKeys: ReadonlySet<string>,
@@ -152,7 +140,7 @@ function rejectUnknownKeys(
 ): void {
 	for (const key of Object.keys(record)) {
 		if (!allowedKeys.has(key)) {
-			throw new TypeError(`${path}.${key} is not a final textpack field.`);
+			throw new TypeError(`${path}.${key} is not a supported textpack field.`);
 		}
 	}
 }
@@ -273,7 +261,7 @@ function validateTargets(value: unknown, path: string): TextPackTargets {
 	for (const key of Object.keys(record)) {
 		if (!targetKeys.includes(key as (typeof targetKeys)[number])) {
 			throw new TypeError(
-				`${path}.${key} is not a final textpack target field.`,
+				`${path}.${key} is not a supported textpack target field.`,
 			);
 		}
 	}
@@ -308,26 +296,9 @@ function validateTargets(value: unknown, path: string): TextPackTargets {
 
 function validateResourceKind(value: unknown, path: string): ResourceKind {
 	if (typeof value !== "string" || !resourceKindSet.has(value)) {
-		throw new TypeError(`${path} must be a final ResourceKind.`);
+		throw new TypeError(`${path} must be a supported ResourceKind.`);
 	}
 	return value as ResourceKind;
-}
-
-function validateStringRecord(
-	value: unknown,
-	path: string,
-): Readonly<Record<string, string>> {
-	const record = requireRecord(value, path);
-	const output: Record<string, string> = {};
-	for (const [key, item] of Object.entries(record).sort(([left], [right]) =>
-		left.localeCompare(right),
-	)) {
-		if (typeof item !== "string" || item.trim().length === 0) {
-			throw new TypeError(`${path}.${key} must be a non-empty string.`);
-		}
-		output[key] = item;
-	}
-	return Object.freeze(output);
 }
 
 function validateDependency(value: unknown, path: string): TextPackDependency {
@@ -819,7 +790,7 @@ function validateTaskResourceBindings(
 			const record = requireRecord(entry, itemPath);
 			rejectUnknownKeys(
 				record,
-				new Set(["role", "resourceId", "schemaId", "required", "ownerPackage"]),
+				new Set(["role", "resourceId", "schemaId", "required"]),
 				itemPath,
 			);
 			if (typeof record.required !== "boolean") {
@@ -835,17 +806,11 @@ function validateTaskResourceBindings(
 				resourceId: readRequiredString(record, "resourceId", itemPath),
 				schemaId: readRequiredString(record, "schemaId", itemPath),
 				required: record.required,
-				ownerPackage: readEnum<TextPackTaskResourceBindingOwnerPackage>(
-					record,
-					"ownerPackage",
-					itemPath,
-					taskResourceBindingOwnerPackages,
-				),
 			};
-			const key = `${binding.role}\u0000${binding.resourceId}\u0000${binding.ownerPackage}`;
+			const key = `${binding.role}\u0000${binding.resourceId}`;
 			if (seen.has(key)) {
 				throw new TypeError(
-					`${itemPath} duplicates binding for role ${binding.role}, resource ${binding.resourceId}, and owner ${binding.ownerPackage}.`,
+					`${itemPath} duplicates binding for role ${binding.role} and resource ${binding.resourceId}.`,
 				);
 			}
 			seen.add(key);
@@ -935,7 +900,7 @@ function validateCapabilities(
 		}
 		const allowed = capabilityLevels[key as keyof typeof capabilityLevels];
 		if (allowed === undefined) {
-			throw new TypeError(`${path}.${key} is not a final capability key.`);
+			throw new TypeError(`${path}.${key} is not a supported capability key.`);
 		}
 		if (
 			typeof item !== "string" ||
@@ -1097,7 +1062,6 @@ export function validateManifest(manifest: unknown): TextPackManifest {
 			"version",
 			"packageName",
 			"targets",
-			"engines",
 			"resources",
 			"components",
 			"artifacts",
@@ -1139,7 +1103,6 @@ export function validateManifest(manifest: unknown): TextPackManifest {
 		version: string;
 		packageName: string;
 		targets: TextPackTargets;
-		engines: Readonly<Record<string, string>>;
 		resources: readonly TextPackResource[];
 		components?: readonly TextPackComponent[];
 		artifacts?: readonly TextPackArtifactDescriptor[];
@@ -1155,7 +1118,6 @@ export function validateManifest(manifest: unknown): TextPackManifest {
 		version: readRequiredString(record, "version", "manifest"),
 		packageName: readRequiredString(record, "packageName", "manifest"),
 		targets: validateTargets(record.targets, "manifest.targets"),
-		engines: validateStringRecord(record.engines, "manifest.engines"),
 		resources,
 		capabilitySlots,
 	};

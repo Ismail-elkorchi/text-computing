@@ -1,4 +1,4 @@
-# Generated Textpack Inventory
+# Generated Capability Pack Inventory
 
 Status: three self-contained source-backed language distributions; forge build units are internal and are not npm packages
 Generated at: `2026-06-12T00:00:00.000Z`

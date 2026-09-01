@@ -1,6 +1,7 @@
 # @ismail-elkorchi/text-computing
 
-Alpha single-entrypoint SDK for deterministic Text Computing NLP workflows.
+Application-facing TypeScript runtime for deployable, inspectable NLP
+workflows.
 
 ```ts
 import { createNodeResourceReader, load } from "@ismail-elkorchi/text-computing/node";
@@ -14,7 +15,13 @@ console.log(doc.searchTokens);
 console.log(doc.evidence.map((item) => item.id));
 ```
 
-`text-computing` is the developer-facing API package. `textpack-*` packages are data-only inputs, and expert users can still import lower-level runtime packages directly. Document analysis returns stable summaries plus evidence; use `doc.toTextDoc()` when you need the expert document object. Use the `/node` entrypoint for package-local files in Node. Browser, Worker, Deno, and Bun deployments can import the root entrypoint and use `createFetchResourceReader()` with served package assets.
+This package is the Text Computing product surface. Capability Packs are
+data-only inputs; they declare resources and artifacts semantically instead of
+depending on the repository package that implements an executor. Document
+analysis returns stable summaries plus evidence; use `doc.toTextDoc()` when you
+need the expert document object. Use the `/node` entrypoint for package-local
+files in Node. Browser, Worker, Deno, and Bun deployments can import the root
+entrypoint and use `createFetchResourceReader()` with served pack assets.
 
 The default `core` preset runs segmentation, normalization, and search analysis.
 The only broader preset is `lookup`:
@@ -70,13 +77,17 @@ const linked = await nlp.document.analyzeDocument(source, {
 ```
 
 Quality analysis is likewise explicit with `tasks: ["quality"]`. Corpus,
-parallel-text, syntax-dataset, and pipeline orchestration APIs live in their
-expert packages rather than this ordinary SDK.
+parallel-text, syntax-dataset, and pipeline orchestration remain expert
+extension APIs rather than ordinary application workflows.
 
-This SDK is suitable for controlled deterministic workflows, but it is not a
-contextual NER, POS-tagging, parsing, or neural inference system. See the
-repository's [evaluation report](../../docs/evaluation.md) before choosing it for
-a production workload.
+The currently shipped Capability Packs and executors are suitable for controlled
+deterministic workflows; they do not yet provide contextual NER, POS tagging,
+parsing, or neural inference. This is a statement about current capabilities,
+not an architectural exclusion. Model-backed capabilities may originate in any
+toolchain, but they become runnable only with a compatible TypeScript executor,
+artifact identity, and held-out task evidence. See the repository's
+[evaluation report](../../docs/evaluation.md) before choosing a production
+workload.
 
 `nlp.support()` reports each slot's availability `status` separately from its linguistic `tier`.
 Use the tier when choosing between a surface baseline, finite lookup, language-specific rules,

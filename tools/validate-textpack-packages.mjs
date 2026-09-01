@@ -387,35 +387,6 @@ const TASK_RUNNABLE_SLOT_STATUSES = new Set([
 	"task-supported",
 	"feature-complete",
 ]);
-const RUNTIME_OWNER_SCHEMA_PREFIXES = [
-	["textdata.", "@ismail-elkorchi/textdata"],
-	["textkb.", "@ismail-elkorchi/textkb"],
-	["textlex.", "@ismail-elkorchi/textlex"],
-	["textnorm.", "@ismail-elkorchi/textnorm"],
-	["textparallel.", "@ismail-elkorchi/textparallel"],
-	["textquality.", "@ismail-elkorchi/textquality"],
-	["textsearch.", "@ismail-elkorchi/textsearch"],
-];
-
-function runtimeOwnerPackageForSlotResource(slotName, resource) {
-	const descriptorSchemaId = resource?.schemaId ?? "";
-	const schemaId =
-		descriptorSchemaId === "textpack.lookup-index.v1" &&
-		typeof resource?.metadata?.indexedResourceSchemaId === "string"
-			? resource.metadata.indexedResourceSchemaId
-			: descriptorSchemaId;
-	if (slotName === "corpus" && schemaId.startsWith("textdata.corpus.")) {
-		return "@ismail-elkorchi/textcorpus";
-	}
-	if (slotName === "parallel" && schemaId.startsWith("textparallel.")) {
-		return "@ismail-elkorchi/textparallel";
-	}
-	for (const [prefix, ownerPackage] of RUNTIME_OWNER_SCHEMA_PREFIXES) {
-		if (schemaId.startsWith(prefix)) return ownerPackage;
-	}
-	return undefined;
-}
-
 function assertCapabilitySlotBindings(
 	packageName,
 	manifestPath,
@@ -423,16 +394,13 @@ function assertCapabilitySlotBindings(
 	resourceById,
 ) {
 	const slotResourceIds = new Set(slot.resourceIds ?? []);
-	const runtimeOwnedResources = [...slotResourceIds]
+	const schemaBoundResources = [...slotResourceIds]
 		.map((resourceId) => resourceById.get(resourceId))
-		.filter(
-			(resource) =>
-				runtimeOwnerPackageForSlotResource(slot.slot, resource) !== undefined,
-		);
+		.filter((resource) => typeof resource?.schemaId === "string");
 	const bindings = slot.bindings ?? [];
 	if (
 		TASK_RUNNABLE_SLOT_STATUSES.has(slot.status) &&
-		runtimeOwnedResources.length > 0
+		schemaBoundResources.length > 0
 	) {
 		expect(
 			bindings.some((binding) => binding.required === true),
@@ -453,19 +421,6 @@ function assertCapabilitySlotBindings(
 			resource.schemaId === binding.schemaId,
 			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} schemaId must match its resource descriptor.`,
 			{ actual: binding.schemaId, expected: resource.schemaId },
-		);
-		const expectedOwner = runtimeOwnerPackageForSlotResource(
-			slot.slot,
-			resource,
-		);
-		expect(
-			expectedOwner !== undefined,
-			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} has no runtime owner for schema ${resource.schemaId}.`,
-		);
-		expect(
-			binding.ownerPackage === expectedOwner,
-			`${manifestPath} capability slot ${slot.slot} binding ${binding.resourceId} ownerPackage must match canonical schema ownership.`,
-			{ actual: binding.ownerPackage, expected: expectedOwner },
 		);
 	}
 	const requiredFileBackedBindings = bindings.filter((binding) => {
@@ -503,7 +458,7 @@ function assertFlattenedDistribution(packageName, manifest, packageJson) {
 	const expectedLanguage = DISTRIBUTION_LANGUAGE_BY_PACKAGE.get(packageName);
 	expect(
 		expectedLanguage !== undefined,
-		`Unexpected generated textpack distribution ${packageName}.`,
+		`Unexpected generated Capability Pack distribution ${packageName}.`,
 	);
 	expect(
 		JSON.stringify(manifest.targets?.languages ?? []) ===
@@ -698,13 +653,13 @@ for (const packDir of packDirs) {
 	assertFlattenedDistribution(packageJson.name, manifest, packageJson);
 	expect(
 		readmeText.includes(
-			"This package is a generated data package. It exports structural textpack data only.",
+			"This package is a generated, data-only Capability Pack in the textpack format.",
 		),
-		`${packageJson.name} README must declare the generated textpack data-only boundary.`,
+		`${packageJson.name} README must declare the Capability Pack data-only boundary.`,
 	);
 	expect(
 		readmeText.includes(
-			"Use `@ismail-elkorchi/text-computing` for developer-facing NLP task APIs.",
+			"Use `@ismail-elkorchi/text-computing` for application-facing NLP task APIs.",
 		),
 		`${packageJson.name} README must point task APIs to @ismail-elkorchi/text-computing.`,
 	);
@@ -860,7 +815,7 @@ for (const packDir of packDirs) {
 	);
 	expect(
 		packageJson.dependencies?.["@ismail-elkorchi/textpack"] === "0.1.0",
-		`${packageJson.name} must depend on final textpack.`,
+		`${packageJson.name} must depend on the textpack contract package.`,
 	);
 	assertPackScripts(packageJson);
 	expect(

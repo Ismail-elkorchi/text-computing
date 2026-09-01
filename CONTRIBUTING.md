@@ -1,9 +1,14 @@
 # Contributing
 
-Thanks for helping improve text-computing. This repository is a TypeScript-first workspace.
+Thanks for helping improve Text Computing. The repository is organized around
+three concepts: the Text Computing runtime, data-only Capability Packs, and the
+Textpack Forge supply chain.
 
-Workspace package sources live under `packages/*`. Generated resource packages
-live under `packages/textpacks/*` and are produced by `tools/textpack-forge`.
+Application-facing runtime work belongs in `packages/text-computing/`.
+Capability Pack contracts and generated packs live in `packages/textpack/` and
+`packages/textpacks/*`. Generated outputs are produced by
+`tools/textpack-forge`; other `packages/*` workspaces are implementation modules
+and expert extension APIs.
 
 **Prerequisites**
 - Node.js 24+
@@ -28,7 +33,7 @@ npm run schema:validate
 ```
 
 Validates repository-level schemas against their declared JSON Schema drafts,
-validates generated textpack packages, validates package schema registries such
+validates generated Capability Packs, validates engine schema registries such
 as `packages/textfacts/schemas/*.schema.json`, and enforces I-JSON safety.
 
 **Multilingual NLP evaluation**
@@ -50,17 +55,20 @@ exports (`eng.tsv.bz2`, `fra.tsv.bz2`, and `ara.tsv.bz2`):
 node tools/build-external-nlp-evaluation.mjs <download-directory> fixtures/nlp-benchmarks/external-tatoeba-v1.json
 ```
 
-**Documentation boundaries**
+**Architecture and documentation boundaries**
+
+- `docs/specs/text-computing-platform.md` is the normative product boundary.
 - `docs/specs/`, `docs/rfcs/`, and `docs/decisions/` contain repository-level public contracts, proposals, and decision records.
 - `fixtures/` and `schemas/` contain repository-level validation material.
 - `packages/*/README.md` and `packages/*/docs/` contain package-level usage and reference documentation.
-- `packages/textpacks/*` packages are generated data packages. Do not add handwritten runtime facades, loaders, processors, or task engines there.
-- `@ismail-elkorchi/text-computing` is the ordinary developer-facing NLP entrypoint. Runtime packages remain expert engines.
+- `packages/textpacks/*` packages are generated, data-only Capability Packs. Do not add handwritten runtime facades, loaders, processors, task engines, or network behavior there.
+- `@ismail-elkorchi/text-computing` is the application-facing NLP entrypoint. Engine workspaces remain expert APIs.
+- Capability bindings identify slots, roles, schemas, and resources. They must
+  not encode the npm package that implements an executor.
 
-**Formatting and linting (Biome)**
+**Linting (Biome)**
 ```sh
 npm run lint
-npm run format
 ```
 
 **Static checks**
@@ -79,15 +87,17 @@ That script downloads the pinned Unicode data files (17.0.0) and regenerates com
 - `packages/textfacts/src/unicode/generated` (UAX #29 + emoji + Indic)
 - `packages/textfacts/src/normalize/generated` (UAX #15 normalization data)
 
-**Updating generated textpacks**
+**Updating Capability Packs**
 ```sh
 npm run forge:build
 npm run forge:verify
 ```
 
-The forge owns generated textpack package contents, reports, source evidence,
+The forge owns generated Capability Pack contents, reports, source evidence,
 and drift checks. Edit forge specs, source policy, schemas, or transforms
-instead of manually changing generated package resources.
+instead of manually changing generated resources. Deployable artifacts created
+by external toolchains enter through the same explicit snapshot, provenance,
+license, evaluation, and integrity gates.
 
 **Code style**
 - ESM only

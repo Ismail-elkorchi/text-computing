@@ -1,9 +1,9 @@
-# Textpack capability tiers
+# Capability Pack tiers
 
 Capability availability and linguistic depth are independent manifest facts.
 `capabilitySlots[].status` describes whether a slot is present and runnable;
 `capabilitySlots[].tier` describes the strongest behavior actually executed by
-the bound runtime adapter.
+a schema-compatible runtime adapter.
 
 The tiers are:
 
@@ -23,7 +23,9 @@ The tiers are:
 The order is a declaration of increasing inference depth, not a claim that a
 higher tier is always more accurate. Packs must declare the lowest tier that
 fully describes ordinary runtime behavior. Merely shipping tables, profiles,
-gold cases, or model metadata never raises a tier.
+gold cases, or model metadata never raises a tier. The toolchain that produced a
+model does not affect its tier; runtime execution and tied evaluation evidence
+do.
 
 Examples:
 

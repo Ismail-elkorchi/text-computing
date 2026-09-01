@@ -158,7 +158,7 @@ function readModuleCandidate(module: unknown): PackModule {
 			? defaultValue
 			: module;
 	if (!isPlainRecord(candidate)) {
-		throw new TypeError("loadPack requires final textpack module exports.");
+		throw new TypeError("loadPack requires standard textpack module exports.");
 	}
 	if (!hasOwn(candidate, "manifest") || !hasOwn(candidate, "resources")) {
 		throw new TypeError("loadPack requires manifest and resources exports.");

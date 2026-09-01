@@ -44,15 +44,6 @@ export interface TextPackLike {
 				readonly resourceId: string;
 				readonly schemaId: string;
 				readonly required: boolean;
-				readonly ownerPackage:
-					| "@ismail-elkorchi/textdata"
-					| "@ismail-elkorchi/textlex"
-					| "@ismail-elkorchi/textkb"
-					| "@ismail-elkorchi/textnorm"
-					| "@ismail-elkorchi/textsearch"
-					| "@ismail-elkorchi/textquality"
-					| "@ismail-elkorchi/textcorpus"
-					| "@ismail-elkorchi/textparallel";
 			}[];
 		}[];
 		readonly gapNotes?: readonly {
@@ -239,7 +230,6 @@ function syntaxResourceId(
 ): string {
 	return requireSingleCapabilityResourceBinding(pack, {
 		slot: slot ?? "syntax",
-		ownerPackage: "@ismail-elkorchi/textdata",
 		schemaId: SYNTAX_SCHEMA_ID,
 		role: "primary",
 		...(explicit === undefined ? {} : { resourceId: explicit }),
@@ -272,7 +262,6 @@ function qualityResourceId(
 ): string {
 	return requireSingleCapabilityResourceBinding(pack, {
 		slot: slot ?? "syntax",
-		ownerPackage: "@ismail-elkorchi/textquality",
 		schemaId: QUALITY_EVIDENCE_SCHEMA_ID,
 		role: "evidence",
 		...(explicit === undefined ? {} : { resourceId: explicit }),

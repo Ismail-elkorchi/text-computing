@@ -3,8 +3,8 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"packageDir": "packages/textpacks/textpack-ar",
-	"name": "Arabic Developer Textpack",
-	"description": "Self-contained Arabic resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"name": "Arabic Capability Pack",
+	"description": "Audited Arabic capabilities for deployable document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
 	"publishable": true,
 	"publishabilityEvidence": {
 		"productionGradeSourceCoverage": "Self-contained Arabic distribution with foundation, core, normalization, CAMeL lexicon/morphology/segmentation, Arabic WordNet and Wikidata KB, search, and quality resources.",

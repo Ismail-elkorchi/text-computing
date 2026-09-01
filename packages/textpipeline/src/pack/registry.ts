@@ -90,7 +90,7 @@ function normalizeEntry(entry: PipelineResourceEntry): PipelineResourceEntry {
 	if (!resourceKinds.includes(entry.kind)) {
 		fail(
 			"TEXTPIPELINE_INVALID_RESOURCE",
-			"resource kind must be a final ResourceKind.",
+			"resource kind must be a supported ResourceKind.",
 		);
 	}
 	const fingerprint =

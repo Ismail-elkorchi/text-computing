@@ -1,11 +1,14 @@
-# `@ismail-elkorchi/textpack`
+# Capability Packs
 
-Resource-pack manifests, loading, composition, capabilities, and resource handles.
+`@ismail-elkorchi/textpack` is the structural TypeScript contract for
+Capability Pack manifests, loading, composition, capability claims, and
+resource handles.
 
-`textpack` is an independent root package. It does not execute NLP engines, read files, fetch
-network resources, discover packs implicitly, or apply hidden canonicalization.
+The contract does not execute NLP tasks, read files, discover packs implicitly,
+or apply hidden canonicalization. Readers are always caller-provided, and pack
+loading performs no network or filesystem I/O.
 
-## Final API
+## Contract API
 
 ```ts
 import {
@@ -21,18 +24,23 @@ import {
 } from "@ismail-elkorchi/textpack";
 ```
 
-The final manifest shape is described by
+The manifest schema is described by
 [`../../schemas/textpack-manifest.schema.json`](../../schemas/textpack-manifest.schema.json).
 
 Every capability slot declares both `status` and `tier`. Status reports availability; tier reports
-the strongest behavior the bound runtime actually executes. A shipped table is `resource-only`
-until an adapter performs the named task, finite keyed matching is `lookup`, and a trained model is
-`model-backed` only when that model runs. The complete contract is documented in
+the strongest behavior a schema-compatible runtime actually executes. A shipped table is
+`resource-only` until an adapter performs the named task, finite keyed matching is `lookup`, and a
+trained model is `model-backed` only when that exact artifact runs. The complete contract is documented in
 [`../../docs/specs/textpack-capability-tiers.md`](../../docs/specs/textpack-capability-tiers.md).
 The `capabilities(pack)` summary includes only runnable slots; profile and artifact metadata cannot
 silently raise an executable capability level.
 
-## Pack Modules
+Bindings identify a capability slot, resource role, schema, resource id, and
+whether the resource is required. They deliberately contain no implementation
+package owner or package-engine map. Runtime compatibility comes from semantic
+contracts, so pack identity remains stable when implementation modules move.
+
+## Pack modules
 
 Every `textpack-*` package exports:
 
@@ -79,10 +87,10 @@ Exact and KB-fuzzy callers must supply keys already normalized as `NFKC-casefold
 lexicon prefix, suffix, and fuzzy pattern queries retain their raw-text semantics. Task adapters own
 normalization so `textpack` stays independent of Unicode policy packages.
 
-## Descriptor Queries And Materialization
+## Descriptor queries and materialization
 
 `textpack` queries descriptors and materializes resources. It does not own lexicon, KB, corpus,
-morphology, syntax, search, quality, or parallel behavior. Runtime packages interpret generated
+morphology, syntax, search, quality, parallel, or model execution. Executors interpret generated
 manifest `capabilitySlots[].bindings` for task selection, then use `textpack` only to open the
 selected structural resources:
 
@@ -94,8 +102,8 @@ const normalizationProfile = await openResourceJson(pack, profiles[0].id, reader
 const normalizationRules = await openResourceTable(pack, "en-normalization-rules", reader);
 ```
 
-Runtime packages decide how to interpret canonical resources. The SDK and runtime adapters must not
-use schema-first or package-specific ID heuristics to decide which task resource to run. `textpack`
+Executors decide how to interpret canonical resources. The SDK and adapters must not
+use a schema alone or package-specific ID heuristics to decide which task resource to run. `textpack`
 only validates manifests, loads modules, composes resource maps, queries descriptors, and materializes
 text/JSON/table payloads from caller-provided resource values. `createFetchResourceReader()` is a
 runtime-neutral helper for file-backed generated resources whose descriptors include `packageRoot`
@@ -123,5 +131,6 @@ choose an explicit conflict policy when shadowing is intended.
 ## Boundary
 
 Pack resources are caller-provided values. They may be strings, bytes, JSON values, typed objects, or
-opaque resource handles. `textpack` validates the manifest and resource-map consistency; higher
-packages decide how to interpret resource payloads.
+opaque resource handles. `textpack` validates the manifest and resource-map consistency; runtime
+executors decide how to interpret resource payloads. Packs may describe artifacts produced by any
+upstream toolchain, but a descriptor alone never makes a task executable.

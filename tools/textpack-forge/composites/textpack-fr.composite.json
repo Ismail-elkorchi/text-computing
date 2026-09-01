@@ -3,8 +3,8 @@
 	"mode": "source-backed",
 	"packageName": "@ismail-elkorchi/textpack-fr",
 	"packageDir": "packages/textpacks/textpack-fr",
-	"name": "French Developer Textpack",
-	"description": "Self-contained French resources for ordinary document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"name": "French Capability Pack",
+	"description": "Audited French capabilities for deployable document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
 	"policySurface": "license-inclusive",
 	"publishable": true,
 	"publishabilityEvidence": {

@@ -99,7 +99,6 @@ test("materializes bounded textpack corpus rows as documents and TextCorpus", as
 							resourceId: "fixture-corpus-rows",
 							schemaId: "textdata.corpus.rows.v1",
 							required: true,
-							ownerPackage: "@ismail-elkorchi/textcorpus" as const,
 						},
 					],
 				},
