@@ -5,6 +5,8 @@
 		"source:camel:morph-msa-lrec-coling-2024",
 		"source:esdb:wordlist-diff-en-default-2026-02-25",
 		"source:fr:lexique-383",
+		"source:huggingface:xenova-bert-multilingual-ner",
+		"source:aqmar:arabic-ner-1.0",
 		"source:iana:language-subtag-registry",
 		"source:scowl:v2-rel-2026-02-25",
 		"source:tatoeba:weekly-2026-06-06",
@@ -24,6 +26,8 @@
 		"snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
 		"snapshot:source:esdb:wordlist-diff-en-default:rel-2026.02.25",
 		"snapshot:source:fr:lexique-383:2019-06-04",
+		"snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+		"snapshot:source:aqmar:arabic-ner-1.0:2012-04-09",
 		"snapshot:source:iana:language-subtag-registry:2026-05-05",
 		"snapshot:source:scowl:v2-rel-2026.02.25",
 		"snapshot:source:tatoeba:weekly-2026-06-06:2026-06-06",
@@ -498,7 +502,7 @@
 							"segmentation": "profile"
 						},
 						"notes": [
-							"The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as expert morphology data and are not presented as executed dictionary segmentation."
+							"The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as morphology data and are not presented as executed dictionary segmentation."
 						]
 					},
 					{
@@ -4903,6 +4907,166 @@
 				],
 				"license": "CC-BY-4.0",
 				"citations": ["Arabic WordNet 4.1.0."]
+			}
+		},
+		{
+			"packageName": "@ismail-elkorchi/textpack-ner-ar-sa",
+			"description": "Audited Arabic model-backed named entity recognition deployment slice.",
+			"publishable": true,
+			"publishabilityEvidence": {
+				"productionGradeSourceCoverage": "Pinned quantized multilingual BERT ONNX artifact, exact WordPiece vocabulary and preprocessing contract, explicit artifact retrieval metadata, and deterministic held-out AQMAR Arabic NER evaluation.",
+				"auditedLicense": "The model and AQMAR source rows are approved; the share-alike evaluation source is isolated by package naming and the artifact is fetched explicitly rather than shipped in npm.",
+				"declaredScope": "Modern Standard Arabic PER, ORG, LOC, and DATE named entity recognition using an explicitly materialized ONNX model. Held-out task evidence covers exact PER, ORG, and LOC spans on Arabic Wikipedia; dialectal and domain-specific fitness is not claimed.",
+				"conformanceEvidence": ["eval:ner-ar:aqmar-exact-span-f1"],
+				"generatedReports": [
+					"LICENSE.generated.md",
+					"NOTICE.generated.md",
+					"SOURCES.generated.json",
+					"ATTRIBUTION.generated.md",
+					"COVERAGE.generated.json",
+					"EVALUATION.generated.json",
+					"QUALITY.generated.json"
+				]
+			},
+			"packClass": "model",
+			"supportLevel": "task-supported",
+			"sourceIds": [
+				"source:huggingface:xenova-bert-multilingual-ner",
+				"source:aqmar:arabic-ner-1.0"
+			],
+			"snapshotIds": [
+				"snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+				"snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+			],
+			"resourceSpecIds": ["resource-spec:textpack-ner-ar-sa:model-backed-ner"],
+			"manifest": {
+				"schemaVersion": "1",
+				"id": "pack:ner-ar-sa",
+				"name": "Arabic Model-backed NER Pack",
+				"version": "0.1.0",
+				"packageName": "@ismail-elkorchi/textpack-ner-ar-sa",
+				"targets": {
+					"languages": ["ar"],
+					"scripts": ["Arab"],
+					"modalities": ["typed"]
+				},
+				"resources": [
+					{
+						"id": "ner-ar-model",
+						"kind": "statistical-model",
+						"path": "resources/ner-ar.model.json",
+						"format": "json",
+						"license": "AFL-3.0",
+						"citations": [
+							"Davlan BERT multilingual cased NER HRL model and Xenova ONNX conversion."
+						],
+						"schemaId": "text-computing.ner-model.v1"
+					},
+					{
+						"id": "ner-ar-vocabulary",
+						"kind": "lexicon",
+						"path": "resources/ner-ar.vocab.txt",
+						"format": "text/plain",
+						"license": "AFL-3.0",
+						"citations": ["Multilingual BERT cased WordPiece vocabulary."],
+						"schemaId": "text-computing.wordpiece-vocabulary.v1"
+					},
+					{
+						"id": "ner-ar-evaluation",
+						"kind": "quality-profile",
+						"path": "resources/ner-ar.evaluation.json",
+						"format": "json",
+						"license": "AFL-3.0 AND CC-BY-SA-3.0",
+						"citations": [
+							"AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
+						],
+						"schemaId": "text-computing.ner-evaluation.v1"
+					},
+					{
+						"id": "ner-ar-quality-profile",
+						"kind": "quality-profile",
+						"path": "resources/ner-ar.quality-profile.json",
+						"format": "json",
+						"license": "AFL-3.0 AND CC-BY-SA-3.0",
+						"citations": [
+							"AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
+						],
+						"schemaId": "textquality.profile.v1"
+					}
+				],
+				"artifacts": [
+					{
+						"artifactId": "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized",
+						"sourceIds": ["source:huggingface:xenova-bert-multilingual-ner"],
+						"version": "263e82c06569c8c2ac46238a7ae5107598934234",
+						"profile": "full",
+						"sizeBytes": 178495423,
+						"mediaType": "application/onnx",
+						"checksum": {
+							"algorithm": "sha256",
+							"value": "5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9"
+						},
+						"licenseExpression": "AFL-3.0",
+						"redistributionPolicy": "redistributable-with-attribution",
+						"retrieval": {
+							"kind": "huggingface",
+							"uri": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/onnx/model_quantized.onnx",
+							"instructions": "Fetch explicitly and verify the declared byte length and SHA-256 checksum before inference."
+						},
+						"cacheKey": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9",
+						"expectedFiles": [
+							{
+								"path": "model_quantized.onnx",
+								"sizeBytes": 178495423,
+								"checksum": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9"
+							}
+						]
+					}
+				],
+				"capabilitySlots": [
+					{
+						"slot": "entities",
+						"status": "task-supported",
+						"tier": "model-backed",
+						"resourceIds": ["ner-ar-model", "ner-ar-vocabulary"],
+						"artifactIds": [
+							"artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized"
+						],
+						"bindings": [
+							{
+								"role": "primary",
+								"resourceId": "ner-ar-model",
+								"schemaId": "text-computing.ner-model.v1",
+								"required": true
+							},
+							{
+								"role": "table",
+								"resourceId": "ner-ar-vocabulary",
+								"schemaId": "text-computing.wordpiece-vocabulary.v1",
+								"required": true
+							}
+						],
+						"capabilities": { "extraction": "statistical" },
+						"notes": [
+							"Runs quantized ONNX token classification through an explicit application-supplied artifact reader and executor.",
+							"Held-out AQMAR exact-span F1 is gated at 0.50; broader Arabic domains and dialects are not claimed."
+						]
+					},
+					{
+						"slot": "quality",
+						"status": "task-supported",
+						"tier": "baseline",
+						"resourceIds": ["ner-ar-evaluation", "ner-ar-quality-profile"],
+						"notes": [
+							"Pinned task evidence identifies the exact artifact, held-out split, sample, metric, and domain limitations."
+						]
+					}
+				],
+				"license": "AFL-3.0 AND CC-BY-SA-3.0",
+				"citations": [
+					"Davlan BERT multilingual cased NER HRL model and Xenova ONNX conversion.",
+					"AQMAR Arabic Wikipedia Named Entity Corpus 1.0."
+				]
 			}
 		},
 		{

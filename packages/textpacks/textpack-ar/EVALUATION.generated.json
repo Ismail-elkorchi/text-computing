@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
     "corpus is planned in this source-backed self-contained language distribution.",
@@ -1053,6 +1053,72 @@
       "tier": "resource-only"
     },
     {
+      "capabilitySlot": "entities",
+      "dataset": {
+        "languages": [
+          "ar"
+        ],
+        "modalities": [
+          "typed"
+        ],
+        "scripts": [
+          "Arab"
+        ],
+        "snapshotIds": [
+          "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+          "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+        ],
+        "sourceIds": [
+          "source:huggingface:xenova-bert-multilingual-ner",
+          "source:aqmar:arabic-ner-1.0"
+        ],
+        "split": "held-out test"
+      },
+      "evaluationKind": "task-accuracy",
+      "evidence": {
+        "artifactId": "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized",
+        "modelId": "Davlan/bert-base-multilingual-cased-ner-hrl",
+        "observations": {
+          "artifactChecksum": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9",
+          "dataset": "AQMAR official test feature split",
+          "datasetChecksum": "sha256:42477fe9221266bd3b5d994e0149c00cfc58654d019a1e7e7215c47452107c3b",
+          "precision": 0.505263,
+          "recall": 0.533333,
+          "spanMatching": "exact-utf16-span-and-type",
+          "targetLabels": [
+            "LOC",
+            "ORG",
+            "PER"
+          ]
+        },
+        "resourceIds": [
+          "ner-ar-model",
+          "ner-ar-evaluation"
+        ],
+        "sampleSize": 100
+      },
+      "limitations": [
+        "Evaluation is scoped to exact PER, ORG, and LOC spans; DATE is not scored because AQMAR does not provide a compatible date annotation policy.",
+        "AQMAR is Arabic Wikipedia; the score does not establish domain-specific or dialectal Arabic fitness.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ner-ar-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar."
+      ],
+      "metric": {
+        "name": "exactSpanMicroF1",
+        "operator": "gte",
+        "threshold": 0.5,
+        "unit": "ratio",
+        "value": 0.518919
+      },
+      "packageName": "@ismail-elkorchi/textpack-ar",
+      "pipelineId": "model-backed-ner",
+      "recordId": "eval:ner-ar:aqmar-exact-span-f1:distribution:textpack-ar",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "result": "pass",
+      "schemaVersion": "1",
+      "taskType": "entities.recognize",
+      "tier": "model-backed"
+    },
+    {
       "capabilitySlot": "unicode-profile",
       "dataset": {
         "modalities": [
@@ -1577,14 +1643,15 @@
     "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
     "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
     "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
-    "resource-spec:textpack-ar-search:arabic-search-profile"
+    "resource-spec:textpack-ar-search:arabic-search-profile",
+    "resource-spec:textpack-ner-ar-sa:model-backed-ner"
   ],
   "schemaVersion": "1",
   "summary": {
     "failCount": 0,
     "notApplicableCount": 0,
-    "passCount": 33,
-    "recordCount": 33,
+    "passCount": 34,
+    "recordCount": 34,
     "status": "passed",
     "warningCount": 0
   }

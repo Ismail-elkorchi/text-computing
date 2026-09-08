@@ -1,8 +1,8 @@
 {
   "fileDigests": [
     {
-      "byteLength": 2244,
-      "checksum": "sha256:a52fa069c3d635317feeb0fb876da655f018898af497c64863c2c7cb52933098",
+      "byteLength": 3154,
+      "checksum": "sha256:b69f4b9fa2d96c4c9de0fc69d42aa6e7ae15548f277beb479c6467e6a6f5978e",
       "path": "ATTRIBUTION.generated.md"
     },
     {
@@ -11,19 +11,24 @@
       "path": "CHANGELOG.md"
     },
     {
-      "byteLength": 55044,
-      "checksum": "sha256:cd6da4a9628f22f607ccf39ea4559b52d60a0027d7103ea678834b190e57765c",
+      "byteLength": 59208,
+      "checksum": "sha256:679f34024e1f50e51b82c31a96d934ee1bf583a430c60000ee5450dc91fd3e43",
       "path": "COVERAGE.generated.json"
     },
     {
-      "byteLength": 48777,
-      "checksum": "sha256:232085ddad07f62f2f358daa733d27c58f1f0bef227aa5239d00917891ec7c65",
+      "byteLength": 51256,
+      "checksum": "sha256:71372c9cb8622dee750cf5d7ff54ac3585dc04b04a2972097817a895a96a68d2",
       "path": "EVALUATION.generated.json"
     },
     {
-      "byteLength": 12824,
-      "checksum": "sha256:90d5e75b0e77b45bd0c449e5351e1602e3028806d475063002d5cf7a0a8a5d0c",
+      "byteLength": 35100,
+      "checksum": "sha256:93ccf3cae575fa8fb04b62fecda6df298ca91673663e1a6f4c143e62489ae9ce",
       "path": "LICENSE.generated.md"
+    },
+    {
+      "byteLength": 21306,
+      "checksum": "sha256:147b92d19ba9287e7dbba606a6c0306799eda1abd5d2294956937fb0acfb90e1",
+      "path": "licenses/source-aqmar-arabic-ner-1.0/LICENSE"
     },
     {
       "byteLength": 1087,
@@ -46,28 +51,28 @@
       "path": "licenses/source-wordnet-arabic-v4.1.0/NOTICE"
     },
     {
-      "byteLength": 2632,
-      "checksum": "sha256:3a088675eb1af0e33a259539a0206d2738312a9316f527264b270716c8ec3bad",
+      "byteLength": 3426,
+      "checksum": "sha256:d950e975ffb24cfb5237b1a02d35da248153f519798646dd33e64a73dd0539f2",
       "path": "NOTICE.generated.md"
     },
     {
-      "byteLength": 41424,
-      "checksum": "sha256:22b786f8e8f54deb546462799d59a770c282a2fdcf149868556f0097eba1b877",
+      "byteLength": 45622,
+      "checksum": "sha256:3206dfc1d1ddc2c6acad63767f33c6e5f543c9f0eabae51719b79d299e52df59",
       "path": "pack.manifest.json"
     },
     {
-      "byteLength": 3535,
-      "checksum": "sha256:508e91b60edda96f4f12946de3bbd5fe5a56ebcf722d238c55cddfd109c99fcc",
+      "byteLength": 3626,
+      "checksum": "sha256:a76b4f105cc2814b132453aaa0102a4c8f9883395f42bba156544bef4842e870",
       "path": "package.json"
     },
     {
-      "byteLength": 51923,
-      "checksum": "sha256:1349a5ab452bdfc821d9abd2a122c1284237575fbe83c12659e439757452a2e3",
+      "byteLength": 56043,
+      "checksum": "sha256:a7d024ad57fc82b6a1988cb775c18217100d933082113baddad69fa9539f9b8b",
       "path": "QUALITY.generated.json"
     },
     {
-      "byteLength": 3644,
-      "checksum": "sha256:84119553964c89e9fd32eeebcef96ad19415c169782b66f5e19867f9017ab1b0",
+      "byteLength": 3843,
+      "checksum": "sha256:d0669619fc339878d13485854a51840acf05c6054f47609c1272d60b5fcae046",
       "path": "README.md"
     },
     {
@@ -216,6 +221,26 @@
       "path": "resources/cldr-48.script-data.tsv"
     },
     {
+      "byteLength": 1694,
+      "checksum": "sha256:729c1225d4b611540158374c4a46f3eb981b00ff32440d5695b26ab9d3fb376c",
+      "path": "resources/ner-ar.evaluation.json"
+    },
+    {
+      "byteLength": 858,
+      "checksum": "sha256:6a3e4dafae026116f2551e5c98f2241f4c961cd60ac3f7578431b92e46c50262",
+      "path": "resources/ner-ar.model.json"
+    },
+    {
+      "byteLength": 842,
+      "checksum": "sha256:183bd6b02819364ac6f3f6b4f45bf87a330cdb65bbda57c7646335722a3b0b14",
+      "path": "resources/ner-ar.quality-profile.json"
+    },
+    {
+      "byteLength": 729473,
+      "checksum": "sha256:c8cf2513bd655536074daa95c12874a598bfe6e3ac2f97601601ac4cfa8e5506",
+      "path": "resources/ner-ar.vocab.txt.gz.b64"
+    },
+    {
       "byteLength": 10002,
       "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
       "path": "resources/unicode-17.blocks.tsv"
@@ -306,8 +331,8 @@
       "path": "resources/wordnet-ar.synsets.tsv.gz.b64"
     },
     {
-      "byteLength": 74341,
-      "checksum": "sha256:04fe2c4e3cab9cfa597b9aa2cfa87903d2a302947f542607d096e22fbc011b90",
+      "byteLength": 86238,
+      "checksum": "sha256:fd5ddf76532b27d1a97cf6e93e2427fa46e5fe406dad3b32a46601fca9d43781",
       "path": "SOURCES.generated.json"
     },
     {
@@ -316,18 +341,18 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 41680,
-      "checksum": "sha256:46f3b091ffbd7ea0a484210c0d95f5d6d7512aff566fbc8784fdf225e421c025",
+      "byteLength": 45792,
+      "checksum": "sha256:eda78668c4dc53fafce34d16fab6aeb4479a662129925d26c5194a3231a5962f",
       "path": "src/manifest.ts"
     },
     {
-      "byteLength": 249,
-      "checksum": "sha256:39a35bddeb71de2bac29c76f475433c3513822bd8469a0129ce4f086ab7c49ae",
+      "byteLength": 193,
+      "checksum": "sha256:6c2e67f3db1e7ef17203ed30d44687b0f6d9825cfdd8cc660117044d813961ed",
       "path": "src/pack.ts"
     },
     {
-      "byteLength": 21681,
-      "checksum": "sha256:6245396de42e6312127fcc98249b462683ddee1dc06c473a0eee4afae7e9f961",
+      "byteLength": 23181,
+      "checksum": "sha256:71d8de50653f7c0ffbb77e6bceb3e192bf7bd2074992c337605ade999fa53302",
       "path": "src/resources.ts"
     },
     {
@@ -347,7 +372,7 @@
     }
   ],
   "forgeVersion": "0.1.0",
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "generatedFiles": [
     "ATTRIBUTION.generated.md",
@@ -355,6 +380,7 @@
     "COVERAGE.generated.json",
     "EVALUATION.generated.json",
     "LICENSE.generated.md",
+    "licenses/source-aqmar-arabic-ner-1.0/LICENSE",
     "licenses/source-camel-morph-msa-lrec-coling-2024/LICENSE",
     "licenses/source-iana-language-subtag-registry/LICENSE.html",
     "licenses/source-wordnet-arabic-v4.1.0/LICENSE",
@@ -393,6 +419,10 @@
     "resources/cldr-48.likely-subtags.tsv.gz.b64",
     "resources/cldr-48.locale-aliases.tsv",
     "resources/cldr-48.script-data.tsv",
+    "resources/ner-ar.evaluation.json",
+    "resources/ner-ar.model.json",
+    "resources/ner-ar.quality-profile.json",
+    "resources/ner-ar.vocab.txt.gz.b64",
     "resources/unicode-17.blocks.tsv",
     "resources/unicode-17.core.summary.json",
     "resources/unicode-17.property-value-aliases.tsv",
@@ -422,13 +452,13 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
+  "lockfileChecksum": "sha256:0ef2740736c1bbb8b502d47c8521d5778b98a5377cc24fd19f8cd544323961f2",
   "mode": "source-backed",
-  "outputChecksum": "sha256:09ee875f85ff9584e0ff5026acf6a050876466137f5904b2af5db17f0b96145f",
+  "outputChecksum": "sha256:20a75f501ff9b1402389b89cf320bedd071712ec2ce5f013806534c858502974",
   "packSpecPath": "tools/textpack-forge/composites/textpack-ar.composite.json",
   "packageName": "@ismail-elkorchi/textpack-ar",
   "packageVersion": "0.1.0",
-  "policySurface": "default",
+  "policySurface": "license-inclusive",
   "publishability": {
     "publishable": true,
     "reasons": [],

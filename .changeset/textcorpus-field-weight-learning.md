@@ -1,5 +1,5 @@
 ---
-"@ismail-elkorchi/textcorpus": minor
+"@ismail-elkorchi/text-computing": minor
 ---
 
 Add deterministic BM25F field-weight learning over caller-provided qrels and finite search spaces.

@@ -16,10 +16,8 @@ function sortJson(value) {
 }
 
 export function manifestModule(manifest) {
-	return `${generatedHeader()}import type { TextPackManifest } from "@ismail-elkorchi/textpack";
-
-// biome-ignore format: generated manifest preserves the canonical JSON projection.
-export const manifest: TextPackManifest = ${jsonFile(manifest).trimEnd()} as const;
+	return `${generatedHeader()}// biome-ignore format: generated manifest preserves the canonical JSON projection.
+export const manifest = ${jsonFile(manifest).trimEnd()} as const;
 `;
 }
 
@@ -35,12 +33,10 @@ export default pack;
 }
 
 export function packModule() {
-	return `${generatedHeader()}import { createPack } from "@ismail-elkorchi/textpack";
-
-import { manifest } from "./manifest.js";
+	return `${generatedHeader()}import { manifest } from "./manifest.js";
 import { resources } from "./resources.js";
 
-export const pack = createPack(manifest, resources);
+export const pack = { manifest, resources } as const;
 `;
 }
 
@@ -74,10 +70,8 @@ export function resourcesModule(pack) {
 		)
 		.join("\n");
 	const body = entries.length === 0 ? "" : `\n${entries}\n`;
-	return `${generatedHeader()}import type { PackResourceMap } from "@ismail-elkorchi/textpack";
-
-// biome-ignore format: generated resource map preserves deterministic payload ordering.
-export const resources: PackResourceMap = {${body}} as const;
+	return `${generatedHeader()}// biome-ignore format: generated resource map preserves deterministic payload ordering.
+export const resources = {${body}} as const;
 `;
 }
 
@@ -387,9 +381,6 @@ function concretePackageJson(pack) {
 			"test:all":
 				"npm run -s build && node test/smoke.mjs && npm run -s check:pack",
 		},
-		dependencies: {
-			"@ismail-elkorchi/textpack": "0.1.0",
-		},
 		license: packageJsonLicenseField(pack),
 		files: [
 			"dist",
@@ -457,7 +448,7 @@ function concreteReadme(pack) {
 ${summary}
 
 This package is a generated, data-only Capability Pack in the textpack format.
-Use \`@ismail-elkorchi/text-computing\` for application-facing NLP task APIs.
+Use \`@ismail-elkorchi/text-computing\` and its public modules to work with these resources.
 It is generated from pinned source snapshots by \`${GENERATED_BY}\`.
 ${isDistributionPack(pack) ? "All resources are included directly; installing this package does not install component packs.\n" : ""}
 
@@ -625,6 +616,7 @@ async function licenseReportMarkdown(pack, context) {
 	const localLicenseTexts = [];
 	for (const file of pack.licenseEvidenceFiles) {
 		const text = await readFile(path.join(ROOT, file.sourcePath), "utf8");
+		const markdownText = text.replace(/[\t ]+$/gmu, "");
 		localLicenseTexts.push(`### ${file.packagePath}
 
 Source id: \`${file.sourceId}\`
@@ -632,7 +624,7 @@ Snapshot id: \`${file.snapshotId}\`
 Checksum: \`${file.checksum}\`
 
 \`\`\`text
-${text.replaceAll("```", "\\`\\`\\`")}
+${markdownText.replaceAll("```", "\\`\\`\\`")}
 \`\`\``);
 	}
 	const localTextSection =

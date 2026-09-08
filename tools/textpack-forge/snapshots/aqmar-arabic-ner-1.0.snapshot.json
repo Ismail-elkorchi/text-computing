@@ -1,0 +1,33 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09",
+	"sourceId": "source:aqmar:arabic-ner-1.0",
+	"version": "1.0",
+	"retrievedAt": "2026-09-01T00:00:00.000Z",
+	"kind": "archive",
+	"checksum": "sha256:fcf767ae7396d798f5a4974c43fc2cd9994d2108021983a50eb84a7a9b7f3231",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/aqmar-arabic-ner-1.0/LICENSE",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 21306,
+			"checksum": "sha256:147b92d19ba9287e7dbba606a6c0306799eda1abd5d2294956937fb0acfb90e1",
+			"sourceUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/AQMAR_Arabic_NER_corpus-1.0.zip#LICENSE"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/aqmar-arabic-ner-1.0/README",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 3730,
+			"checksum": "sha256:6bc4b219626bd8d36ff50d465e81d8c51389762375f1f3cc24f066188344b897",
+			"sourceUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/AQMAR_Arabic_NER_corpus-1.0.zip#README"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/aqmar-arabic-ner-1.0/all.test.features.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 6617373,
+			"checksum": "sha256:42477fe9221266bd3b5d994e0149c00cfc58654d019a1e7e7215c47452107c3b",
+			"sourceUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/AQMAR_Arabic_NER_corpus-1.0.zip#featureFiles/test/all.test.features.txt"
+		}
+	],
+	"notes": "Pinned official AQMAR test feature split and local license evidence. Corpus text is used only for held-out evaluation and is not emitted into npm packages."
+}

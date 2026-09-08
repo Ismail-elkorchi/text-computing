@@ -2,7 +2,7 @@
   "fileDigests": [
     {
       "byteLength": 2649,
-      "checksum": "sha256:b0cfea972d994c7b14d0a591d3cce6ba3448e9694a8937b8c55d5c37b88ad9c2",
+      "checksum": "sha256:5816d79298ea9bbaa418b0f740754f75250fb3d8318da4beed93df2265b8dca3",
       "path": "ATTRIBUTION.generated.md"
     },
     {
@@ -12,17 +12,17 @@
     },
     {
       "byteLength": 64993,
-      "checksum": "sha256:ab7a2bc7b2979c0ec81267e0a6648d8439e6258bccf96949c0914bb1c7beb7d2",
+      "checksum": "sha256:14071164894463eea0e11eedf380ffc193614265434d948f693f37082fc84b0f",
       "path": "COVERAGE.generated.json"
     },
     {
       "byteLength": 64277,
-      "checksum": "sha256:56e6840f5c3660828ac94a571f2a8e241141b667e990b75efa5b39d100d729b9",
+      "checksum": "sha256:f7f3d90edb577266d071fc29d5fa20d3913161d210172f4f2bcbb612db39181a",
       "path": "EVALUATION.generated.json"
     },
     {
-      "byteLength": 41957,
-      "checksum": "sha256:06dca0e2f298102f9a8e5688bb6f6323096b4f14210bfefe49e3ec483f196e59",
+      "byteLength": 41842,
+      "checksum": "sha256:13550af8a001f9dd8ff7b61e21eb6a792530394ff6137f3e2d01a1be91e26a2a",
       "path": "LICENSE.generated.md"
     },
     {
@@ -52,27 +52,27 @@
     },
     {
       "byteLength": 2941,
-      "checksum": "sha256:abe37a31e9e62ceb96e494973cb44c5ad64728961e1b06f11f080570e1d10ba7",
+      "checksum": "sha256:496860c0c3c88ec25e4bad61323384a7870df18dd3a408d66468371d7291140d",
       "path": "NOTICE.generated.md"
     },
     {
       "byteLength": 50001,
-      "checksum": "sha256:171a56bef5d16852a15a9357a657c1b3803ecae14c7d8aba18d69304c95a70d7",
+      "checksum": "sha256:eaa41fc3549a40b633e2cd538cb5b82bd5e7db93567f22ba46c82ddfc1ccaeed",
       "path": "pack.manifest.json"
     },
     {
-      "byteLength": 3807,
-      "checksum": "sha256:8c35366f06061e7afe915b4196ab637392a8d4bc83788f82de28093ad28ddd79",
+      "byteLength": 3745,
+      "checksum": "sha256:4e30f4dc692ad1abe227b3d0b35ee39cdf82fadf106f1699e13066a7c106ad08",
       "path": "package.json"
     },
     {
       "byteLength": 60397,
-      "checksum": "sha256:7b6d24c0303e092fc2ff5f5a6aa79f6131a468ad772691b4207859d0a2467966",
+      "checksum": "sha256:0416e6b5d91f438812ae58b533ed8f2ba6676de16fbc8b8669b1b6e7c65cbcad",
       "path": "QUALITY.generated.json"
     },
     {
-      "byteLength": 4145,
-      "checksum": "sha256:2597359106e16b2e66f471001ab0c119b9f6e015535f6eaa56ddb92af1f6d82b",
+      "byteLength": 4160,
+      "checksum": "sha256:afb3db26664cc596845ee81d36f87542a288528ba6fc12d8cfa579ffdc597c75",
       "path": "README.md"
     },
     {
@@ -347,7 +347,7 @@
     },
     {
       "byteLength": 88648,
-      "checksum": "sha256:09d543b2bf8432f3ce7481074415d16c54f6064b9e75aa271bc51294c6db99f9",
+      "checksum": "sha256:fdcfd77e251f0a1e93de8d3f66e8f009ebfd240f427c67a9f6cbd271bf50d2c0",
       "path": "SOURCES.generated.json"
     },
     {
@@ -356,18 +356,18 @@
       "path": "src/index.ts"
     },
     {
-      "byteLength": 50257,
-      "checksum": "sha256:1863b2afbb502c1ee05b9fc47e4dfc40aa9c8f22d2784443dfc08531719c5fd4",
+      "byteLength": 50171,
+      "checksum": "sha256:6d3f318344259d8dca8f368246188594d8e7f1bc944c215fa745041a138b71f6",
       "path": "src/manifest.ts"
     },
     {
-      "byteLength": 249,
-      "checksum": "sha256:39a35bddeb71de2bac29c76f475433c3513822bd8469a0129ce4f086ab7c49ae",
+      "byteLength": 193,
+      "checksum": "sha256:6c2e67f3db1e7ef17203ed30d44687b0f6d9825cfdd8cc660117044d813961ed",
       "path": "src/pack.ts"
     },
     {
-      "byteLength": 24964,
-      "checksum": "sha256:c0bfcf826f2b3ab74296455af246f2180d0457157cf7bae33014e4174b3196cf",
+      "byteLength": 24880,
+      "checksum": "sha256:dc0587b020b198b5449f7af41d13a1a26de442a416ca9d482843d4517a45535d",
       "path": "src/resources.ts"
     },
     {
@@ -387,7 +387,7 @@
     }
   ],
   "forgeVersion": "0.1.0",
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "generatedFiles": [
     "ATTRIBUTION.generated.md",
@@ -470,9 +470,9 @@
   ],
   "generatorCommand": "node tools/textpack-forge/cli.mjs build",
   "lockfile": "tools/textpack-forge/forge.lock.json",
-  "lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
+  "lockfileChecksum": "sha256:0ef2740736c1bbb8b502d47c8521d5778b98a5377cc24fd19f8cd544323961f2",
   "mode": "source-backed",
-  "outputChecksum": "sha256:f3ed06322ef036ed149e5c2e76da526fdfc975b9bbe3103c3d1c83713ce5fdee",
+  "outputChecksum": "sha256:623f18cfd3ac4da8f73c85a7edf63e14081cb55d76eba38a8b663911cfc05759",
   "packSpecPath": "tools/textpack-forge/composites/textpack-en.composite.json",
   "packageName": "@ismail-elkorchi/textpack-en",
   "packageVersion": "0.1.0",

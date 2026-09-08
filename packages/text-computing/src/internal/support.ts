@@ -1,9 +1,9 @@
-import type { TextPack } from "@ismail-elkorchi/textpack";
+import type { TextPack } from "../packs/index.ts";
 import type {
 	TextComputingPackInspection,
 	TextComputingResourceInspection,
 	TextComputingSupportReport,
-} from "./types.js";
+} from "./types.ts";
 
 export function inspectResources(
 	resources: readonly TextPack["manifest"]["resources"][number][],

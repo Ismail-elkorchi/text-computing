@@ -1,7 +1,9 @@
 # @ismail-elkorchi/text-computing
 
-Application-facing TypeScript runtime for deployable, inspectable NLP
-workflows.
+A modular TypeScript library for processing, analyzing, transforming,
+searching, and learning from text. Direct algorithms, local classical learning,
+and resource-backed analysis are equally supported. See the
+[module guide](../../docs/modules.md) for the full library.
 
 ```ts
 import { createNodeResourceReader, load } from "@ismail-elkorchi/text-computing/node";
@@ -15,11 +17,14 @@ console.log(doc.searchTokens);
 console.log(doc.evidence.map((item) => item.id));
 ```
 
-This package is the Text Computing product surface. Capability Packs are
+This package owns all Text Computing runtime implementations. Capability Packs are
 data-only inputs; they declare resources and artifacts semantically instead of
 depending on the repository package that implements an executor. Document
-analysis returns stable summaries plus evidence; use `doc.toTextDoc()` when you
-need the expert document object. Use the `/node` entrypoint for package-local
+analysis returns the canonical `TextDocument`, with typed convenience projections.
+Use it directly with corpus, search, rules, and pipeline modules. Serialize it
+with `toDocumentJson(doc)` or `JSON.stringify(doc)`; use `analysisOf(doc)` to
+read a fresh projection after deserialization or downstream transformations.
+Use the `/node` entrypoint for package-local
 files in Node. Browser, Worker, Deno, and Bun deployments can import the root
 entrypoint and use `createFetchResourceReader()` with served pack assets.
 
@@ -51,7 +56,7 @@ index before querying it.
 
 ```ts
 const empty = await nlp.search.createIndex();
-const index = nlp.search.addAnalysis(empty, lookupDoc);
+const index = nlp.search.addDocument(empty, lookupDoc);
 const hits = nlp.search.query(index, "paris");
 ```
 
@@ -60,7 +65,7 @@ annotations. Document analysis deliberately does not treat every KB alias as a
 named entity:
 
 ```ts
-import { createDocument } from "@ismail-elkorchi/textdoc";
+import { createDocument } from "@ismail-elkorchi/text-computing/document";
 
 const source = createDocument("Paris est en France.");
 const linked = await nlp.document.analyzeDocument(source, {
@@ -76,16 +81,52 @@ const linked = await nlp.document.analyzeDocument(source, {
 });
 ```
 
-Quality analysis is likewise explicit with `tasks: ["quality"]`. Corpus,
-parallel-text, syntax-dataset, and pipeline orchestration remain expert
-extension APIs rather than ordinary application workflows.
+The Arabic Capability Pack declares model-backed named entity recognition. The
+178 MB ONNX artifact is deliberately not part of the npm package: download or
+provision the pinned file, then supply both its location and the executor
+explicitly.
+
+```ts
+import ar from "@ismail-elkorchi/textpack-ar";
+import {
+  createNodeArtifactReader,
+  createNodeResourceReader,
+  load,
+} from "@ismail-elkorchi/text-computing/node";
+import { createNodeOnnxEntityExecutor } from "@ismail-elkorchi/text-computing/onnx/node";
+
+const artifactId =
+  "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized";
+const nlp = await load(ar, {
+  reader: createNodeResourceReader(),
+  artifactReader: createNodeArtifactReader({
+    paths: { [artifactId]: "/models/model_quantized.onnx" },
+  }),
+  entityExecutor: createNodeOnnxEntityExecutor(),
+});
+
+const doc = await nlp("زار محمد القاهرة.", { tasks: ["entities"] });
+console.log(doc.entities);
+console.log(doc.evidence);
+```
+
+The pinned AQMAR gate measures exact PER, ORG, and LOC spans on 100 held-out
+Arabic Wikipedia examples: precision 0.505263, recall 0.533333, and F1
+0.518919. This establishes a real executable slice, not broad domain or
+dialectal fitness.
+
+Quality analysis is explicit with `tasks: ["quality"]`. Corpus analysis,
+parallel text, dataset conversion, pipelines, and classical training are
+ordinary public modules and do not require a Capability Pack.
 
 The currently shipped Capability Packs and executors are suitable for controlled
-deterministic workflows; they do not yet provide contextual NER, POS tagging,
-parsing, or neural inference. This is a statement about current capabilities,
-not an architectural exclusion. Model-backed capabilities may originate in any
-toolchain, but they become runnable only with a compatible TypeScript executor,
-artifact identity, and held-out task evidence. See the repository's
+workflows. Arabic NER is the first evaluated neural path; pretrained POS and parsing
+resources, general coreference, embeddings, and broader model coverage remain
+unavailable. The `/learning` module already implements trainable classical
+sequence models and a projective dependency parser. Model-backed
+capabilities may originate in any toolchain, but they become runnable only with
+a compatible TypeScript executor, artifact identity, and held-out task evidence.
+See the repository's
 [evaluation report](../../docs/evaluation.md) before choosing a production
 workload.
 

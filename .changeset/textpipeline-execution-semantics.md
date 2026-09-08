@@ -1,5 +1,5 @@
 ---
-"@ismail-elkorchi/textpipeline": patch
+"@ismail-elkorchi/text-computing": patch
 ---
 
 Harden deterministic local pipeline execution with graph-plan validation, versioned requirements,

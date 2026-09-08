@@ -1,139 +1,114 @@
-# Text Computing platform architecture
+# Text Computing architecture
 
-Status: accepted architecture  
-Version: 1  
-Scope: product boundaries, runtime integration, Capability Packs, and pack supply chain  
-Normative terms: MUST, MUST NOT, SHOULD, and MAY are used as requirement keywords.
+## Intent
 
-## Mission
+Make TypeScript a first-class environment for processing, analyzing,
+transforming, searching, and learning from text—with reliable composition,
+reproducible resources, and measurable quality.
 
-Text Computing makes TypeScript the operational layer for NLP: applications
-deploy, integrate, inspect, and run text capabilities through portable runtime
-contracts. The platform optimizes for reproducible behavior, explicit I/O,
-auditable evidence, predictable deployment, and honest capability claims.
+The product has three concepts: Text Computing, Capability Packs, and Textpack
+Forge. These are complementary, not mandatory stages of every workflow.
 
-Training is not a required TypeScript workflow. A model or tokenizer MAY be
-produced by any upstream toolchain. Before it becomes a runnable capability, its
-deployable artifact and execution contract MUST be versioned, attributable,
-licensed, integrity-checked, and evaluated for the task it claims.
+## One modular library
 
-## Product model
+`packages/text-computing` MUST own all shipped runtime implementations.
+`@ismail-elkorchi/text-computing` and its explicit public subpaths form one
+supported library, installation, version, and release. Public modules are
+organized by what users do, not by an audience's presumed expertise.
 
-The product has exactly three concepts.
+Implementations MUST NOT be kept in separately released sibling engines and
+re-exported through a permanent facade. Internal files remain private.
+Cross-domain imports MUST form an acyclic graph. Node-specific I/O and optional
+inference backends MUST remain behind explicit environment entrypoints.
 
-### Text Computing
+The root supports convenient resource-backed document analysis. Direct
+algorithms, corpus/index operations, data conversion, and local training MUST
+also be usable independently. An operation MUST NOT require a pack, pipeline,
+or document when its natural inputs are strings, examples, matrices, or records.
 
-Text Computing is the application-facing TypeScript runtime. It MUST own:
+## Shared contracts
 
-- pack loading and explicit resource readers;
-- task and preset selection;
-- document, span, annotation, and evidence outputs;
-- runtime capability inspection and unsupported-task errors;
-- portable behavior across Node.js, Bun, Deno, browsers, and Workers;
-- integration points for built-in and future model-backed executors.
+### Documents and coordinates
 
-Ordinary applications SHOULD import `@ismail-elkorchi/text-computing`. Engine
-workspaces under `packages/*` are implementation modules and expert extension
-APIs. They are not additional product concepts and MUST NOT force applications
-to reconstruct the ordinary runtime by hand.
+`TextDocument` is the canonical interchange and serialization representation:
+sources, views, span maps, annotation layers, graphs, and metadata. Analysis
+MUST return this representation directly. There is no conversion to another
+document tier.
 
-### Capability Packs
+Analysis conveniences are non-enumerable typed projections. `analysisOf(doc)`
+reads canonical layers, including after serialization or a downstream
+transformation. They are not independently serialized state. General document
+operations return canonical documents; callers can request a fresh projection.
 
-Capability Packs are immutable, data-only inputs. The current pack contract and
-npm naming convention use `textpack`, but the product concept includes all
-deployable capability material: profiles, lexicons, rules, finite-state data,
-indexes, tokenizers, model artifacts, and evaluation records.
+Spans MUST identify their view and unit. End offsets are exclusive. JavaScript
+text slicing MUST use UTF-16 code units, never silently interpret byte,
+code-point, or token offsets as code units. Transformations MUST retain source
+views and explicit span maps. Alternative lexical/morphological candidates
+MUST NOT be represented as a disambiguated linguistic fact.
 
-A Capability Pack:
+### Execution
 
-- MUST NOT contain loaders, processors, task facades, runtime engines, or
-  post-install downloads;
-- MUST declare target languages, scripts, domains, modalities, resources,
-  artifacts, and capability slots explicitly;
-- MUST bind resources semantically through slot, role, schema, and resource id;
-- MUST NOT bind resources to the npm package that happens to implement an
-  executor;
-- MUST separate availability status from inference tier;
-- MUST keep `artifact-backed` distinct from executable `task-supported`
-  behavior;
-- MUST require an executing adapter and held-out task evidence before claiming
-  `model-backed` behavior.
+`TextProcessor` in `/pipeline` is the document processor contract. Rules and
+resource-backed analysis use it, with explicit requirements and outputs.
+Direct and composed execution MUST invoke the same algorithm implementation.
 
-The manifest describes runtime compatibility through versioned schemas and
-capability contracts. Package dependency maps do not belong in the manifest;
-npm already owns package installation metadata.
+Processor id/version identify implementation behavior. Configured processors
+MUST additionally fingerprint executable content and options. Resource
+identity MUST include the version and content checksum; caller-supplied cache
+labels alone MUST NOT identify model sessions. Failed materializations MUST
+remain retryable. Pipelines retain cancellation, diagnostics, traces, explicit
+resource ownership, and deterministic dependency planning.
 
-### Textpack Forge
+### Evidence and scores
 
-Textpack Forge is the build-time supply chain for Capability Packs. It MUST own:
+Annotation evidence identifies the method, producer, implementation version,
+input views, and contributing resources. Model execution evidence MUST retain
+artifact content identity and executor identity. Capability availability,
+method, quality, and supported language/domain are distinct claims.
 
-- explicit source acquisition and immutable snapshot locks;
-- checksum, provenance, citation, redistribution, and license policy;
-- deterministic transforms into runtime-oriented resources;
-- storage layout and indexes for bounded deployment-time access;
-- schema, integrity, capability, and evaluation gates;
-- generated package payloads and audit reports;
-- byte-for-byte drift detection.
+Scores carry their meaning: probability, log probability, margin, rank,
+weight, cost, or association. They MUST NOT be compared across methods without
+a declared scale. Probabilities lie in [0, 1]. Mean token model confidence is
+not a calibrated probability that an entire entity span is correct.
 
-Forge MUST accept deployable artifacts without prescribing how their upstream
-training or compilation was performed. It MUST record enough identity and
-evidence to reproduce the packaged result and audit its use. Normal build and
-verification commands MUST NOT perform implicit network access.
+## Capability Packs
 
-## Runtime contract
+`packages/textpacks/*` contains independently versioned, generated data-only
+packages. The structural contract, validation, resource I/O, and materialization
+live in `text-computing/packs`. A generated pack MUST NOT import runtime code,
+construct an execution engine, contain processors, or initiate network access.
 
-The deployment path is:
+Packs MAY contain or reference lexical data, rules, FSTs, statistical models,
+tokenizers, indexes, and evaluation evidence. Bindings identify semantic slots,
+roles, schemas, and resources; they MUST NOT name the npm implementation or
+repository path that executes them.
 
-```text
-application input
-  -> Text Computing
-  -> declared Capability Pack slot
-  -> schema-compatible executor
-  -> text-aligned result + capability/resource evidence
-```
+The library validates pack input when loading it. Forge validates generated
+output at build time. Importing a data package is not task execution.
 
-Capability selection MUST use semantic declarations. Repository folder names,
-internal package names, guessed resource ids, source format accidents, and
-ambient host behavior MUST NOT decide which implementation runs.
+## Textpack Forge
 
-Resource materialization MUST be explicit and lazy. File-backed resources MAY
-use direct file ranges or HTTP byte ranges. Loading a pack MUST NOT eagerly read
-all payloads. Unsupported, sampled, profiled, and descriptor-only slots MUST
-fail before task execution instead of silently falling back to weaker behavior.
+`tools/textpack-forge` owns explicit acquisition, pinned snapshots, audited
+transforms, licensing policy, generated outputs, and measured capability
+reports. Normal builds MUST NOT fetch mutable upstream resources.
+Generated resources MUST be changed through their source definitions.
 
-## Model interoperability
+Forge is optional infrastructure for reproducible distribution. It MUST NOT
+become a prerequisite for rules, local classical learning, dataset conversion,
+or algorithms over caller-owned values.
 
-The runtime architecture is model-format neutral. Supporting a model-backed
-task requires all of the following:
+## Quality and growth
 
-1. a pack resource or locked artifact with stable identity and integrity data;
-2. a versioned input/output schema that preserves text coordinates;
-3. an executor available in the target TypeScript environment;
-4. declared preprocessing and postprocessing resources;
-5. held-out task metrics tied to the exact artifact;
-6. runtime evidence that identifies the pack, slot, tier, and resources used.
+Rules, finite-state methods, corpus statistics, classical learning, and neural
+inference are first-class techniques. A task selects a method on measured
+quality, resource cost, determinism, domain, and deployment constraints—not
+on a requirement to use a particular model family.
 
-Merely listing a remote model, shipping metadata, or passing an integrity smoke
-test does not satisfy this contract. Remote services MAY be integrated only
-through explicit application-supplied executors; packs and ordinary runtime
-loading MUST NOT hide network calls.
+New features need explicit semantics, representative real-text fixtures,
+source-aligned outputs, evaluation appropriate to the claim, and import/runtime
+cost checks. Algorithm construction primitives MUST be distinguished from
+evaluated ready-to-use task solutions. The library MUST NOT claim task support
+because a named wrapper exists.
 
-## Operating principles
-
-- Source text and coordinate systems remain explicit.
-- Outputs and evidence remain serializable and deterministic where the selected
-  executor promises determinism.
-- Capability claims are bounded by measured behavior, not resource volume.
-- Cold-start time, peak memory, and real-text robustness are release gates for
-  shipped runtime paths.
-- Licenses and provenance travel with deployment artifacts.
-- Training utilities in expert modules MAY remain useful, but they do not define
-  the platform boundary or constrain artifact origin.
-
-## Verification
-
-The architecture is enforced by manifest validation, repository boundary
-checks, forge drift verification, generated audit reports, cross-runtime smoke
-tests, held-out task tests, external real-text tests, and isolated cold-start
-budgets. The root project description MUST present the three concepts and MUST
-NOT regress to a catalog of implementation packages.
+See the [module inventory](../modules.md), [evaluation](../evaluation.md), and
+[roadmap](../roadmap.md).

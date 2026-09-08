@@ -4,12 +4,13 @@
 	"packageName": "@ismail-elkorchi/textpack-ar",
 	"packageDir": "packages/textpacks/textpack-ar",
 	"name": "Arabic Capability Pack",
-	"description": "Audited Arabic capabilities for deployable document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"description": "Audited Arabic capabilities for deployable document NLP, including explicitly materialized model-backed named entity recognition.",
+	"policySurface": "license-inclusive",
 	"publishable": true,
 	"publishabilityEvidence": {
-		"productionGradeSourceCoverage": "Self-contained Arabic distribution with foundation, core, normalization, CAMeL lexicon/morphology/segmentation, Arabic WordNet and Wikidata KB, search, and quality resources.",
-		"auditedLicense": "Selected IANA, Unicode, CLDR, CAMeL Morph, Arabic WordNet, and Wikidata sources are approved and retain generated attribution and license evidence.",
-		"declaredScope": "Ordinary typed MSA document NLP. Large corpora, parallel alignments, and UD annotation datasets are deliberately excluded from the npm package and remain explicit forge acquisition inputs.",
+		"productionGradeSourceCoverage": "Self-contained Arabic distribution with foundation, core, normalization, CAMeL lexicon/morphology/segmentation, Arabic WordNet and Wikidata KB, search, quality resources, and a pinned ONNX NER execution contract with held-out AQMAR evidence.",
+		"auditedLicense": "Selected IANA, Unicode, CLDR, CAMeL Morph, Arabic WordNet, Wikidata, Davlan/Xenova model, and AQMAR evaluation sources are approved and retain generated attribution and license evidence.",
+		"declaredScope": "Ordinary typed MSA document NLP with opt-in model-backed PER, ORG, LOC, and DATE recognition. Held-out NER evidence covers Arabic Wikipedia PER, ORG, and LOC spans; large corpora, parallel alignments, UD annotations, dialectal NER, and domain-specific NER remain outside the claim.",
 		"conformanceEvidence": [
 			"eval:language-registry:bcp47-record-volume:distribution:textpack-ar",
 			"eval:ar-core:iana-language-profile:distribution:textpack-ar",
@@ -19,6 +20,7 @@
 			"eval:ar-msa-camel-morph:morpheme-inventory:distribution:textpack-ar",
 			"eval:wikidata-ar:entity-extract:distribution:textpack-ar",
 			"eval:ar-search:analyzer-profile:distribution:textpack-ar",
+			"eval:ner-ar:aqmar-exact-span-f1:distribution:textpack-ar",
 			"eval:ar-core:transform-rejections:distribution:textpack-ar",
 			"docs:textpacks/language-distribution-readiness.generated.md#arabic-ar"
 		],
@@ -88,6 +90,11 @@
 			"buildUnitId": "ar-search",
 			"reason": "Arabic MSA search analyzer profile resources.",
 			"licensePolicy": "allow-attribution"
+		},
+		{
+			"buildUnitId": "ner-ar-sa",
+			"reason": "Arabic ONNX named entity recognition model contract and held-out task evidence.",
+			"licensePolicy": "allow-share-alike"
 		}
 	],
 	"capabilitySlots": [
@@ -138,6 +145,14 @@
 			]
 		},
 		{
+			"slot": "entities",
+			"status": "task-supported",
+			"tier": "model-backed",
+			"notes": [
+				"Named entity recognition requires an explicit ONNX executor and model artifact reader; no network access or weaker fallback is implicit."
+			]
+		},
+		{
 			"slot": "search",
 			"status": "task-supported",
 			"tier": "baseline"
@@ -167,13 +182,15 @@
 			]
 		}
 	],
-	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND AFL-3.0 AND CC-BY-SA-3.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
 		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 		"CAMeL Morph MSA LREC-COLING 2024 release.",
 		"Arabic WordNet 4.1.0.",
-		"Wikidata main structured data dump, 2026-06-08."
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Davlan BERT multilingual cased NER HRL model and Xenova ONNX conversion.",
+		"AQMAR Arabic Wikipedia Named Entity Corpus 1.0."
 	]
 }

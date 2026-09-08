@@ -1,5 +1,5 @@
 ---
-"@ismail-elkorchi/textrules": minor
+"@ismail-elkorchi/text-computing": minor
 ---
 
 Add pack-backed rule compilation from loaded textpack resources and execution over textdoc token layers with provenance-bearing extension annotations.

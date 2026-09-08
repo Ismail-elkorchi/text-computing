@@ -35,6 +35,7 @@
 				"french-normalization-profile",
 				"french-segmentation-profile",
 				"iana-language-registry",
+				"model-backed-ner",
 				"open-english-wordnet-lmf",
 				"scowl-v2-inflection",
 				"tatoeba-arabic-corpus-artifact",

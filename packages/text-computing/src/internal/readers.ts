@@ -2,7 +2,7 @@ import {
 	createFetchResourceReader as createTextPackFetchResourceReader,
 	type TextPackFetchResourceReaderOptions,
 	type TextPackResourceReader,
-} from "@ismail-elkorchi/textpack";
+} from "../packs/index.ts";
 
 export type { TextPackFetchResourceReaderOptions, TextPackResourceReader };
 

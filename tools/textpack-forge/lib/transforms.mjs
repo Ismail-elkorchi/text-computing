@@ -78,6 +78,123 @@ function requiredInput(inputs, basename, resourceSpec) {
 	return text;
 }
 
+function transformModelBackedNer(resourceSpec, inputs) {
+	const upstreamConfig = JSON.parse(
+		requiredInput(inputs, "upstream-config.json", resourceSpec),
+	);
+	const evaluation = JSON.parse(
+		requiredInput(inputs, "evaluation-results.json", resourceSpec),
+	);
+	const vocabulary = requiredInput(inputs, "vocab.txt", resourceSpec);
+	const labels = Object.entries(upstreamConfig.id2label ?? {})
+		.sort(([left], [right]) => Number(left) - Number(right))
+		.map(([, label]) => label);
+	expect(
+		upstreamConfig.model_type === "bert" &&
+			upstreamConfig.max_position_embeddings === 512 &&
+			labels.join("\u0000") ===
+				[
+					"O",
+					"B-DATE",
+					"I-DATE",
+					"B-PER",
+					"I-PER",
+					"B-ORG",
+					"I-ORG",
+					"B-LOC",
+					"I-LOC",
+				].join("\u0000"),
+		`${resourceSpec.resourceSpecId} has an unsupported upstream NER configuration.`,
+	);
+	expect(
+		evaluation.schemaVersion === "1" &&
+			evaluation.task === "entities" &&
+			evaluation.artifactId ===
+				"artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized" &&
+			evaluation.artifactChecksum ===
+				"sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9" &&
+			evaluation.languages?.length === 1 &&
+			evaluation.languages[0]?.languageTag === "ar" &&
+			Number.isFinite(evaluation.aggregate?.metrics?.f1),
+		`${resourceSpec.resourceSpecId} has invalid or stale held-out NER evidence.`,
+	);
+	expect(
+		vocabulary.split(/\r?\n/u).filter((line) => line.length > 0).length ===
+			upstreamConfig.vocab_size,
+		`${resourceSpec.resourceSpecId} vocabulary size does not match the model configuration.`,
+	);
+	const model = {
+		schemaVersion: "1",
+		task: "entities",
+		format: "onnx",
+		artifactId: evaluation.artifactId,
+		artifactFile: "model_quantized.onnx",
+		tokenizer: {
+			type: "bert-wordpiece",
+			vocabularyResourceId: "ner-ar-vocabulary",
+			doLowerCase: false,
+			stripAccents: false,
+			tokenizeChineseCharacters: true,
+			specialTokens: {
+				unknown: "[UNK]",
+				cls: "[CLS]",
+				sep: "[SEP]",
+				pad: "[PAD]",
+			},
+		},
+		inputs: {
+			inputIds: "input_ids",
+			attentionMask: "attention_mask",
+			tokenTypeIds: "token_type_ids",
+		},
+		output: { logits: "logits", labels },
+		maxSequenceLength: 512,
+	};
+	const qualityProfile = {
+		schemaVersion: "1",
+		kind: "quality-profile",
+		profileId: "ner-ar-model-quality",
+		languageTag: "ar",
+		script: "Arab",
+		diagnostics: [
+			{
+				diagnosticId: "ner-ar-domain-scope",
+				task: "entities.recognize",
+				severity: "warning",
+				message:
+					"Held-out evidence covers Arabic Wikipedia PER, ORG, and LOC spans; dialectal and domain-specific fitness remains unestablished.",
+				metadata: { dataset: evaluation.languages[0].dataset },
+			},
+		],
+		metrics: [
+			{
+				metricId: "exact-span-f1",
+				name: "exactSpanF1",
+				value: evaluation.aggregate.metrics.f1,
+				unit: "ratio",
+			},
+		],
+		thresholds: [
+			{
+				metricId: "exact-span-f1",
+				operator: "gte",
+				value: 0.5,
+			},
+		],
+		evaluationRecordIds: ["eval:ner-ar:aqmar-exact-span-f1"],
+	};
+	return [
+		outputFor(resourceSpec, "ner-ar-model", stableJson(model)),
+		outputFor(resourceSpec, "ner-ar-vocabulary", vocabulary),
+		outputFor(resourceSpec, "ner-ar-evaluation", stableJson(evaluation)),
+		outputFor(
+			resourceSpec,
+			"ner-ar-quality-profile",
+			stableJson(qualityProfile),
+		),
+	];
+}
+
 function incrementWordnetCount(counts, key) {
 	counts.set(key, (counts.get(key) ?? 0) + 1);
 }
@@ -6130,6 +6247,7 @@ export const transformRunners = new Map([
 	["french-segmentation-profile", transformFrenchSegmentationProfile],
 	["french-unimorph", transformFrenchUnimorph],
 	["iana-language-registry", transformIanaLanguageRegistry],
+	["model-backed-ner", transformModelBackedNer],
 	["open-english-wordnet-lmf", transformOpenEnglishWordnetLmf],
 	["scowl-v2-inflection", transformScowlV2Inflection],
 	["tatoeba-arabic-corpus-artifact", transformTatoebaArabicCorpusArtifact],

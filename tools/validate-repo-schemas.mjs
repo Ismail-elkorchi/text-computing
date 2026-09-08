@@ -21,6 +21,8 @@ const NLP_BENCHMARK_FIXTURES = [
 const DRAFT_07 = "http://json-schema.org/draft-07/schema#";
 const DRAFT_2020_12 = "https://json-schema.org/draft/2020-12/schema";
 const REQUIRED_TEXTPACK_SCHEMA_FILES = [
+	"text-computing-ner-evaluation.schema.json",
+	"text-computing-ner-model.schema.json",
 	"textpack-corpus-resource.schema.json",
 	"textpack-coverage-report.schema.json",
 	"textpack-evaluation-record.schema.json",

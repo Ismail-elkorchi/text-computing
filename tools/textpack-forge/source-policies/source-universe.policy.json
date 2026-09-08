@@ -55,6 +55,42 @@
 	],
 	"sources": [
 		{
+			"sourceId": "source:huggingface:xenova-bert-multilingual-ner",
+			"family": "HUGGINGFACE-MODEL",
+			"name": "Xenova BERT multilingual cased NER HRL ONNX",
+			"homepageUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl",
+			"licenseExpression": "AFL-3.0",
+			"policyClass": "attribution",
+			"redistributionPolicy": "redistributable-with-attribution",
+			"reviewState": "approved",
+			"defaultCompositeAllowed": true,
+			"publishableByDefault": true,
+			"requiredPackageNameSuffixes": [],
+			"languages": ["ar"],
+			"capabilitySlots": ["entities"],
+			"priority": "first",
+			"citation": "Davlan multilingual NER model and pinned Xenova ONNX conversion.",
+			"notes": "Explicit model artifact for deployable multilingual NER; model bytes are not npm-shipped."
+		},
+		{
+			"sourceId": "source:aqmar:arabic-ner-1.0",
+			"family": "AQMAR",
+			"name": "AQMAR Arabic Wikipedia Named Entity Corpus 1.0",
+			"homepageUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/",
+			"licenseExpression": "CC-BY-SA-3.0",
+			"policyClass": "share-alike",
+			"redistributionPolicy": "share-alike-isolated",
+			"reviewState": "approved",
+			"defaultCompositeAllowed": false,
+			"publishableByDefault": false,
+			"requiredPackageNameSuffixes": ["-sa"],
+			"languages": ["ar"],
+			"capabilitySlots": ["entities", "evaluation"],
+			"priority": "isolated",
+			"citation": "AQMAR Arabic NER Corpus 1.0 held-out test data.",
+			"notes": "Evaluation-only share-alike source; corpus rows are not emitted into language packs."
+		},
+		{
 			"sourceId": "source:unicode:ucd",
 			"family": "UCD",
 			"name": "Unicode Character Database",
@@ -1704,6 +1740,7 @@
 				"source:unicode:ucd",
 				"source:unicode:cldr-core",
 				"source:iana:language-subtag-registry",
+				"source:huggingface:xenova-bert-multilingual-ner",
 				"source:ud:arabic",
 				"source:unimorph:arabic",
 				"source:camel:morph-msa-lrec-coling-2024",
@@ -1725,7 +1762,8 @@
 				"source:wordnet:arabic-4",
 				"source:ud:arabic-padt-r2.18",
 				"source:ud:arabic-pud-r2.18",
-				"source:ud:arabic-nyuad-r2.18"
+				"source:ud:arabic-nyuad-r2.18",
+				"source:aqmar:arabic-ner-1.0"
 			]
 		},
 		{

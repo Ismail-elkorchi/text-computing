@@ -1589,8 +1589,8 @@
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
-		"generatedAt": "2026-06-12T00:00:00.000Z",
+		"lockfileChecksum": "sha256:0ef2740736c1bbb8b502d47c8521d5778b98a5377cc24fd19f8cd544323961f2",
+		"generatedAt": "2026-09-01T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},
 	"artifacts": [

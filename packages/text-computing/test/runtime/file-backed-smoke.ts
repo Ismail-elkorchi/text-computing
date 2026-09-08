@@ -1,5 +1,6 @@
-import { createPack } from "@ismail-elkorchi/textpack";
+import { createPack } from "@ismail-elkorchi/text-computing/packs";
 import { createFetchResourceReader, load } from "../../dist/index.js";
+import { createWebOnnxEntityExecutor } from "../../dist/onnx-web.js";
 
 const fixturePackageRoot = "https://text-computing.invalid/runtime-smoke/";
 const segmentationPath = "resources/segmentation.json.gz.b64";
@@ -113,6 +114,13 @@ function smokePack(runtimeName: string) {
 export async function runTextComputingFileBackedSmoke(
 	runtimeName: string,
 ): Promise<void> {
+	const entityExecutor = createWebOnnxEntityExecutor();
+	if (
+		entityExecutor.format !== "onnx" ||
+		entityExecutor.id !== "text-computing-entities:onnxruntime-web"
+	) {
+		throw new Error(`${runtimeName} ONNX Web executor did not initialize.`);
+	}
 	const nlp = await load(smokePack(runtimeName), {
 		reader: createFetchResourceReader({ fetch: fixtureFetch }),
 	});

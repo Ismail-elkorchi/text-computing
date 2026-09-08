@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:huggingface:xenova-bert-multilingual-ner",
+	"family": "HUGGINGFACE-MODEL",
+	"name": "Xenova BERT multilingual cased NER HRL ONNX",
+	"homepageUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl",
+	"licenseEvidence": [
+		"https://huggingface.co/Davlan/bert-base-multilingual-cased-ner-hrl/blob/5e290dbe35953ce62c0cdd704326c47d403a5002/README.md",
+		"https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/blob/263e82c06569c8c2ac46238a7ae5107598934234/README.md"
+	],
+	"licenseExpression": "AFL-3.0",
+	"redistributionPolicy": "redistributable-with-attribution",
+	"reviewState": "approved",
+	"citation": "Davlan BERT multilingual cased NER HRL model; Xenova ONNX conversion, commit 263e82c06569c8c2ac46238a7ae5107598934234.",
+	"notes": "Pinned quantized ONNX deployment artifact and cased multilingual BERT WordPiece vocabulary. The artifact is acquired explicitly and is not included in npm packages."
+}

@@ -40,6 +40,24 @@
       "tier": "none"
     },
     {
+      "evaluationRecordIds": [
+        "eval:ner-ar:aqmar-exact-span-f1:distribution:textpack-ar"
+      ],
+      "evidenceLevel": "task-evaluated",
+      "limitations": [
+        "AQMAR is Arabic Wikipedia; the score does not establish domain-specific or dialectal Arabic fitness.",
+        "Evaluated in internal build unit @ismail-elkorchi/textpack-ner-ar-sa; the referenced payload is shipped directly in @ismail-elkorchi/textpack-ar.",
+        "Evaluation is scoped to exact PER, ORG, and LOC spans; DATE is not scored because AQMAR does not provide a compatible date annotation policy."
+      ],
+      "resourceIds": [
+        "ner-ar-model",
+        "ner-ar-vocabulary"
+      ],
+      "slot": "entities",
+      "status": "task-supported",
+      "tier": "model-backed"
+    },
+    {
       "evaluationRecordIds": [],
       "evidenceLevel": "none",
       "limitations": [],
@@ -214,7 +232,9 @@
         "wikidata-ar-quality",
         "wikidata-ar-quality-profile",
         "ar-search-quality",
-        "ar-search-quality-profile"
+        "ar-search-quality-profile",
+        "ner-ar-evaluation",
+        "ner-ar-quality-profile"
       ],
       "slot": "quality",
       "status": "task-supported",
@@ -308,6 +328,26 @@
       "slot": "corpus",
       "status": "planned",
       "tier": "none"
+    },
+    {
+      "artifactIds": [
+        "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized"
+      ],
+      "capabilities": {
+        "extraction": "statistical"
+      },
+      "notes": [
+        "Named entity recognition requires an explicit ONNX executor and model artifact reader; no network access or weaker fallback is implicit.",
+        "Runs quantized ONNX token classification through an explicit application-supplied artifact reader and executor.",
+        "Held-out AQMAR exact-span F1 is gated at 0.50; broader Arabic domains and dialects are not claimed."
+      ],
+      "resourceIds": [
+        "ner-ar-model",
+        "ner-ar-vocabulary"
+      ],
+      "slot": "entities",
+      "status": "task-supported",
+      "tier": "model-backed"
     },
     {
       "slot": "foundation",
@@ -439,7 +479,8 @@
         "Generated quality profile records source counts, accepted records, and transform warnings.",
         "Generated quality profile records lexical-entry, sense, synset, and relation counts.",
         "Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations.",
-        "Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations."
+        "Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations.",
+        "Pinned task evidence identifies the exact artifact, held-out split, sample, metric, and domain limitations."
       ],
       "resourceIds": [
         "ar-core-quality",
@@ -453,7 +494,9 @@
         "wikidata-ar-quality",
         "wikidata-ar-quality-profile",
         "ar-search-quality",
-        "ar-search-quality-profile"
+        "ar-search-quality-profile",
+        "ner-ar-evaluation",
+        "ner-ar-quality-profile"
       ],
       "slot": "quality",
       "status": "task-supported",
@@ -478,7 +521,7 @@
         "segmentation": "profile"
       },
       "notes": [
-        "The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as expert morphology data and are not presented as executed dictionary segmentation."
+        "The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as morphology data and are not presented as executed dictionary segmentation."
       ],
       "resourceIds": [
         "ar-msa-camel-segmentation-canonical"
@@ -534,6 +577,7 @@
     "eval:cldr-core:script-variant-coverage:distribution:textpack-ar",
     "eval:language-registry:bcp47-record-volume:distribution:textpack-ar",
     "eval:language-registry:bcp47-type-coverage:distribution:textpack-ar",
+    "eval:ner-ar:aqmar-exact-span-f1:distribution:textpack-ar",
     "eval:unicode-17:block-range-coverage:distribution:textpack-ar",
     "eval:unicode-17:property-alias-coverage:distribution:textpack-ar",
     "eval:unicode-17:script-range-coverage:distribution:textpack-ar",
@@ -566,7 +610,7 @@
       "status": "planned"
     }
   ],
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "knownGaps": [
     "corpus is planned in this source-backed self-contained language distribution.",
@@ -1065,6 +1109,70 @@
       "sizeClass": "tiny"
     },
     {
+      "byteLength": 1694,
+      "checksum": "sha256:729c1225d4b611540158374c4a46f3eb981b00ff32440d5695b26ab9d3fb376c",
+      "kind": "quality-profile",
+      "logicalRecordCount": 56,
+      "nonEmptyLineCount": 56,
+      "path": "resources/ner-ar.evaluation.json",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceId": "ner-ar-evaluation",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-evaluation"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 858,
+      "checksum": "sha256:6a3e4dafae026116f2551e5c98f2241f4c961cd60ac3f7578431b92e46c50262",
+      "kind": "statistical-model",
+      "logicalRecordCount": 40,
+      "nonEmptyLineCount": 40,
+      "path": "resources/ner-ar.model.json",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceId": "ner-ar-model",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-model"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 842,
+      "checksum": "sha256:183bd6b02819364ac6f3f6b4f45bf87a330cdb65bbda57c7646335722a3b0b14",
+      "kind": "quality-profile",
+      "logicalRecordCount": 36,
+      "nonEmptyLineCount": 36,
+      "path": "resources/ner-ar.quality-profile.json",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceId": "ner-ar-quality-profile",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-quality-profile"
+      ],
+      "sizeClass": "tiny"
+    },
+    {
+      "byteLength": 729473,
+      "checksum": "sha256:c8cf2513bd655536074daa95c12874a598bfe6e3ac2f97601601ac4cfa8e5506",
+      "kind": "lexicon",
+      "logicalRecordCount": 119547,
+      "nonEmptyLineCount": 119547,
+      "path": "resources/ner-ar.vocab.txt.gz.b64",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceId": "ner-ar-vocabulary",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-vocabulary"
+      ],
+      "sizeClass": "small"
+    },
+    {
       "byteLength": 10002,
       "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
       "kind": "unicode-profile",
@@ -1436,6 +1544,7 @@
     "quality-profile",
     "search-profile",
     "segmentation-profile",
+    "statistical-model",
     "unicode-profile"
   ],
   "schemaVersion": "1",

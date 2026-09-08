@@ -1,9 +1,9 @@
-import type { TextPack } from "@ismail-elkorchi/textpack";
-import { unsupportedTaskError } from "./errors.js";
+import type { TextPack } from "../packs/index.ts";
+import { unsupportedTaskError } from "./errors.ts";
 import type {
 	TextComputingDocumentTask,
 	TextComputingTaskPreset,
-} from "./types.js";
+} from "./types.ts";
 
 export function assertRunnableTask(pack: TextPack, slot: string): void {
 	const capabilitySlot = pack.manifest.capabilitySlots.find(

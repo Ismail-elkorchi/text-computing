@@ -1,4 +1,4 @@
-import type { TextPack } from "@ismail-elkorchi/textpack";
+import type { TextPack } from "../packs/index.ts";
 
 export function unsupportedTaskError(pack: TextPack, slot: string): TypeError {
 	const capabilitySlot = pack.manifest.capabilitySlots.find(
