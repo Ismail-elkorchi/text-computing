@@ -252,6 +252,29 @@ export async function acquireFromForgeLock({
 			for (const licenseFile of pack.licenseEvidenceFiles) {
 				requiredPaths.add(licenseFile.sourcePath);
 			}
+			for (const artifact of pack.manifest.artifacts ?? []) {
+				for (const expectedFile of artifact.expectedFiles) {
+					const matchingFiles = context.snapshots.flatMap((snapshot) =>
+						artifact.sourceIds.includes(snapshot.sourceId)
+							? (snapshot.files ?? []).filter(
+									(file) =>
+										path.basename(file.path) === expectedFile.path &&
+										(expectedFile.checksum === undefined ||
+											file.checksum === expectedFile.checksum) &&
+										(expectedFile.sizeBytes === undefined ||
+											file.byteLength === expectedFile.sizeBytes),
+								)
+							: [],
+					);
+					if (matchingFiles.length === 0) continue;
+					if (matchingFiles.length > 1) {
+						throw new Error(
+							`${artifact.artifactId}/${expectedFile.path} resolves to ${matchingFiles.length} pinned snapshot files; expected at most one.`,
+						);
+					}
+					requiredPaths.add(matchingFiles[0].path);
+				}
+			}
 		}
 	}
 	return acquireSnapshots({

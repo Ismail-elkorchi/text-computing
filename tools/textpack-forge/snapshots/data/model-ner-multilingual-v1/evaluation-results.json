@@ -1,0 +1,56 @@
+{
+	"schemaVersion": "1",
+	"task": "entities",
+	"modelId": "Davlan/bert-base-multilingual-cased-ner-hrl",
+	"artifactId": "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized",
+	"artifactChecksum": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9",
+	"executorId": "text-computing-entities:onnxruntime-node",
+	"targetLabels": [
+		"LOC",
+		"ORG",
+		"PER"
+	],
+	"sampling": {
+		"method": "lowest-sha256",
+		"key": "example id, newline, reconstructed text",
+		"sampleSizePerLanguage": 100
+	},
+	"spanMatching": "exact-utf16-span-and-type",
+	"languages": [
+		{
+			"languageTag": "ar",
+			"dataset": "AQMAR official test feature split",
+			"sourceId": "source:aqmar:arabic-ner-1.0",
+			"snapshotId": "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09",
+			"checksum": "sha256:42477fe9221266bd3b5d994e0149c00cfc58654d019a1e7e7215c47452107c3b",
+			"sampleSize": 100,
+			"counts": {
+				"truePositive": 48,
+				"falsePositive": 47,
+				"falseNegative": 42
+			},
+			"metrics": {
+				"precision": 0.505263,
+				"recall": 0.533333,
+				"f1": 0.518919
+			}
+		}
+	],
+	"aggregate": {
+		"sampleSize": 100,
+		"counts": {
+			"truePositive": 48,
+			"falsePositive": 47,
+			"falseNegative": 42
+		},
+		"metrics": {
+			"precision": 0.505263,
+			"recall": 0.533333,
+			"f1": 0.518919
+		}
+	},
+	"limitations": [
+		"Evaluation is scoped to exact PER, ORG, and LOC spans; DATE is not scored because AQMAR does not provide a compatible date annotation policy.",
+		"AQMAR is Arabic Wikipedia; the score does not establish domain-specific or dialectal Arabic fitness."
+	]
+}

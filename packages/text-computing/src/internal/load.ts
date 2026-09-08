@@ -1,15 +1,15 @@
-import { loadPack } from "@ismail-elkorchi/textpack";
-import { createTextComputingNlp } from "./runtime.js";
-import { inspectionReport, supportReport } from "./support.js";
+import { loadPack } from "../packs/index.ts";
+import { createTextComputingNlp } from "./runtime.ts";
+import { inspectionReport, supportReport } from "./support.ts";
 import type {
+	AnalyzedDocument,
 	TextComputingAnalyzeOptions,
-	TextComputingDocument,
 	TextComputingLoadOptions,
 	TextComputingLoadTarget,
 	TextComputingNlp,
 	TextComputingPackInspection,
 	TextComputingSupportReport,
-} from "./types.js";
+} from "./types.ts";
 
 export async function packFromTarget(target: TextComputingLoadTarget) {
 	return loadPack(target);
@@ -19,15 +19,20 @@ export async function load(
 	target: TextComputingLoadTarget,
 	options: TextComputingLoadOptions = {},
 ): Promise<TextComputingNlp> {
-	return createTextComputingNlp(await packFromTarget(target), options.reader);
+	return createTextComputingNlp(await packFromTarget(target), options);
 }
 
 export async function analyze(
 	text: string,
 	options: TextComputingAnalyzeOptions,
-): Promise<TextComputingDocument> {
-	const { pack, reader, ...analysisOptions } = options;
-	const loadOptions = reader === undefined ? {} : { reader };
+): Promise<AnalyzedDocument> {
+	const { pack, reader, artifactReader, entityExecutor, ...analysisOptions } =
+		options;
+	const loadOptions = {
+		...(reader === undefined ? {} : { reader }),
+		...(artifactReader === undefined ? {} : { artifactReader }),
+		...(entityExecutor === undefined ? {} : { entityExecutor }),
+	};
 	return (await load(pack, loadOptions))(text, analysisOptions);
 }
 

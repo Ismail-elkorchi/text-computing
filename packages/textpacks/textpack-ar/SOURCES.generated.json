@@ -44,14 +44,19 @@
       "buildUnitId": "ar-search",
       "licensePolicy": "allow-attribution",
       "reason": "Arabic MSA search analyzer profile resources."
+    },
+    {
+      "buildUnitId": "ner-ar-sa",
+      "licensePolicy": "allow-share-alike",
+      "reason": "Arabic ONNX named entity recognition model contract and held-out task evidence."
     }
   ],
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "mode": "source-backed",
   "packageId": "textpack-ar",
   "packageName": "@ismail-elkorchi/textpack-ar",
-  "policySurface": "default",
+  "policySurface": "license-inclusive",
   "publishability": {
     "publishable": true,
     "reasons": [],
@@ -67,7 +72,8 @@
     "resource-spec:textpack-ar-msa-morphology:camel-morph-msa",
     "resource-spec:textpack-wordnet-ar:arabic-wordnet-lmf",
     "resource-spec:textpack-wikidata-ar:wikidata-main-artifact",
-    "resource-spec:textpack-ar-search:arabic-search-profile"
+    "resource-spec:textpack-ar-search:arabic-search-profile",
+    "resource-spec:textpack-ner-ar-sa:model-backed-ner"
   ],
   "resources": [
     {
@@ -854,6 +860,110 @@
       ]
     },
     {
+      "byteLength": 1694,
+      "checksum": "sha256:729c1225d4b611540158374c4a46f3eb981b00ff32440d5695b26ab9d3fb376c",
+      "citations": [
+        "AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
+      ],
+      "id": "ner-ar-evaluation",
+      "kind": "quality-profile",
+      "license": "AFL-3.0 AND CC-BY-SA-3.0",
+      "logicalRecordCount": 56,
+      "path": "resources/ner-ar.evaluation.json",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-evaluation"
+      ],
+      "snapshotIds": [
+        "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+        "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+      ],
+      "sourceIds": [
+        "source:huggingface:xenova-bert-multilingual-ner",
+        "source:aqmar:arabic-ner-1.0"
+      ]
+    },
+    {
+      "byteLength": 858,
+      "checksum": "sha256:6a3e4dafae026116f2551e5c98f2241f4c961cd60ac3f7578431b92e46c50262",
+      "citations": [
+        "Davlan BERT multilingual cased NER HRL model and Xenova ONNX conversion."
+      ],
+      "id": "ner-ar-model",
+      "kind": "statistical-model",
+      "license": "AFL-3.0",
+      "logicalRecordCount": 40,
+      "path": "resources/ner-ar.model.json",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-model"
+      ],
+      "snapshotIds": [
+        "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+        "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+      ],
+      "sourceIds": [
+        "source:huggingface:xenova-bert-multilingual-ner",
+        "source:aqmar:arabic-ner-1.0"
+      ]
+    },
+    {
+      "byteLength": 842,
+      "checksum": "sha256:183bd6b02819364ac6f3f6b4f45bf87a330cdb65bbda57c7646335722a3b0b14",
+      "citations": [
+        "AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
+      ],
+      "id": "ner-ar-quality-profile",
+      "kind": "quality-profile",
+      "license": "AFL-3.0 AND CC-BY-SA-3.0",
+      "logicalRecordCount": 36,
+      "path": "resources/ner-ar.quality-profile.json",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-quality-profile"
+      ],
+      "snapshotIds": [
+        "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+        "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+      ],
+      "sourceIds": [
+        "source:huggingface:xenova-bert-multilingual-ner",
+        "source:aqmar:arabic-ner-1.0"
+      ]
+    },
+    {
+      "byteLength": 729473,
+      "checksum": "sha256:c8cf2513bd655536074daa95c12874a598bfe6e3ac2f97601601ac4cfa8e5506",
+      "citations": [
+        "Multilingual BERT cased WordPiece vocabulary."
+      ],
+      "id": "ner-ar-vocabulary",
+      "kind": "lexicon",
+      "license": "AFL-3.0",
+      "logicalRecordCount": 119547,
+      "path": "resources/ner-ar.vocab.txt.gz.b64",
+      "pipelineId": "model-backed-ner",
+      "pipelineVersion": "1.0.0",
+      "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+      "sharedStorageResourceIds": [
+        "ner-ar-vocabulary"
+      ],
+      "snapshotIds": [
+        "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+        "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+      ],
+      "sourceIds": [
+        "source:huggingface:xenova-bert-multilingual-ner",
+        "source:aqmar:arabic-ner-1.0"
+      ]
+    },
+    {
       "byteLength": 10002,
       "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
       "citations": [
@@ -1397,7 +1507,9 @@
     "snapshot:source:unicode:cldr-core:48.2.0",
     "snapshot:source:camel:morph-msa-lrec-coling-2024:5a202cf",
     "snapshot:source:wordnet:arabic-v4.1.0:v4.1.0",
-    "snapshot:source:wikidata:main:20260608"
+    "snapshot:source:wikidata:main:20260608",
+    "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+    "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
   ],
   "snapshots": [
     {
@@ -1702,6 +1814,78 @@
       "snapshotId": "snapshot:source:wikidata:main:20260608",
       "sourceId": "source:wikidata:main",
       "version": "20260608"
+    },
+    {
+      "checksum": "sha256:8c823e08b49067467513bb970d77b52ab2ebf9b2128d7bf2b6a3529329d2e554",
+      "files": [
+        {
+          "byteLength": 1575,
+          "checksum": "sha256:47535680ecc14b5504066d0d2b1780aae57be0785c4968fcd8c52ca3456c8246",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/evaluation-results.json"
+        },
+        {
+          "byteLength": 178495423,
+          "checksum": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9",
+          "mediaType": "application/onnx",
+          "path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/model_quantized.onnx",
+          "sourceUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/onnx/model_quantized.onnx"
+        },
+        {
+          "byteLength": 1207,
+          "checksum": "sha256:7aa891abae067f95a40f5e2005b3de44824a083f256802934a993d301ec25076",
+          "mediaType": "application/json",
+          "path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/upstream-config.json",
+          "sourceUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/config.json"
+        },
+        {
+          "byteLength": 995526,
+          "checksum": "sha256:fe0fda7c425b48c516fc8f160d594c8022a0808447475c1a7c6d6479763f310c",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/vocab.txt",
+          "sourceUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/vocab.txt"
+        }
+      ],
+      "kind": "file-set",
+      "notes": "Pinned quantized ONNX model, tokenizer vocabulary, upstream configuration, and deterministic local AQMAR evaluation result. Model bytes remain outside npm packages.",
+      "retrievedAt": "2026-09-01T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+      "sourceId": "source:huggingface:xenova-bert-multilingual-ner",
+      "version": "263e82c06569c8c2ac46238a7ae5107598934234"
+    },
+    {
+      "checksum": "sha256:fcf767ae7396d798f5a4974c43fc2cd9994d2108021983a50eb84a7a9b7f3231",
+      "files": [
+        {
+          "byteLength": 21306,
+          "checksum": "sha256:147b92d19ba9287e7dbba606a6c0306799eda1abd5d2294956937fb0acfb90e1",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/aqmar-arabic-ner-1.0/LICENSE",
+          "sourceUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/AQMAR_Arabic_NER_corpus-1.0.zip#LICENSE"
+        },
+        {
+          "byteLength": 3730,
+          "checksum": "sha256:6bc4b219626bd8d36ff50d465e81d8c51389762375f1f3cc24f066188344b897",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/aqmar-arabic-ner-1.0/README",
+          "sourceUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/AQMAR_Arabic_NER_corpus-1.0.zip#README"
+        },
+        {
+          "byteLength": 6617373,
+          "checksum": "sha256:42477fe9221266bd3b5d994e0149c00cfc58654d019a1e7e7215c47452107c3b",
+          "mediaType": "text/plain; charset=utf-8",
+          "path": "tools/textpack-forge/snapshots/data/aqmar-arabic-ner-1.0/all.test.features.txt",
+          "sourceUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/AQMAR_Arabic_NER_corpus-1.0.zip#featureFiles/test/all.test.features.txt"
+        }
+      ],
+      "kind": "archive",
+      "notes": "Pinned official AQMAR test feature split and local license evidence. Corpus text is used only for held-out evaluation and is not emitted into npm packages.",
+      "retrievedAt": "2026-09-01T00:00:00.000Z",
+      "schemaVersion": "1",
+      "snapshotId": "snapshot:source:aqmar:arabic-ner-1.0:2012-04-09",
+      "sourceId": "source:aqmar:arabic-ner-1.0",
+      "version": "1.0"
     }
   ],
   "sourceIds": [
@@ -1710,7 +1894,9 @@
     "source:unicode:cldr-core",
     "source:camel:morph-msa-lrec-coling-2024",
     "source:wordnet:arabic-v4.1.0",
-    "source:wikidata:main"
+    "source:wikidata:main",
+    "source:huggingface:xenova-bert-multilingual-ner",
+    "source:aqmar:arabic-ner-1.0"
   ],
   "sourcePolicies": [
     {
@@ -1859,6 +2045,53 @@
       "requiredPackageNameSuffixes": [],
       "reviewState": "approved",
       "sourceId": "source:wikidata:main"
+    },
+    {
+      "capabilitySlots": [
+        "entities"
+      ],
+      "citation": "Davlan multilingual NER model and pinned Xenova ONNX conversion.",
+      "defaultCompositeAllowed": true,
+      "family": "HUGGINGFACE-MODEL",
+      "homepageUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "AFL-3.0",
+      "name": "Xenova BERT multilingual cased NER HRL ONNX",
+      "notes": "Explicit model artifact for deployable multilingual NER; model bytes are not npm-shipped.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:huggingface:xenova-bert-multilingual-ner"
+    },
+    {
+      "capabilitySlots": [
+        "entities",
+        "evaluation"
+      ],
+      "citation": "AQMAR Arabic NER Corpus 1.0 held-out test data.",
+      "defaultCompositeAllowed": false,
+      "family": "AQMAR",
+      "homepageUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "AQMAR Arabic Wikipedia Named Entity Corpus 1.0",
+      "notes": "Evaluation-only share-alike source; corpus rows are not emitted into language packs.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:aqmar:arabic-ner-1.0"
     }
   ],
   "sources": [
@@ -1957,6 +2190,38 @@
       "reviewState": "approved",
       "schemaVersion": "1",
       "sourceId": "source:wikidata:main"
+    },
+    {
+      "citation": "Davlan BERT multilingual cased NER HRL model; Xenova ONNX conversion, commit 263e82c06569c8c2ac46238a7ae5107598934234.",
+      "family": "HUGGINGFACE-MODEL",
+      "homepageUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl",
+      "licenseEvidence": [
+        "https://huggingface.co/Davlan/bert-base-multilingual-cased-ner-hrl/blob/5e290dbe35953ce62c0cdd704326c47d403a5002/README.md",
+        "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/blob/263e82c06569c8c2ac46238a7ae5107598934234/README.md"
+      ],
+      "licenseExpression": "AFL-3.0",
+      "name": "Xenova BERT multilingual cased NER HRL ONNX",
+      "notes": "Pinned quantized ONNX deployment artifact and cased multilingual BERT WordPiece vocabulary. The artifact is acquired explicitly and is not included in npm packages.",
+      "redistributionPolicy": "redistributable-with-attribution",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:huggingface:xenova-bert-multilingual-ner"
+    },
+    {
+      "citation": "Mohit, Schneider, Bhowmick, Oflazer, and Smith (2012), Recall-Oriented Learning of Named Entities in Arabic Wikipedia.",
+      "family": "AQMAR",
+      "homepageUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/",
+      "licenseEvidence": [
+        "https://www.cs.cmu.edu/~ark/ArabicNER/corpus/LICENSE",
+        "https://www.cs.cmu.edu/~ark/ArabicNER/corpus/README"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "AQMAR Arabic Wikipedia Named Entity Corpus 1.0",
+      "notes": "The official AQMAR test feature split is used only as a held-out Arabic NER evaluation input; corpus text is not shipped in generated language packages.",
+      "redistributionPolicy": "share-alike-isolated",
+      "reviewState": "approved",
+      "schemaVersion": "1",
+      "sourceId": "source:aqmar:arabic-ner-1.0"
     }
   ]
 }

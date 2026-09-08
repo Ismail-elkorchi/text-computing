@@ -1,5 +1,7 @@
+export * from "./index.ts";
 export {
+	createNodeArtifactReader,
 	createNodeResourceReader,
+	type TextPackNodeArtifactReaderOptions,
 	type TextPackNodeResourceReaderOptions,
-} from "@ismail-elkorchi/textpack/node";
-export * from "./index.js";
+} from "./packs/node.ts";

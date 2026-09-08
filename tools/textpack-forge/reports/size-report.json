@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "limits": {
     "compositePackedBytes": 512000,
@@ -13,9 +13,9 @@
   "mode": "source-backed",
   "packages": [
     {
-      "artifactBackedSizeBytes": 0,
-      "npmShippedSizeBytes": 47465660,
-      "outputChecksum": "sha256:09ee875f85ff9584e0ff5026acf6a050876466137f5904b2af5db17f0b96145f",
+      "artifactBackedSizeBytes": 142470007772,
+      "npmShippedSizeBytes": 48198527,
+      "outputChecksum": "sha256:20a75f501ff9b1402389b89cf320bedd071712ec2ce5f013806534c858502974",
       "packageDir": "packages/textpacks/textpack-ar",
       "packageName": "@ismail-elkorchi/textpack-ar",
       "physicalStorage": [
@@ -250,6 +250,38 @@
           "path": "resources/cldr-48.script-data.tsv",
           "resourceIds": [
             "cldr-48-script-data"
+          ]
+        },
+        {
+          "byteLength": 1694,
+          "checksum": "sha256:729c1225d4b611540158374c4a46f3eb981b00ff32440d5695b26ab9d3fb376c",
+          "path": "resources/ner-ar.evaluation.json",
+          "resourceIds": [
+            "ner-ar-evaluation"
+          ]
+        },
+        {
+          "byteLength": 858,
+          "checksum": "sha256:6a3e4dafae026116f2551e5c98f2241f4c961cd60ac3f7578431b92e46c50262",
+          "path": "resources/ner-ar.model.json",
+          "resourceIds": [
+            "ner-ar-model"
+          ]
+        },
+        {
+          "byteLength": 842,
+          "checksum": "sha256:183bd6b02819364ac6f3f6b4f45bf87a330cdb65bbda57c7646335722a3b0b14",
+          "path": "resources/ner-ar.quality-profile.json",
+          "resourceIds": [
+            "ner-ar-quality-profile"
+          ]
+        },
+        {
+          "byteLength": 729473,
+          "checksum": "sha256:c8cf2513bd655536074daa95c12874a598bfe6e3ac2f97601601ac4cfa8e5506",
+          "path": "resources/ner-ar.vocab.txt.gz.b64",
+          "resourceIds": [
+            "ner-ar-vocabulary"
           ]
         },
         {
@@ -1041,6 +1073,90 @@
           "sizeClass": "tiny"
         },
         {
+          "byteLength": 1694,
+          "checksum": "sha256:729c1225d4b611540158374c4a46f3eb981b00ff32440d5695b26ab9d3fb376c",
+          "id": "ner-ar-evaluation",
+          "kind": "quality-profile",
+          "lineCount": 57,
+          "logicalLineCount": 57,
+          "logicalNonEmptyLineCount": 56,
+          "logicalRecordCount": 56,
+          "logicalResourceTextByteLength": 1694,
+          "nonEmptyLineCount": 56,
+          "path": "resources/ner-ar.evaluation.json",
+          "pipelineId": "model-backed-ner",
+          "pipelineVersion": "1.0.0",
+          "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+          "resourceTextByteLength": 1694,
+          "sharedStorageResourceIds": [
+            "ner-ar-evaluation"
+          ],
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 858,
+          "checksum": "sha256:6a3e4dafae026116f2551e5c98f2241f4c961cd60ac3f7578431b92e46c50262",
+          "id": "ner-ar-model",
+          "kind": "statistical-model",
+          "lineCount": 41,
+          "logicalLineCount": 41,
+          "logicalNonEmptyLineCount": 40,
+          "logicalRecordCount": 40,
+          "logicalResourceTextByteLength": 858,
+          "nonEmptyLineCount": 40,
+          "path": "resources/ner-ar.model.json",
+          "pipelineId": "model-backed-ner",
+          "pipelineVersion": "1.0.0",
+          "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+          "resourceTextByteLength": 858,
+          "sharedStorageResourceIds": [
+            "ner-ar-model"
+          ],
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 842,
+          "checksum": "sha256:183bd6b02819364ac6f3f6b4f45bf87a330cdb65bbda57c7646335722a3b0b14",
+          "id": "ner-ar-quality-profile",
+          "kind": "quality-profile",
+          "lineCount": 37,
+          "logicalLineCount": 37,
+          "logicalNonEmptyLineCount": 36,
+          "logicalRecordCount": 36,
+          "logicalResourceTextByteLength": 842,
+          "nonEmptyLineCount": 36,
+          "path": "resources/ner-ar.quality-profile.json",
+          "pipelineId": "model-backed-ner",
+          "pipelineVersion": "1.0.0",
+          "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+          "resourceTextByteLength": 842,
+          "sharedStorageResourceIds": [
+            "ner-ar-quality-profile"
+          ],
+          "sizeClass": "tiny"
+        },
+        {
+          "byteLength": 729473,
+          "checksum": "sha256:c8cf2513bd655536074daa95c12874a598bfe6e3ac2f97601601ac4cfa8e5506",
+          "id": "ner-ar-vocabulary",
+          "kind": "lexicon",
+          "lineCount": 119548,
+          "logicalLineCount": 119548,
+          "logicalNonEmptyLineCount": 119547,
+          "logicalRecordCount": 119547,
+          "logicalResourceTextByteLength": 995526,
+          "nonEmptyLineCount": 119547,
+          "path": "resources/ner-ar.vocab.txt.gz.b64",
+          "pipelineId": "model-backed-ner",
+          "pipelineVersion": "1.0.0",
+          "resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+          "resourceTextByteLength": 995526,
+          "sharedStorageResourceIds": [
+            "ner-ar-vocabulary"
+          ],
+          "sizeClass": "small"
+        },
+        {
           "byteLength": 10002,
           "checksum": "sha256:41d04cab0faa03916e7833a0447cf38df3fe80e470e0d20d0fac9482e49fcb59",
           "id": "unicode-17-blocks",
@@ -1514,9 +1630,9 @@
       "sizeClass": "medium"
     },
     {
-      "artifactBackedSizeBytes": 0,
+      "artifactBackedSizeBytes": 142291512349,
       "npmShippedSizeBytes": 38010412,
-      "outputChecksum": "sha256:f3ed06322ef036ed149e5c2e76da526fdfc975b9bbe3103c3d1c83713ce5fdee",
+      "outputChecksum": "sha256:623f18cfd3ac4da8f73c85a7edf63e14081cb55d76eba38a8b663911cfc05759",
       "packageDir": "packages/textpacks/textpack-en",
       "packageName": "@ismail-elkorchi/textpack-en",
       "physicalStorage": [
@@ -3242,9 +3358,9 @@
       "sizeClass": "medium"
     },
     {
-      "artifactBackedSizeBytes": 0,
+      "artifactBackedSizeBytes": 142291512349,
       "npmShippedSizeBytes": 15741685,
-      "outputChecksum": "sha256:f57ad273796e33e821d40abc9a37965a69eedefe00a1e2e90aa4c765b67fbf29",
+      "outputChecksum": "sha256:ba5831d8db7aecab963754a35629c3e9d17b34d6a2543d59bb2c99fde7a542f3",
       "packageDir": "packages/textpacks/textpack-fr",
       "packageName": "@ismail-elkorchi/textpack-fr",
       "physicalStorage": [

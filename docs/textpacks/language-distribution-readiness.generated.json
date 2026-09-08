@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "languages": [
     {
@@ -1324,6 +1324,11 @@
               "tier": "none"
             },
             {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
+            },
+            {
               "slot": "foundation",
               "status": "profiled",
               "tier": "resource-only"
@@ -1437,7 +1442,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [],
           "stage": "distribution-ready"
@@ -1458,6 +1465,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -1558,7 +1570,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [],
           "stage": "distribution-ready"
@@ -1578,6 +1592,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -1678,7 +1697,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [],
           "stage": "distribution-ready"
@@ -1698,6 +1719,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -1799,7 +1825,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [
             {
@@ -1827,6 +1855,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -1928,7 +1961,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [
             {
@@ -1962,6 +1997,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -2063,7 +2103,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [
             {
@@ -2092,6 +2134,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -2202,7 +2249,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [
             {
@@ -2235,6 +2284,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -2335,7 +2389,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [
             {
@@ -2368,6 +2424,11 @@
               "slot": "corpus",
               "status": "planned",
               "tier": "none"
+            },
+            {
+              "slot": "entities",
+              "status": "task-supported",
+              "tier": "model-backed"
             },
             {
               "slot": "foundation",
@@ -2489,6 +2550,15 @@
               "publishable": true
             },
             {
+              "buildUnitClass": "model",
+              "buildUnitId": "ner-ar-sa",
+              "capabilitySlots": [
+                "entities",
+                "quality"
+              ],
+              "publishable": true
+            },
+            {
               "buildUnitClass": "kb",
               "buildUnitId": "wikidata-ar",
               "capabilitySlots": [
@@ -2515,7 +2585,9 @@
             "source:unicode:cldr-core",
             "source:camel:morph-msa-lrec-coling-2024",
             "source:wordnet:arabic-v4.1.0",
-            "source:wikidata:main"
+            "source:wikidata:main",
+            "source:huggingface:xenova-bert-multilingual-ner",
+            "source:aqmar:arabic-ner-1.0"
           ],
           "sourceRequirements": [
             {

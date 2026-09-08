@@ -16,6 +16,14 @@ const COVERAGE_REPORT_SCHEMA_PATH =
 const EVALUATION_RECORD_SCHEMA_PATH =
 	"schemas/textpack-evaluation-record.schema.json";
 const CANONICAL_RESOURCE_SCHEMA_PATHS = new Map([
+	[
+		"text-computing.ner-evaluation.v1",
+		"schemas/text-computing-ner-evaluation.schema.json",
+	],
+	[
+		"text-computing.ner-model.v1",
+		"schemas/text-computing-ner-model.schema.json",
+	],
 	["textdata.corpus.v1", "schemas/textpack-corpus-resource.schema.json"],
 	["textkb.knowledge-base.v1", "schemas/textpack-kb-resource.schema.json"],
 	["textlex.lexicon.v1", "schemas/textpack-lexicon-resource.schema.json"],
@@ -44,6 +52,7 @@ const CANONICAL_RESOURCE_SCHEMA_PATHS = new Map([
 ]);
 const CANONICAL_RESOURCE_SCHEMA_IDS = new Set([
 	...CANONICAL_RESOURCE_SCHEMA_PATHS.keys(),
+	"text-computing.wordpiece-vocabulary.v1",
 	"textdata.corpus.rows.v1",
 	"textdata.dataset.v1",
 	"textdata.segmentation-table.v1",
@@ -479,9 +488,8 @@ function assertFlattenedDistribution(packageName, manifest, packageJson) {
 		{ components: manifest.components ?? [] },
 	);
 	expect(
-		JSON.stringify(Object.keys(packageJson.dependencies ?? {}).sort()) ===
-			JSON.stringify(["@ismail-elkorchi/textpack"]),
-		`${packageName} must depend only on the structural textpack runtime.`,
+		Object.keys(packageJson.dependencies ?? {}).length === 0,
+		`${packageName} must have no runtime dependencies.`,
 		{ dependencies: packageJson.dependencies ?? {} },
 	);
 	for (const slotName of REQUIRED_LANGUAGE_DISTRIBUTION_SLOTS) {
@@ -659,7 +667,7 @@ for (const packDir of packDirs) {
 	);
 	expect(
 		readmeText.includes(
-			"Use `@ismail-elkorchi/text-computing` for application-facing NLP task APIs.",
+			"Use `@ismail-elkorchi/text-computing` and its public modules to work with these resources.",
 		),
 		`${packageJson.name} README must point task APIs to @ismail-elkorchi/text-computing.`,
 	);
@@ -814,8 +822,8 @@ for (const packDir of packDirs) {
 		`${packageJson.name} must export ./pack.manifest.json.`,
 	);
 	expect(
-		packageJson.dependencies?.["@ismail-elkorchi/textpack"] === "0.1.0",
-		`${packageJson.name} must depend on the textpack contract package.`,
+		Object.keys(packageJson.dependencies ?? {}).length === 0,
+		`${packageJson.name} must be an independent data-only package.`,
 	);
 	assertPackScripts(packageJson);
 	expect(

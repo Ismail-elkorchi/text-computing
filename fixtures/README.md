@@ -12,6 +12,6 @@ validation.
 
 ## Fixture sets
 
-- [`textdoc/`](textdoc/) — curated document-model and invalid cases.
-- [`textpack/`](textpack/) — licensed resource fixtures and manifest negatives used to verify issue
+- [`textdoc/`](./textdoc/) — curated document-model and invalid cases.
+- [`textpack/`](./textpack/) — licensed resource fixtures and manifest negatives used to verify issue
   `#12`.

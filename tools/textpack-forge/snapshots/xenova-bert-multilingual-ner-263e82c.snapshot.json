@@ -1,0 +1,39 @@
+{
+	"schemaVersion": "1",
+	"snapshotId": "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+	"sourceId": "source:huggingface:xenova-bert-multilingual-ner",
+	"version": "263e82c06569c8c2ac46238a7ae5107598934234",
+	"retrievedAt": "2026-09-01T00:00:00.000Z",
+	"kind": "file-set",
+	"checksum": "sha256:8c823e08b49067467513bb970d77b52ab2ebf9b2128d7bf2b6a3529329d2e554",
+	"files": [
+		{
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/evaluation-results.json",
+			"mediaType": "application/json",
+			"byteLength": 1575,
+			"checksum": "sha256:47535680ecc14b5504066d0d2b1780aae57be0785c4968fcd8c52ca3456c8246"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/model_quantized.onnx",
+			"mediaType": "application/onnx",
+			"byteLength": 178495423,
+			"checksum": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9",
+			"sourceUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/onnx/model_quantized.onnx"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/upstream-config.json",
+			"mediaType": "application/json",
+			"byteLength": 1207,
+			"checksum": "sha256:7aa891abae067f95a40f5e2005b3de44824a083f256802934a993d301ec25076",
+			"sourceUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/config.json"
+		},
+		{
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/vocab.txt",
+			"mediaType": "text/plain; charset=utf-8",
+			"byteLength": 995526,
+			"checksum": "sha256:fe0fda7c425b48c516fc8f160d594c8022a0808447475c1a7c6d6479763f310c",
+			"sourceUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/vocab.txt"
+		}
+	],
+	"notes": "Pinned quantized ONNX model, tokenizer vocabulary, upstream configuration, and deterministic local AQMAR evaluation result. Model bytes remain outside npm packages."
+}

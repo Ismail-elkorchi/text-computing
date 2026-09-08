@@ -20,9 +20,6 @@
 		"prepack": "npm run build",
 		"test:all": "npm run -s build && node test/smoke.mjs && npm run -s check:pack"
 	},
-	"dependencies": {
-		"@ismail-elkorchi/textpack": "0.1.0"
-	},
 	"license": "SEE LICENSE IN LICENSE.generated.md",
 	"files": [
 		"dist",

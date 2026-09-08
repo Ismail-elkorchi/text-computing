@@ -301,6 +301,40 @@ function taskPipelineId(pack) {
 	);
 }
 
+function modelBackedNerEvaluationRecords(pack) {
+	const evaluation = payloadJson(pack, "ner-ar-evaluation");
+	return [
+		evaluationRecord(pack, {
+			recordId: "eval:ner-ar:aqmar-exact-span-f1",
+			resourceSpecId: resourceSpecIdFor(pack),
+			pipelineId: taskPipelineId(pack),
+			capabilitySlot: "entities",
+			taskType: "entities.recognize",
+			evaluationKind: "task-accuracy",
+			resourceIds: ["ner-ar-model", "ner-ar-evaluation"],
+			modelId: evaluation.modelId,
+			artifactId: evaluation.artifactId,
+			metricName: "exactSpanMicroF1",
+			value: evaluation.aggregate.metrics.f1,
+			unit: "ratio",
+			operator: "gte",
+			threshold: 0.5,
+			split: "held-out test",
+			sampleSize: evaluation.aggregate.sampleSize,
+			observations: {
+				precision: evaluation.aggregate.metrics.precision,
+				recall: evaluation.aggregate.metrics.recall,
+				spanMatching: evaluation.spanMatching,
+				targetLabels: evaluation.targetLabels,
+				artifactChecksum: evaluation.artifactChecksum,
+				dataset: evaluation.languages[0]?.dataset,
+				datasetChecksum: evaluation.languages[0]?.checksum,
+			},
+			limitations: evaluation.limitations,
+		}),
+	];
+}
+
 function languageRegistryEvaluationRecords(pack) {
 	const summary = payloadJson(pack, "bcp47-language-registry-summary");
 	const resourceSpecId = resourceSpecIdFor(pack);
@@ -2448,6 +2482,9 @@ export function evaluationRecordsForPack(pack, context) {
 	}
 	if (pack.packageName === "@ismail-elkorchi/textpack-language-registry") {
 		return languageRegistryEvaluationRecords(pack);
+	}
+	if (pack.packageName === "@ismail-elkorchi/textpack-ner-ar-sa") {
+		return modelBackedNerEvaluationRecords(pack);
 	}
 	if (pack.packageName === "@ismail-elkorchi/textpack-unicode-17") {
 		return unicodeFoundationEvaluationRecords(pack);

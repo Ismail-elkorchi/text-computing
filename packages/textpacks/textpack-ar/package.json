@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/textpack-ar",
 	"version": "0.1.0",
-	"description": "Audited Arabic capabilities for deployable document NLP; heavy corpus, parallel, and annotation datasets are acquired separately.",
+	"description": "Audited Arabic capabilities for deployable document NLP, including explicitly materialized model-backed named entity recognition.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -19,9 +19,6 @@
 		"test": "npm run test:all",
 		"prepack": "npm run build",
 		"test:all": "npm run -s build && node test/smoke.mjs && npm run -s check:pack"
-	},
-	"dependencies": {
-		"@ismail-elkorchi/textpack": "0.1.0"
 	},
 	"license": "SEE LICENSE IN LICENSE.generated.md",
 	"files": [
@@ -56,6 +53,10 @@
 		"resources/cldr-48.likely-subtags.tsv.gz.b64",
 		"resources/cldr-48.locale-aliases.tsv",
 		"resources/cldr-48.script-data.tsv",
+		"resources/ner-ar.evaluation.json",
+		"resources/ner-ar.model.json",
+		"resources/ner-ar.quality-profile.json",
+		"resources/ner-ar.vocab.txt.gz.b64",
 		"resources/unicode-17.blocks.tsv",
 		"resources/unicode-17.core.summary.json",
 		"resources/unicode-17.property-value-aliases.tsv",

@@ -6,7 +6,7 @@ import {
 } from "@ismail-elkorchi/text-computing/node";
 import fr from "@ismail-elkorchi/textpack-fr";
 
-test("French consumer workflow uses only the SDK plus textpack-fr", async () => {
+test("French consumer workflow uses only the library plus textpack-fr", async () => {
 	const nlp = await load(fr, { reader: createNodeResourceReader() });
 	const text = "La Republique francaise reconnait la France.";
 	const doc = await nlp(text, {
@@ -27,9 +27,7 @@ test("French consumer workflow uses only the SDK plus textpack-fr", async () => 
 
 	const normalized = await nlp.normalize(text);
 	assert.ok(normalized.length > 0);
-	const normalizedView = await nlp.normalization.normalizeDocument(
-		doc.toTextDoc(),
-	);
+	const normalizedView = await nlp.normalization.normalizeDocument(doc);
 	assert.ok(normalizedView.view.text.length > 0);
 	assert.equal(normalizedView.spanMap.targetViewId, normalizedView.view.id);
 
@@ -47,11 +45,11 @@ test("French consumer workflow uses only the SDK plus textpack-fr", async () => 
 	const entities = await nlp.kb.candidates("France", { maxCandidates: 2 });
 	assert.ok(entities.some((entity) => entity.label === "France"));
 	const emptyIndex = await nlp.search.createIndex();
-	const index = nlp.search.addAnalysis(emptyIndex, doc);
+	const index = nlp.search.addDocument(emptyIndex, doc);
 	assert.equal(index.stats.documentCount, 1);
-	assert.equal(nlp.search.query(index, "france")[0]?.docId, doc.toTextDoc().id);
+	assert.equal(nlp.search.query(index, "france")[0]?.docId, doc.id);
 
-	const quality = await nlp.quality.analyzeDocument(doc.toTextDoc(), {
+	const quality = await nlp.quality.analyzeDocument(doc, {
 		maxFindings: 4,
 	});
 	assert.ok(quality.id.length > 0);

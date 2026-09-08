@@ -59,7 +59,7 @@ Declared TSV outputs use one v1 indexed-table store when their resource spec dec
 `lookupKeyColumns`. The logical source descriptor and its `lookup-index` view share that physical
 file, so rows are shipped once. The store contains column-scoped normalized key buckets, reusable
 row buckets, normalized fuzzy key catalogs for KB aliases and labels, and raw pattern catalogs only
-for expert lexicon prefix, suffix, and fuzzy lookup. Empty keys are indexed only through explicit
+for lexicon prefix, suffix, and fuzzy lookup. Empty keys are indexed only through explicit
 `lookupEmptyKeyColumns`. Declaring lookup keys is a hard contract: forge generation fails instead of
 silently omitting an index, and generated verification reconstructs the logical TSV and
 deterministically rebuilds the complete store to compare its metadata and bytes.

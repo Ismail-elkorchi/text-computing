@@ -41,8 +41,20 @@ jobs:
       - name: Schema Validate
         run: npm run schema:validate
 
+      - name: Module and composition regression tests
+        run: npm test
+
+      - name: Static API checks
+        run: npm run check:static
+
+      - name: Isolated package and import cost checks
+        run: npm run check:pack
+
+      - name: Browser and Worker module smoke tests
+        run: npm -w @ismail-elkorchi/text-computing run test:browser:run && npm -w @ismail-elkorchi/text-computing run test:workers:run
+
       - name: Forge regression tests
-        run: npm run test:forge
+        run: npm run forge:verify && npm run test:forge
 
       - name: Held-out NLP benchmarks
         run: npm run test:nlp

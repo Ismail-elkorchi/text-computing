@@ -4,30 +4,32 @@ import test from "node:test";
 import {
 	analyze,
 	createFetchResourceReader,
+	createOnnxEntityExecutor,
 	inspect,
 	load,
 	support,
+	type TextComputingOnnxBackend,
 } from "@ismail-elkorchi/text-computing";
 import {
 	segmentationAdapterFromPack,
 	type TextDataSegment,
-} from "@ismail-elkorchi/textdata";
+} from "@ismail-elkorchi/text-computing/data";
 import {
 	addViewWithSpanMap,
 	createDocument,
 	validateTextDocument,
-} from "@ismail-elkorchi/textdoc";
-import { candidateEntitiesFromPack } from "@ismail-elkorchi/textkb";
+} from "@ismail-elkorchi/text-computing/document";
+import { candidateEntitiesFromPack } from "@ismail-elkorchi/text-computing/knowledge";
 import {
 	lookupManyFromPackAsync,
 	morphologyAnalysesManyFromPackAsync,
-} from "@ismail-elkorchi/textlex";
-import { normalizationProfileFromPack } from "@ismail-elkorchi/textnorm";
+} from "@ismail-elkorchi/text-computing/lexicon";
+import { normalizationProfileFromPack } from "@ismail-elkorchi/text-computing/normalization";
 import type {
 	TextPack,
 	TextPackResourceReader,
-} from "@ismail-elkorchi/textpack";
-import { createPack } from "@ismail-elkorchi/textpack";
+} from "@ismail-elkorchi/text-computing/packs";
+import { createPack } from "@ismail-elkorchi/text-computing/packs";
 import ar from "@ismail-elkorchi/textpack-ar";
 import en from "@ismail-elkorchi/textpack-en";
 import fr from "@ismail-elkorchi/textpack-fr";
@@ -63,6 +65,15 @@ function localGeneratedResourceReader(): TextPackResourceReader {
 }
 
 const generatedReader = localGeneratedResourceReader();
+
+async function sha256Bytes(bytes: Uint8Array): Promise<string> {
+	const input = new Uint8Array(bytes.byteLength);
+	input.set(bytes);
+	const digest = await crypto.subtle.digest("SHA-256", input);
+	return [...new Uint8Array(digest)]
+		.map((byte) => byte.toString(16).padStart(2, "0"))
+		.join("");
+}
 
 const languageCases = [
 	{
@@ -155,6 +166,316 @@ test("loads imported textpack data and runs the top-level analyze convenience AP
 	}
 });
 
+test("runs model-backed NER with source spans, confidence, and execution evidence", async () => {
+	const modelBytes = Uint8Array.from([1, 2, 3, 4]);
+	const modelChecksum = await sha256Bytes(modelBytes);
+	const vocabulary = [
+		"[PAD]",
+		"[UNK]",
+		"[CLS]",
+		"[SEP]",
+		"Alice",
+		"works",
+		"at",
+		"Acme",
+		".",
+	].join("\n");
+	const pack = createPack(
+		{
+			schemaVersion: "1",
+			id: "pack:text-computing:model-ner-test",
+			name: "Text Computing Model NER Test",
+			version: "0.1.0",
+			packageName: "@example/textpack-model-ner-test",
+			targets: { languages: ["en"], scripts: ["Latn"] },
+			resources: [
+				{
+					id: "segmentation-profile",
+					kind: "segmentation-profile",
+					format: "json",
+					schemaId: "textdata.segmentation-profile.v1",
+				},
+				{
+					id: "normalization-profile",
+					kind: "normalization-profile",
+					format: "json",
+					schemaId: "textnorm.profile.v1",
+				},
+				{
+					id: "ner-model",
+					kind: "statistical-model",
+					format: "json",
+					schemaId: "text-computing.ner-model.v1",
+				},
+				{
+					id: "ner-vocabulary",
+					kind: "lexicon",
+					format: "text",
+				},
+			],
+			artifacts: [
+				{
+					artifactId: "ner-onnx",
+					sourceIds: ["source:ner-onnx"],
+					version: "test",
+					profile: "local",
+					sizeBytes: modelBytes.byteLength,
+					mediaType: "application/onnx",
+					checksum: { algorithm: "sha256", value: modelChecksum },
+					licenseExpression: "MIT",
+					redistributionPolicy: "local-only",
+					retrieval: { kind: "manual" },
+					cacheKey: `sha256:${modelChecksum}`,
+					expectedFiles: [
+						{
+							path: "model.onnx",
+							sizeBytes: modelBytes.byteLength,
+							checksum: `sha256:${modelChecksum}`,
+						},
+					],
+				},
+			],
+			capabilitySlots: [
+				{
+					slot: "segmentation",
+					status: "task-supported",
+					tier: "baseline",
+					resourceIds: ["segmentation-profile"],
+					bindings: [
+						{
+							role: "profile",
+							resourceId: "segmentation-profile",
+							schemaId: "textdata.segmentation-profile.v1",
+							required: true,
+						},
+					],
+				},
+				{
+					slot: "normalization",
+					status: "task-supported",
+					tier: "rule-based",
+					resourceIds: ["normalization-profile"],
+					bindings: [
+						{
+							role: "profile",
+							resourceId: "normalization-profile",
+							schemaId: "textnorm.profile.v1",
+							required: true,
+						},
+					],
+				},
+				{
+					slot: "entities",
+					status: "task-supported",
+					tier: "model-backed",
+					resourceIds: ["ner-model", "ner-vocabulary"],
+					artifactIds: ["ner-onnx"],
+					bindings: [
+						{
+							role: "primary",
+							resourceId: "ner-model",
+							schemaId: "text-computing.ner-model.v1",
+							required: true,
+						},
+					],
+				},
+			],
+			license: "MIT",
+		},
+		{
+			"segmentation-profile": {
+				schemaVersion: "1",
+				kind: "segmentation-profile",
+				profileId: "segmentation-test",
+				languageTag: "en",
+				granularity: "token",
+			},
+			"normalization-profile": {
+				schemaVersion: "1",
+				kind: "normalization-profile",
+				profileId: "normalization-test",
+				languageTag: "en",
+				script: "Latn",
+				unicodeNormalization: "NFC",
+				rules: [],
+			},
+			"ner-model": {
+				schemaVersion: "1",
+				task: "entities",
+				format: "onnx",
+				artifactId: "ner-onnx",
+				artifactFile: "model.onnx",
+				tokenizer: {
+					type: "bert-wordpiece",
+					vocabularyResourceId: "ner-vocabulary",
+					doLowerCase: false,
+					stripAccents: false,
+					tokenizeChineseCharacters: true,
+					specialTokens: {
+						unknown: "[UNK]",
+						cls: "[CLS]",
+						sep: "[SEP]",
+						pad: "[PAD]",
+					},
+				},
+				inputs: { inputIds: "input_ids", attentionMask: "attention_mask" },
+				output: {
+					logits: "logits",
+					labels: ["O", "B-PER", "I-PER", "B-ORG", "I-ORG"],
+				},
+				maxSequenceLength: 16,
+			},
+			"ner-vocabulary": vocabulary,
+		},
+	);
+	let sessionCreations = 0;
+	const backend: TextComputingOnnxBackend = {
+		id: "test-onnx",
+		version: "1",
+		async createSession(bytes) {
+			sessionCreations += 1;
+			assert.ok(bytes.byteLength > 0);
+			return {
+				async run(feeds) {
+					const input = feeds.input_ids;
+					if (input === undefined) throw new Error("missing input_ids");
+					const labelCount = 5;
+					const values = new Float32Array(input.data.length * labelCount);
+					for (let index = 0; index < input.data.length; index += 1) {
+						const id = Number(input.data[index]);
+						const label = id === 4 ? 1 : id === 7 ? 3 : 0;
+						values[index * labelCount + label] = 10;
+					}
+					return {
+						logits: {
+							data: values,
+							dims: [1, input.data.length, labelCount],
+						},
+					};
+				},
+			};
+		},
+		createInt64Tensor: (data, dims) => ({ data, dims }),
+	};
+	const entityExecutor = createOnnxEntityExecutor(backend);
+	const artifactReader = { readBytes: () => modelBytes };
+	const nlp = await load(pack, { artifactReader, entityExecutor });
+	const doc = await nlp("Alice works at Acme.", { tasks: ["entities"] });
+
+	assert.deepEqual(
+		doc.entities.map(({ text, type }) => ({ text, type })),
+		[
+			{ text: "Alice", type: "person" },
+			{ text: "Acme", type: "organization" },
+		],
+	);
+	assert.equal(doc.entities[0]?.startCU, 0);
+	assert.equal(doc.entities[0]?.endCU, 5);
+	assert.equal((doc.entities[0]?.score ?? 0) > 0.99, true);
+	assert.deepEqual(doc.entities[0]?.tokenIds, [doc.tokens[0]?.id]);
+	assert.equal(doc.entityLinks.length, 0);
+	assert.equal(doc.layers["entity.text-computing"]?.type, "entity.named");
+	assert.equal(
+		doc.evidence.some(
+			(evidence) =>
+				evidence.kind === "model-execution" &&
+				evidence.artifactIds.includes("ner-onnx") &&
+				evidence.executionProvider === "test-onnx",
+		),
+		true,
+	);
+	assert.equal(sessionCreations, 1);
+	assert.deepEqual(
+		(await nlp.entities.recognize("Alice")).map((entity) => entity.text),
+		["Alice"],
+	);
+	assert.equal(sessionCreations, 1);
+
+	const execution = doc.evidence.find(
+		(item) => item.kind === "model-execution",
+	);
+	assert.ok(execution && execution.kind === "model-execution");
+	assert.equal(execution.artifact.checksum, `sha256:${modelChecksum}`);
+	assert.equal(execution.executorVersion, "1");
+	assert.match(execution.modelChecksum, /^sha256:[0-9a-f]{64}$/);
+	assert.match(execution.vocabularyChecksum, /^sha256:[0-9a-f]{64}$/);
+	assert.deepEqual(
+		JSON.parse(JSON.stringify(doc)).metadata.analysis.evidence,
+		doc.evidence,
+	);
+	const changedBytes = Uint8Array.from([9, 8, 7, 6]);
+	const changedChecksum = await sha256Bytes(changedBytes);
+	const firstArtifact = pack.manifest.artifacts?.[0];
+	assert.ok(firstArtifact);
+	const changedPack = createPack(
+		{
+			...pack.manifest,
+			artifacts: [
+				{
+					...firstArtifact,
+					version: "changed",
+					checksum: { algorithm: "sha256", value: changedChecksum },
+					expectedFiles: [
+						{
+							path: "model.onnx",
+							sizeBytes: changedBytes.byteLength,
+							checksum: `sha256:${changedChecksum}`,
+						},
+					],
+				},
+			],
+		},
+		pack.resources,
+	);
+	let changedReads = 0;
+	const changed = await load(changedPack, {
+		entityExecutor,
+		artifactReader: {
+			readBytes: () => {
+				changedReads += 1;
+				return changedBytes;
+			},
+		},
+	});
+	await changed("Alice", { tasks: ["entities"] });
+	assert.equal(
+		changedReads,
+		1,
+		"Changed content with the same cache label must be read and verified.",
+	);
+	assert.equal(sessionCreations, 2);
+	const changedArtifact = changedPack.manifest.artifacts?.[0];
+	assert.ok(changedArtifact);
+	const broken = await load(
+		createPack(
+			{
+				...changedPack.manifest,
+				artifacts: [{ ...changedArtifact, version: "retry" }],
+			},
+			pack.resources,
+		),
+		{
+			entityExecutor,
+			artifactReader: { readBytes: () => modelBytes },
+		},
+	);
+	await assert.rejects(
+		() => broken("Alice", { tasks: ["entities"] }),
+		/checksum mismatch/,
+	);
+
+	const noExecutor = await load(pack, { artifactReader });
+	await assert.rejects(
+		() => noExecutor("Alice", { tasks: ["entities"] }),
+		/requires an entity executor/u,
+	);
+	const noArtifactReader = await load(pack, { entityExecutor });
+	await assert.rejects(
+		() => noArtifactReader("Alice", { tasks: ["entities"] }),
+		/requires an explicit artifactReader/u,
+	);
+});
+
 test("runs lightweight task APIs over generated English, French, and Arabic packs", async () => {
 	for (const { languageTag, pack, text } of languageCases) {
 		const nlp = await load(pack, { reader: generatedReader });
@@ -202,7 +523,7 @@ test("keeps default document analysis lightweight and token-aligned", async () =
 		assert.equal(doc.searchTokens.length > 0, true, `${languageTag} search`);
 		assert.equal(
 			doc.searchTokens.every((token) => {
-				const view = doc.toTextDoc().views[token.viewId];
+				const view = doc.views[token.viewId];
 				return view !== undefined && token.endCU <= view.text.length;
 			}),
 			true,
@@ -215,7 +536,12 @@ test("keeps default document analysis lightweight and token-aligned", async () =
 			0,
 			`${languageTag} morphology is opt-in`,
 		);
-		assert.equal(doc.entities.length, 0, `${languageTag} KB linking is opt-in`);
+		assert.equal(doc.entities.length, 0, `${languageTag} NER is opt-in`);
+		assert.equal(
+			doc.entityLinks.length,
+			0,
+			`${languageTag} KB linking is opt-in`,
+		);
 		assert.equal(
 			doc.tokens.every(
 				(token, index) =>
@@ -224,12 +550,13 @@ test("keeps default document analysis lightweight and token-aligned", async () =
 					token.normalizedText.length > 0 &&
 					token.lemmas.length === 0 &&
 					token.morphology.length === 0 &&
-					token.entities.length === 0,
+					token.entities.length === 0 &&
+					token.entityLinks.length === 0,
 			),
 			true,
 			`${languageTag} token alignment`,
 		);
-		assert.ok(doc.toTextDoc().layers["token.text-computing"]);
+		assert.ok(doc.layers["token.text-computing"]);
 		assert.equal(doc.evidence.length > 0, true, `${languageTag} evidence`);
 		assert.equal(
 			"entityLinkedDocument" in (doc as unknown as Record<string, unknown>),
@@ -242,12 +569,15 @@ test("keeps default document analysis lightweight and token-aligned", async () =
 			`${languageTag} raw source document is not public DTO`,
 		);
 		assert.equal(
-			doc.toJSON().languageTag,
+			JSON.parse(JSON.stringify(doc)).metadata.analysis.languageTag,
 			languageTag,
 			`${languageTag} JSON language`,
 		);
-		assert.equal(doc.toJSON().evidence.length, doc.evidence.length);
-		assert.equal(typeof doc.toTextDoc().id, "string");
+		assert.equal(
+			JSON.parse(JSON.stringify(doc)).metadata.analysis.evidence.length,
+			doc.evidence.length,
+		);
+		assert.equal(typeof doc.id, "string");
 		assert.equal(
 			elapsedMs < 2_000,
 			true,
@@ -256,16 +586,16 @@ test("keeps default document analysis lightweight and token-aligned", async () =
 	}
 });
 
-test("fails clearly instead of reusing stale SDK analysis layers", async () => {
+test("fails clearly instead of reusing stale library analysis layers", async () => {
 	const nlp = await load(en, { reader: generatedReader });
 	const analysis = await nlp("Paris");
 	await assert.rejects(
-		() => nlp.document.analyzeDocument(analysis.toTextDoc()),
+		() => nlp.document.analyzeDocument(analysis),
 		/cannot replace existing analysis layer token\.text-computing/u,
 	);
 });
 
-test("keeps direct runtime packages usable as expert mode over the same textpack", async () => {
+test("composes public modules over the same pack", async () => {
 	const text = "L'Etat francais reconnait Paris.";
 	const nlp = await load(fr, { reader: generatedReader });
 	const sdkTokens = await nlp.tokenize(text);
@@ -304,7 +634,7 @@ test("keeps direct runtime packages usable as expert mode over the same textpack
 	assert.equal(Array.isArray(entityCandidates), true);
 });
 
-test("reports generated pack resources without treating textpack as SDK", async () => {
+test("reports generated pack resources without treating textpack as library", async () => {
 	const report = await inspect(fr);
 
 	assert.equal(report.packageName, "@ismail-elkorchi/textpack-fr");
@@ -437,7 +767,7 @@ test("exports the portable fetch-style reader through the entrypoint package", a
 	assert.equal(result, text);
 });
 
-test("analyzes an existing TextDocument through the SDK document namespace", async () => {
+test("analyzes an existing TextDocument through the library document namespace", async () => {
 	const nlp = await load(fr, { reader: generatedReader });
 	const source = createDocument("L'Etat francais reconnait Paris.", {
 		id: "text-computing-doc-test",
@@ -449,7 +779,7 @@ test("analyzes an existing TextDocument through the SDK document namespace", asy
 		quality: { maxFindings: 3 },
 	});
 
-	assert.equal(doc.toTextDoc().id, "text-computing-doc-test");
+	assert.equal(doc.id, "text-computing-doc-test");
 	assert.equal(doc.tokens.length > 0, true);
 	const expectedSearchView = await nlp.normalization.searchView(source);
 	const conflictingSearchDocument = addViewWithSpanMap(
@@ -598,15 +928,15 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 		},
 	});
 
-	assert.equal(doc.entities.length, 1);
-	assert.equal(doc.entities[0]?.entityId, "Q-phrase");
-	assert.equal(doc.entities[0]?.matchedAlias, "Guinea-Bissau");
-	assert.equal(doc.entities[0]?.matchKind, "exact");
-	assert.deepEqual(doc.entities[0]?.types, ["Q6256"]);
-	assert.equal(doc.entities[0]?.mention, "Guinea-Bissau");
-	assert.equal(doc.entities[0]?.startCU, 0);
-	assert.equal(doc.entities[0]?.endCU, 13);
-	assert.deepEqual(doc.entities[0]?.tokenIds, [
+	assert.equal(doc.entityLinks.length, 1);
+	assert.equal(doc.entityLinks[0]?.entityId, "Q-phrase");
+	assert.equal(doc.entityLinks[0]?.matchedAlias, "Guinea-Bissau");
+	assert.equal(doc.entityLinks[0]?.matchKind, "exact");
+	assert.deepEqual(doc.entityLinks[0]?.types, ["Q6256"]);
+	assert.equal(doc.entityLinks[0]?.mention, "Guinea-Bissau");
+	assert.equal(doc.entityLinks[0]?.startCU, 0);
+	assert.equal(doc.entityLinks[0]?.endCU, 13);
+	assert.deepEqual(doc.entityLinks[0]?.tokenIds, [
 		doc.tokens[0]?.id,
 		doc.tokens[1]?.id,
 	]);
@@ -633,24 +963,26 @@ test("document analysis links hyphenated multi-token KB entities with link metad
 		},
 	});
 	assert.equal(customViewDoc.sourceViewId, "source-text");
-	assert.equal(customViewDoc.toJSON().sourceViewId, "source-text");
+	assert.equal(
+		JSON.parse(JSON.stringify(customViewDoc)).metadata.analysis.sourceViewId,
+		"source-text",
+	);
 	assert.equal(
 		customViewDoc.tokens.every((token) => token.viewId === "source-text"),
 		true,
 	);
-	assert.equal(customViewDoc.entities[0]?.viewId, "source-text");
+	assert.equal(customViewDoc.entityLinks[0]?.viewId, "source-text");
 	assert.equal(
-		customViewDoc.toTextDoc().layers["token.text-computing"]?.viewId,
+		customViewDoc.layers["token.text-computing"]?.viewId,
 		"source-text",
 	);
 	assert.deepEqual(
 		Object.values(
-			customViewDoc.toTextDoc().layers["token.text-computing"]?.annotations ??
-				{},
+			customViewDoc.layers["token.text-computing"]?.annotations ?? {},
 		).map((annotation) => annotation.evidence.inputViewIds),
 		customViewDoc.tokens.map(() => ["source-text"]),
 	);
-	assert.deepEqual(validateTextDocument(customViewDoc.toTextDoc()), {
+	assert.deepEqual(validateTextDocument(customViewDoc), {
 		ok: true,
 		diagnostics: [],
 	});
@@ -798,14 +1130,8 @@ test("document morphology deduplicates and limits analyses independently per for
 	assert.equal(doc.tokens[2]?.morphology[0]?.queryForm, "á");
 	assert.equal(doc.tokens[2]?.morphology[0]?.viewId, "raw");
 	assert.equal(doc.tokens[2]?.lemmas[0]?.viewId, "raw");
-	assert.equal(
-		doc.toTextDoc().layers["morph.text-computing"] !== undefined,
-		true,
-	);
-	assert.equal(
-		doc.toTextDoc().layers["lemma.text-computing"] !== undefined,
-		true,
-	);
+	assert.equal(doc.layers["morph.text-computing"] !== undefined, true);
+	assert.equal(doc.layers["lemma.text-computing"] !== undefined, true);
 	const noMorphology = await nlp("alpha beta a\u0301", {
 		tasks: ["morphology"],
 		morphologyMaxResults: 0,

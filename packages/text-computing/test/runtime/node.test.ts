@@ -4,7 +4,7 @@ import {
 	createNodeResourceReader,
 	load,
 } from "@ismail-elkorchi/text-computing/node";
-import { createPack } from "@ismail-elkorchi/textpack";
+import { createPack } from "@ismail-elkorchi/text-computing/packs";
 import { indexedMorphologyTableFixture } from "../fixtures/indexed-table.ts";
 import { runTextComputingFileBackedSmoke } from "./file-backed-smoke.ts";
 

@@ -6,7 +6,7 @@
 	"type": "module",
 	"sideEffects": false,
 	"workspaces": [
-		"packages/*",
+		"packages/text-computing",
 		"packages/textpacks/*"
 	],
 	"scripts": {
@@ -14,10 +14,13 @@
 		"lint": "npm run --workspaces --if-present lint && npm run -s check:boundaries && npm run -s check:public-language",
 		"check:boundaries": "node tools/check-boundaries.mjs",
 		"check:public-language": "node tools/check-public-language.mjs",
-		"schema:validate": "node tools/validate-repo-schemas.mjs && node tools/validate-textpack-packages.mjs && npm -w @ismail-elkorchi/textfacts run schema:validate",
+		"schema:validate": "node tools/validate-repo-schemas.mjs && node tools/validate-textpack-packages.mjs && npm -w @ismail-elkorchi/text-computing run schema:validate",
+		"test": "npm -w @ismail-elkorchi/text-computing run test:node",
+		"gen:unicode": "npm -w @ismail-elkorchi/text-computing run gen:unicode",
 		"test:forge": "node --test tools/textpack-forge/test/*.test.mjs",
 		"test:nlp": "node tools/run-nlp-benchmarks.mjs && node tools/run-nlp-cold-benchmarks.mjs",
 		"test:nlp:cold": "node tools/run-nlp-cold-benchmarks.mjs",
+		"test:nlp:model": "npm run -s build && node tools/evaluate-ner-model.mjs",
 		"forge:build": "node tools/textpack-forge/cli.mjs build",
 		"forge:acquire": "node tools/textpack-forge/cli.mjs acquire",
 		"forge:verify": "node tools/textpack-forge/cli.mjs verify",
@@ -28,13 +31,12 @@
 		"forge:size": "node tools/textpack-forge/cli.mjs size",
 		"forge:snapshot-update": "node tools/textpack-forge/cli.mjs snapshot-update",
 		"check:static": "npm run --workspaces --if-present check:static",
-		"check:pack": "npm -w @ismail-elkorchi/textfacts run check:pack",
-		"check:publint": "npm -w @ismail-elkorchi/textfacts run check:publint",
-		"check:attw": "npm -w @ismail-elkorchi/textfacts run check:attw",
-		"check:jsr": "npm -w @ismail-elkorchi/textfacts run check:jsr"
+		"check:pack": "npm -w @ismail-elkorchi/text-computing run check:pack",
+		"check:publint": "npm -w @ismail-elkorchi/text-computing run check:publint",
+		"check:attw": "npm -w @ismail-elkorchi/text-computing run check:attw"
 	},
 	"devDependencies": {
-		"@arethetypeswrong/cli": "0.18.2",
+		"@arethetypeswrong/cli": "0.18.5",
 		"@biomejs/biome": "2.4.15",
 		"@types/node": "25.9.1",
 		"ajv": "8.20.0",

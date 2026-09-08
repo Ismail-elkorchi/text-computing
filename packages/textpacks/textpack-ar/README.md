@@ -3,7 +3,7 @@
 Generated self-contained Arabic Capability Pack.
 
 This package is a generated, data-only Capability Pack in the textpack format.
-Use `@ismail-elkorchi/text-computing` for application-facing NLP task APIs.
+Use `@ismail-elkorchi/text-computing` and its public modules to work with these resources.
 It is generated from pinned source snapshots by `tools/textpack-forge`.
 All resources are included directly; installing this package does not install component packs.
 
@@ -70,6 +70,10 @@ console.log(pack.manifest.resources.length);
 - `ar-search-profile` (search-profile, json)
 - `ar-search-quality` (quality-profile, json)
 - `ar-search-quality-profile` (quality-profile, json)
+- `ner-ar-model` (statistical-model, json)
+- `ner-ar-vocabulary` (lexicon, text/plain)
+- `ner-ar-evaluation` (quality-profile, json)
+- `ner-ar-quality-profile` (quality-profile, json)
 
 ## Publishability
 

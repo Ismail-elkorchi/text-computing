@@ -1,6 +1,6 @@
 # Language Distribution Readiness
 
-Generated at: `2026-06-12T00:00:00.000Z`
+Generated at: `2026-09-01T00:00:00.000Z`
 
 This report is generated from the active forge graph. It gates the self-contained `textpack-en`, `textpack-ar`, and `textpack-fr` distributions.
 
@@ -40,7 +40,7 @@ A slot is ready only when the language distribution contains audited, evaluated,
 | `morphology` | `@ismail-elkorchi/textpack-ar` | `distribution-ready` | `ar-msa-morphology` | None |
 | `kb` | `@ismail-elkorchi/textpack-ar` | `distribution-ready` | `wikidata-ar`, `wordnet-ar` | None |
 | `search` | `@ismail-elkorchi/textpack-ar` | `distribution-ready` | `ar-search` | None |
-| `quality` | `@ismail-elkorchi/textpack-ar` | `distribution-ready` | `ar-core`, `ar-msa-morphology`, `ar-normalization`, `ar-search`, `wikidata-ar`, `wordnet-ar` | None |
+| `quality` | `@ismail-elkorchi/textpack-ar` | `distribution-ready` | `ar-core`, `ar-msa-morphology`, `ar-normalization`, `ar-search`, `ner-ar-sa`, `wikidata-ar`, `wordnet-ar` | None |
 
 ## French (fr)
 

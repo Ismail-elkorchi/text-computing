@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { gunzipSync, gzipSync } from "node:zlib";
 
-import { nfkcCaseFold } from "../../../packages/textfacts/src/casefold/mod.ts";
+import { nfkcCaseFold } from "../../../packages/text-computing/src/unicode/casefold/mod.ts";
 
 export const LOOKUP_INDEX_SCHEMA_ID = "textpack.lookup-index.v1";
 export const LOOKUP_INDEX_FORMAT = "normalized-key-bucketed-rows-v1";

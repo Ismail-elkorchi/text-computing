@@ -6,7 +6,7 @@ import {
 } from "@ismail-elkorchi/text-computing/node";
 import ar from "@ismail-elkorchi/textpack-ar";
 
-test("Arabic consumer workflow uses only the SDK plus textpack-ar", async () => {
+test("Arabic consumer workflow uses only the library plus textpack-ar", async () => {
 	const nlp = await load(ar, { reader: createNodeResourceReader() });
 	const text = "تعترف فرنسا باللغة العربية.";
 	const doc = await nlp(text, {
@@ -27,9 +27,7 @@ test("Arabic consumer workflow uses only the SDK plus textpack-ar", async () => 
 
 	const normalized = await nlp.normalize(text);
 	assert.ok(normalized.length > 0);
-	const normalizedView = await nlp.normalization.normalizeDocument(
-		doc.toTextDoc(),
-	);
+	const normalizedView = await nlp.normalization.normalizeDocument(doc);
 	assert.ok(normalizedView.view.text.length > 0);
 	assert.equal(normalizedView.spanMap.targetViewId, normalizedView.view.id);
 
@@ -45,11 +43,11 @@ test("Arabic consumer workflow uses only the SDK plus textpack-ar", async () => 
 	const entities = await nlp.kb.candidates("فرنسا", { maxCandidates: 2 });
 	assert.ok(entities.some((entity) => entity.label === "فرنسا"));
 	const emptyIndex = await nlp.search.createIndex();
-	const index = nlp.search.addAnalysis(emptyIndex, doc);
+	const index = nlp.search.addDocument(emptyIndex, doc);
 	assert.equal(index.stats.documentCount, 1);
-	assert.equal(nlp.search.query(index, "فرنسا")[0]?.docId, doc.toTextDoc().id);
+	assert.equal(nlp.search.query(index, "فرنسا")[0]?.docId, doc.id);
 
-	const quality = await nlp.quality.analyzeDocument(doc.toTextDoc(), {
+	const quality = await nlp.quality.analyzeDocument(doc, {
 		maxFindings: 4,
 	});
 	assert.ok(quality.id.length > 0);

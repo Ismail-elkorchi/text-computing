@@ -6,9 +6,12 @@ node_modules
 dist
 dist-test
 coverage
-/tools/unicode/ucd
+/packages/text-computing/tools/unicode/ucd
 /data/ucd
 /tools/textpack-forge/snapshots/data/*
+!/tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/
+/tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/*
+!/tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/evaluation-results.json
 !/tools/textpack-forge/snapshots/data/wikidata-main-20260608/
 /tools/textpack-forge/snapshots/data/wikidata-main-20260608/*
 !/tools/textpack-forge/snapshots/data/wikidata-main-20260608/*.tsv.gz

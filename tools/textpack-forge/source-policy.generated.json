@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
   "generatedBy": "tools/textpack-forge",
   "languages": [
     {
@@ -7,6 +7,7 @@
         "source:unicode:ucd",
         "source:unicode:cldr-core",
         "source:iana:language-subtag-registry",
+        "source:huggingface:xenova-bert-multilingual-ner",
         "source:ud:arabic",
         "source:unimorph:arabic",
         "source:camel:morph-msa-lrec-coling-2024",
@@ -21,7 +22,8 @@
         "source:wordnet:arabic-4",
         "source:ud:arabic-padt-r2.18",
         "source:ud:arabic-pud-r2.18",
-        "source:ud:arabic-nyuad-r2.18"
+        "source:ud:arabic-nyuad-r2.18",
+        "source:aqmar:arabic-ner-1.0"
       ],
       "languageName": "Arabic",
       "languageTag": "ar",
@@ -290,6 +292,30 @@
   ],
   "schemaVersion": "1",
   "sources": [
+    {
+      "capabilitySlots": [
+        "entities",
+        "evaluation"
+      ],
+      "defaultCompositeAllowed": false,
+      "family": "AQMAR",
+      "homepageUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "CC-BY-SA-3.0",
+      "name": "AQMAR Arabic Wikipedia Named Entity Corpus 1.0",
+      "notes": "Evaluation-only share-alike source; corpus rows are not emitted into language packs.",
+      "policyClass": "share-alike",
+      "priority": "isolated",
+      "publishableByDefault": false,
+      "redistributionPolicy": "share-alike-isolated",
+      "requiredPackageNameSuffixes": [
+        "-sa"
+      ],
+      "reviewState": "approved",
+      "sourceId": "source:aqmar:arabic-ner-1.0"
+    },
     {
       "capabilitySlots": [
         "corpus",
@@ -786,6 +812,27 @@
       "requiredPackageNameSuffixes": [],
       "reviewState": "pending",
       "sourceId": "source:greek:lsj-perseus"
+    },
+    {
+      "capabilitySlots": [
+        "entities"
+      ],
+      "defaultCompositeAllowed": true,
+      "family": "HUGGINGFACE-MODEL",
+      "homepageUrl": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl",
+      "languages": [
+        "ar"
+      ],
+      "licenseExpression": "AFL-3.0",
+      "name": "Xenova BERT multilingual cased NER HRL ONNX",
+      "notes": "Explicit model artifact for deployable multilingual NER; model bytes are not npm-shipped.",
+      "policyClass": "attribution",
+      "priority": "first",
+      "publishableByDefault": true,
+      "redistributionPolicy": "redistributable-with-attribution",
+      "requiredPackageNameSuffixes": [],
+      "reviewState": "approved",
+      "sourceId": "source:huggingface:xenova-bert-multilingual-ner"
     },
     {
       "capabilitySlots": [
@@ -2471,28 +2518,28 @@
     }
   ],
   "summaries": {
-    "activeSourceCount": 17,
+    "activeSourceCount": 19,
     "byPolicyClass": {
-      "attribution": 15,
+      "attribution": 16,
       "blocked/review-only": 31,
       "copyleft": 8,
       "default-safe": 5,
       "local-only": 4,
       "noncommercial/research": 8,
-      "share-alike": 21
+      "share-alike": 22
     },
     "byPriority": {
-      "first": 36,
-      "isolated": 32,
+      "first": 37,
+      "isolated": 33,
       "review": 15,
       "second": 9
     },
     "byReviewState": {
-      "approved": 46,
+      "approved": 48,
       "blocked": 5,
       "pending": 41
     },
     "languageCount": 8,
-    "sourceCount": 92
+    "sourceCount": 94
   }
 }

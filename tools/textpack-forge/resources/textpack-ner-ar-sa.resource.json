@@ -1,0 +1,58 @@
+{
+	"schemaVersion": "1",
+	"resourceSpecId": "resource-spec:textpack-ner-ar-sa:model-backed-ner",
+	"packageName": "@ismail-elkorchi/textpack-ner-ar-sa",
+	"pipelineId": "model-backed-ner",
+	"pipelineVersion": "1.0.0",
+	"sourceIds": [
+		"source:huggingface:xenova-bert-multilingual-ner",
+		"source:aqmar:arabic-ner-1.0"
+	],
+	"snapshotIds": [
+		"snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+		"snapshot:source:aqmar:arabic-ner-1.0:2012-04-09"
+	],
+	"inputFiles": [
+		{
+			"snapshotId": "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/upstream-config.json",
+			"checksum": "sha256:7aa891abae067f95a40f5e2005b3de44824a083f256802934a993d301ec25076"
+		},
+		{
+			"snapshotId": "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/vocab.txt",
+			"checksum": "sha256:fe0fda7c425b48c516fc8f160d594c8022a0808447475c1a7c6d6479763f310c"
+		},
+		{
+			"snapshotId": "snapshot:source:huggingface:xenova-bert-multilingual-ner:263e82c",
+			"path": "tools/textpack-forge/snapshots/data/model-ner-multilingual-v1/evaluation-results.json",
+			"checksum": "sha256:47535680ecc14b5504066d0d2b1780aae57be0785c4968fcd8c52ca3456c8246"
+		}
+	],
+	"outputs": [
+		{
+			"resourceId": "ner-ar-model",
+			"path": "resources/ner-ar.model.json",
+			"kind": "statistical-model",
+			"format": "json"
+		},
+		{
+			"resourceId": "ner-ar-vocabulary",
+			"path": "resources/ner-ar.vocab.txt",
+			"kind": "lexicon",
+			"format": "text/plain"
+		},
+		{
+			"resourceId": "ner-ar-evaluation",
+			"path": "resources/ner-ar.evaluation.json",
+			"kind": "quality-profile",
+			"format": "json"
+		},
+		{
+			"resourceId": "ner-ar-quality-profile",
+			"path": "resources/ner-ar.quality-profile.json",
+			"kind": "quality-profile",
+			"format": "json"
+		}
+	]
+}

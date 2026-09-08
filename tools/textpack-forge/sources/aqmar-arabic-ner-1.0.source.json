@@ -1,0 +1,16 @@
+{
+	"schemaVersion": "1",
+	"sourceId": "source:aqmar:arabic-ner-1.0",
+	"family": "AQMAR",
+	"name": "AQMAR Arabic Wikipedia Named Entity Corpus 1.0",
+	"homepageUrl": "https://www.cs.cmu.edu/~ark/ArabicNER/",
+	"licenseEvidence": [
+		"https://www.cs.cmu.edu/~ark/ArabicNER/corpus/LICENSE",
+		"https://www.cs.cmu.edu/~ark/ArabicNER/corpus/README"
+	],
+	"licenseExpression": "CC-BY-SA-3.0",
+	"redistributionPolicy": "share-alike-isolated",
+	"reviewState": "approved",
+	"citation": "Mohit, Schneider, Bhowmick, Oflazer, and Smith (2012), Recall-Oriented Learning of Named Entities in Arabic Wikipedia.",
+	"notes": "The official AQMAR test feature split is used only as a held-out Arabic NER evaluation input; corpus text is not shipped in generated language packages."
+}

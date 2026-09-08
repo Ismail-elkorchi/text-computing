@@ -1,5 +1,5 @@
-import { segmentationAdapterFromPack } from "@ismail-elkorchi/textdata";
-import type { SpanRef, TextDocument } from "@ismail-elkorchi/textdoc";
+import { segmentationAdapterFromPack } from "../data/index.ts";
+import type { SpanRef, TextDocument } from "../document/mod.ts";
 import {
 	candidateEntities,
 	candidateEntitiesFromPack,
@@ -8,7 +8,7 @@ import {
 	knowledgeBaseSliceFromPack,
 	linkEntities,
 	normalizeKnowledgeBaseMention,
-} from "@ismail-elkorchi/textkb";
+} from "../knowledge/index.ts";
 import {
 	type LookupOptions,
 	lookupFromPackAsync,
@@ -18,17 +18,17 @@ import {
 	morphologyGenerationsFromPackAsync,
 	morphologyIndexFromPackAsync,
 	morphologyParadigmsFromPackAsync,
-} from "@ismail-elkorchi/textlex";
+} from "../lexicon/index.ts";
 import {
 	type CompiledTextNormProfile,
 	normalizationProfileFromPack,
 	type TextNormProfileMode,
-} from "@ismail-elkorchi/textnorm";
+} from "../normalization/index.ts";
 import {
 	type TextPack,
 	type TextPackResourceReader,
 	taskResourceIdsFromBindings,
-} from "@ismail-elkorchi/textpack";
+} from "../packs/index.ts";
 import {
 	analyzeDocumentQuality,
 	type DocumentQualityOptions,
@@ -36,7 +36,7 @@ import {
 	qualityProfileFromPack,
 	qualityResourcesFromPack,
 	type TextQualityPackResource,
-} from "@ismail-elkorchi/textquality";
+} from "../quality/index.ts";
 import {
 	type AddOptions,
 	type Analyzer,
@@ -49,19 +49,20 @@ import {
 	type SearchQuery,
 	searchIndexFromPack,
 	termQuery,
-} from "@ismail-elkorchi/textsearch";
-import { createDocumentRuntime } from "./document.js";
+} from "../search/index.ts";
+import { createDocumentRuntime } from "./document.ts";
+import { recognizeEntities } from "./entities.ts";
 import {
 	inspectionReport,
 	inspectSchemaResources,
 	supportReport,
-} from "./support.js";
-import { assertRunnableTask, uniqueSorted } from "./tasks.js";
+} from "./support.ts";
+import { assertRunnableTask, uniqueSorted } from "./tasks.ts";
 import type {
-	TextComputingDocument,
 	TextComputingDocumentAnalysisOptions,
+	TextComputingLoadOptions,
 	TextComputingNlp,
-} from "./types.js";
+} from "./types.ts";
 
 function readerOptions(reader: TextPackResourceReader | undefined) {
 	return reader === undefined ? {} : { reader };
@@ -423,8 +424,9 @@ function mergedQualityProfile(
 
 export function createTextComputingNlp(
 	pack: TextPack,
-	reader: TextPackResourceReader | undefined,
+	options: TextComputingLoadOptions,
 ): TextComputingNlp {
+	const { reader, artifactReader, entityExecutor } = options;
 	const languageTag = pack.manifest.targets.languages?.[0] ?? "und";
 	const scriptTag = pack.manifest.targets.scripts?.[0] ?? "Zyyy";
 	let segmentationPromise:
@@ -525,6 +527,8 @@ export function createTextComputingNlp(
 	const documentRuntime = createDocumentRuntime({
 		pack,
 		reader,
+		artifactReader,
+		entityExecutor,
 		languageTag,
 		openSegmentation,
 		openNormalization,
@@ -548,6 +552,8 @@ export function createTextComputingNlp(
 			languageTag,
 			pack,
 			reader,
+			artifactReader,
+			entityExecutor,
 			support: () => supportReport(pack),
 			inspect: () => inspectionReport(pack),
 			tokenize: (text: string) =>
@@ -696,6 +702,21 @@ export function createTextComputingNlp(
 					});
 				},
 			}),
+			entities: Object.freeze({
+				recognize: (text: string) =>
+					recognizeEntities(
+						{
+							pack,
+							reader,
+							artifactReader,
+							executor: entityExecutor,
+							languageTag,
+						},
+						text,
+						"raw",
+						() => Object.freeze([]),
+					).then((result) => result.entities),
+			}),
 			search: Object.freeze({
 				analyze: (text: string) =>
 					openAnalyzer().then((analyzer) =>
@@ -718,11 +739,6 @@ export function createTextComputingNlp(
 					doc: TextDocument,
 					options: AddOptions = {},
 				) => addToIndex(index, doc, options),
-				addAnalysis: (
-					index: SearchIndex,
-					analysis: TextComputingDocument,
-					options: AddOptions = {},
-				) => addToIndex(index, analysis.toTextDoc(), options),
 				query: (
 					index: SearchIndex,
 					query: string | SearchQuery,

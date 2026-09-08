@@ -844,6 +844,13 @@ function flattenDistributionPack(pack, packageByName) {
 	pack.payloads = [...payloads.values()];
 	pack.resourceStats = resourceStats(pack.payloads);
 	pack.npmShippedSizeBytes = physicalPayloadByteLength(pack.payloads);
+	pack.artifactBackedSizeBytes = [...artifacts.values()].reduce(
+		(total, artifact) => total + artifact.sizeBytes,
+		0,
+	);
+	pack.artifactProfiles = uniqueValues(
+		[...artifacts.values()].map((artifact) => artifact.profile),
+	);
 	pack.capabilitySlots = capabilitySlots(manifest);
 	pack.resourceSpecIds = uniqueValues(
 		componentPacks.flatMap((component) => component.resourceSpecIds),
@@ -885,6 +892,7 @@ function knownGaps(packSpec, manifest) {
 			"historical-noisy",
 			"kb",
 			"license-isolated",
+			"model",
 			"parallel",
 		].includes(packSpec.packClass)
 	) {
@@ -1133,9 +1141,15 @@ async function collectContext(options = {}) {
 			},
 			baseContext,
 		);
+		const artifacts = manifest.artifacts ?? [];
 		packs.push({
-			artifactBackedSizeBytes: 0,
-			artifactProfiles: [],
+			artifactBackedSizeBytes: artifacts.reduce(
+				(total, artifact) => total + artifact.sizeBytes,
+				0,
+			),
+			artifactProfiles: uniqueValues(
+				artifacts.map((artifact) => artifact.profile),
+			),
 			capabilitySlots: capabilitySlots(manifest),
 			description: packageJson.description,
 			generationMode: normalizedPackSpec.generationMode,

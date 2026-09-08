@@ -363,16 +363,16 @@ async function evaluateLanguage(language) {
 			failures.push(`${item.id}: missing kb task evidence`);
 		}
 		const expectedSpanKeys = new Set(item.mentions.map(spanKey));
-		const actualSpanKeys = new Set(analysis.entities.map(spanKey));
+		const actualSpanKeys = new Set(analysis.entityLinks.map(spanKey));
 		entitySpanPredicted += actualSpanKeys.size;
 		entitySpanExpected += expectedSpanKeys.size;
 		entitySpanTruePositive += [...actualSpanKeys].filter((key) =>
 			expectedSpanKeys.has(key),
 		).length;
 		entityExpectedMentions += item.mentions.length;
-		let caseCorrect = analysis.entities.length === item.mentions.length;
+		let caseCorrect = analysis.entityLinks.length === item.mentions.length;
 		for (const expectedMention of item.mentions) {
-			const actualAtSpan = analysis.entities.filter(
+			const actualAtSpan = analysis.entityLinks.filter(
 				(entity) => spanKey(entity) === spanKey(expectedMention),
 			);
 			const actual = actualAtSpan[0];
@@ -390,7 +390,7 @@ async function evaluateLanguage(language) {
 				);
 			}
 		}
-		const unexpected = analysis.entities.filter(
+		const unexpected = analysis.entityLinks.filter(
 			(entity) => !expectedSpanKeys.has(spanKey(entity)),
 		);
 		if (unexpected.length > 0) {
@@ -401,7 +401,7 @@ async function evaluateLanguage(language) {
 		}
 		if (item.mentions.length === 0) {
 			nilCases += 1;
-			if (analysis.entities.length === 0) nilCorrect += 1;
+			if (analysis.entityLinks.length === 0) nilCorrect += 1;
 			else caseCorrect = false;
 		}
 		if (caseCorrect) entityCaseCorrect += 1;
@@ -424,7 +424,7 @@ async function evaluateLanguage(language) {
 				`${item.id}: expected ${JSON.stringify(item.tokens)}, got ${JSON.stringify(actual)}`,
 			);
 		}
-		const textDocument = analysis.toTextDoc();
+		const textDocument = analysis;
 		for (const token of analysis.searchTokens) {
 			const view = textDocument.views[token.viewId];
 			if (
@@ -476,16 +476,18 @@ async function evaluateLanguage(language) {
 			morphologyTop1LemmaAccuracy: round(
 				morphologyTop1Correct / morphologyTokenCount,
 			),
-			entitySpanPrecision: round(entityBoundary.precision),
-			entitySpanRecall: round(entityBoundary.recall),
-			entitySpanF1: round(entityBoundary.f1),
-			entityTop1Accuracy: round(
+			entityLinkSpanPrecision: round(entityBoundary.precision),
+			entityLinkSpanRecall: round(entityBoundary.recall),
+			entityLinkSpanF1: round(entityBoundary.f1),
+			entityLinkTop1Accuracy: round(
 				entityExpectedMentions === 0
 					? 1
 					: entityTop1Correct / entityExpectedMentions,
 			),
-			entityNilAccuracy: round(nilCases === 0 ? 1 : nilCorrect / nilCases),
-			entityCaseExactMatch: round(entityCaseCorrect / language.entities.length),
+			entityLinkNilAccuracy: round(nilCases === 0 ? 1 : nilCorrect / nilCases),
+			entityLinkCaseExactMatch: round(
+				entityCaseCorrect / language.entities.length,
+			),
 			searchSequenceAccuracy: round(searchCorrect / language.search.length),
 			performanceTextCodeUnits: latencyText.length,
 			warmLatencySamples: latencyMeasurementCount,
@@ -556,10 +558,10 @@ async function evaluateExternalLanguage(language) {
 			fail(`${item.id}: normalization is not idempotent`);
 		}
 		const analysis = await nlp(item.text, { tasks: ["kb"] });
-		if (analysis.text !== item.text || analysis.entities.length !== 0) {
+		if (analysis.text !== item.text || analysis.entityLinks.length !== 0) {
 			fail(`${item.id}: unsafe implicit entity linking or text mutation`);
 		}
-		const quality = await nlp.quality.analyzeDocument(analysis.toTextDoc(), {
+		const quality = await nlp.quality.analyzeDocument(analysis, {
 			dimensions: ["unicode-integrity", "script-mix", "annotation"],
 			maxFindings: 50,
 			maxFindingsPerKind: 10,

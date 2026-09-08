@@ -1,7 +1,8 @@
+import { withAnalysis } from "../analysis.ts";
 import type {
 	TextDataSegment,
 	TextDataSegmentationAdapter,
-} from "@ismail-elkorchi/textdata";
+} from "../data/index.ts";
 import {
 	type Annotation,
 	addLayer,
@@ -9,54 +10,62 @@ import {
 	createDocument,
 	type Evidence,
 	type TextDocument,
-} from "@ismail-elkorchi/textdoc";
+} from "../document/mod.ts";
 import {
 	type EntityLinkOptions,
 	knowledgeBaseSliceFromPack,
 	linkEntities,
-} from "@ismail-elkorchi/textkb";
+} from "../knowledge/index.ts";
 import {
 	type LexicalMatch,
 	lookupManyFromPackAsync,
 	type MorphologyAnalysis,
 	morphologyAnalysesManyFromPackAsync,
-} from "@ismail-elkorchi/textlex";
+} from "../lexicon/index.ts";
 import type {
 	CompiledTextNormProfile,
 	NormalizationViewResult,
-} from "@ismail-elkorchi/textnorm";
+} from "../normalization/index.ts";
 import type {
 	TextPack,
+	TextPackArtifactReader,
 	TextPackResourceReader,
-} from "@ismail-elkorchi/textpack";
+} from "../packs/index.ts";
 import {
 	analyzeDocumentQuality,
 	type QualityProfile,
 	type QualityReport,
-} from "@ismail-elkorchi/textquality";
-import type { Analyzer, SearchToken } from "@ismail-elkorchi/textsearch";
+} from "../quality/index.ts";
+import type { Analyzer, SearchToken } from "../search/index.ts";
+import { packageName, packageVersion } from "./constants.ts";
+import {
+	entityTokenIds,
+	recognizeEntities,
+	type TextComputingEntityRuntimeResult,
+} from "./entities.ts";
 import {
 	assertRunnableTask,
 	planDocumentTasks,
 	uniqueSorted,
-} from "./tasks.js";
+} from "./tasks.ts";
 import type {
-	TextComputingDocument,
+	AnalyzedDocument,
 	TextComputingDocumentAnalysisOptions,
-	TextComputingDocumentJson,
 	TextComputingDocumentTask,
-	TextComputingEntitySummary,
+	TextComputingEntityExecutor,
 	TextComputingEvidence,
 	TextComputingLemmaSummary,
 	TextComputingMorphologySummary,
 	TextComputingQualitySummary,
 	TextComputingSearchTokenSummary,
 	TextComputingToken,
-} from "./types.js";
+} from "./types.ts";
 
 export interface TextComputingDocumentRuntime {
 	readonly pack: TextPack;
 	readonly reader: TextPackResourceReader | undefined;
+	readonly artifactReader: TextPackArtifactReader | undefined;
+	readonly entityExecutor: TextComputingEntityExecutor | undefined;
 	readonly languageTag: string;
 	readonly openSegmentation: () => Promise<TextDataSegmentationAdapter>;
 	readonly openNormalization: () => Promise<CompiledTextNormProfile>;
@@ -71,11 +80,11 @@ export interface TextComputingDocumentRuntimeApi {
 	readonly analyzeText: (
 		text: string,
 		options?: TextComputingDocumentAnalysisOptions,
-	) => Promise<TextComputingDocument>;
+	) => Promise<AnalyzedDocument>;
 	readonly analyzeDocument: (
 		doc: TextDocument,
 		options?: TextComputingDocumentAnalysisOptions,
-	) => Promise<TextComputingDocument>;
+	) => Promise<AnalyzedDocument>;
 }
 
 function sourceView(doc: TextDocument): TextDocument["views"][string] {
@@ -127,91 +136,6 @@ function ensureSearchView(
 		return doc;
 	}
 	return addViewWithSpanMap(doc, searchView.view, searchView.spanMap);
-}
-
-function entityCandidatesFromDocument(
-	doc: TextDocument,
-	tokens: readonly Pick<
-		TextComputingToken,
-		"endCU" | "id" | "startCU" | "viewId"
-	>[],
-): readonly TextComputingEntitySummary[] {
-	const annotations = Object.values(
-		doc.layers["link.entity"]?.annotations ?? {},
-	);
-	return Object.freeze(
-		annotations.flatMap((annotation) => {
-			const ref = annotation.spans.find(
-				(candidate) => candidate.span.unit === "utf16-code-unit",
-			);
-			const view = ref === undefined ? undefined : doc.views[ref.viewId];
-			const value = annotation.value;
-			if (
-				ref === undefined ||
-				view === undefined ||
-				value === undefined ||
-				value === null ||
-				typeof value !== "object"
-			) {
-				return [];
-			}
-			const record = value as {
-				readonly entityId?: unknown;
-				readonly label?: unknown;
-				readonly matchedAlias?: unknown;
-				readonly matchKind?: unknown;
-				readonly score?: unknown;
-				readonly rank?: unknown;
-				readonly types?: unknown;
-				readonly entityTypes?: unknown;
-				readonly sourceEntityId?: unknown;
-			};
-			return typeof record.entityId === "string" &&
-				typeof record.label === "string"
-				? [
-						Object.freeze({
-							entityId: record.entityId,
-							label: record.label,
-							matchedAlias:
-								typeof record.matchedAlias === "string"
-									? record.matchedAlias
-									: record.label,
-							matchKind:
-								typeof record.matchKind === "string"
-									? record.matchKind
-									: "link",
-							score: typeof record.score === "number" ? record.score : 0,
-							rank: typeof record.rank === "number" ? record.rank : 0,
-							types: jsonStringArray(record.entityTypes ?? record.types),
-							mention: view.text.slice(ref.span.start, ref.span.end),
-							viewId: ref.viewId,
-							startCU: ref.span.start,
-							endCU: ref.span.end,
-							tokenIds: Object.freeze(
-								tokens
-									.filter(
-										(token) =>
-											token.viewId === ref.viewId &&
-											token.startCU < ref.span.end &&
-											token.endCU > ref.span.start,
-									)
-									.map((token) => token.id),
-							),
-							...(typeof record.sourceEntityId === "string"
-								? { sourceEntityId: record.sourceEntityId }
-								: {}),
-						}),
-					]
-				: [];
-		}),
-	);
-}
-
-function jsonStringArray(value: unknown): readonly string[] {
-	if (!Array.isArray(value)) return Object.freeze([]);
-	return Object.freeze(
-		value.flatMap((entry) => (typeof entry === "string" ? [entry] : [])),
-	);
 }
 
 export function mentionCandidates(
@@ -291,23 +215,6 @@ function entityMentionTexts(
 	return Object.freeze(
 		[...mentions].sort((left, right) => left.localeCompare(right)),
 	);
-}
-
-function documentJson(doc: TextComputingDocument): TextComputingDocumentJson {
-	return Object.freeze({
-		text: doc.text,
-		sourceViewId: doc.sourceViewId,
-		languageTag: doc.languageTag,
-		sentences: doc.sentences,
-		tokens: doc.tokens,
-		lexicalUnits: doc.lexicalUnits,
-		lemmas: doc.lemmas,
-		morphology: doc.morphology,
-		entities: doc.entities,
-		searchTokens: doc.searchTokens,
-		quality: doc.quality,
-		evidence: doc.evidence,
-	});
 }
 
 function emptyQualityReport(doc: TextDocument): QualityReport {
@@ -404,9 +311,9 @@ function analysisEvidence(
 	return Object.freeze({
 		mode,
 		exactness: "E1" as const,
-		producer: "@ismail-elkorchi/text-computing",
-		packageName: "@ismail-elkorchi/text-computing",
-		packageVersion: "0.1.0",
+		producer: packageName,
+		packageName,
+		packageVersion,
 		resourceIds: uniqueSorted(resourceIds),
 		inputViewIds: Object.freeze([inputViewId]),
 	});
@@ -442,7 +349,7 @@ function addAnalysisLayer(
 		annotations: Object.fromEntries(
 			annotations.map((annotation) => [annotation.id, annotation]),
 		),
-		metadata: { producer: "@ismail-elkorchi/text-computing" },
+		metadata: { producer: packageName },
 	});
 }
 
@@ -457,14 +364,19 @@ function addAnalysisLayers(
 		"token.text-computing",
 		"token.word",
 		sourceViewId,
-		analyses.map((analysis) => ({
+		analyses.map((analysis, index) => ({
 			id: analysis.tokenId,
 			layer: "token.text-computing",
 			type: "token.word",
 			spans: [annotationSpan(analysis.segment, sourceViewId)],
 			value: {
+				index,
 				text: analysis.segment.text,
-				normalizedText: analysis.normalizedText,
+				granularity: analysis.segment.granularity,
+				...(analysis.segment.source === undefined
+					? {}
+					: { source: analysis.segment.source }),
+				normalized: analysis.normalizedText,
 				isWordLike: analysis.segment.isWordLike ?? true,
 			},
 			evidence: analysisEvidence("algorithm", [], sourceViewId),
@@ -526,6 +438,56 @@ function addAnalysisLayers(
 	return output;
 }
 
+function addEntityLayer(
+	doc: TextDocument,
+	result: TextComputingEntityRuntimeResult | undefined,
+	sourceViewId: string,
+): TextDocument {
+	if (result === undefined) return doc;
+	return addAnalysisLayer(
+		doc,
+		"entity.text-computing",
+		"entity.named",
+		sourceViewId,
+		result.entities.map((entity) => ({
+			id: entity.id,
+			layer: "entity.text-computing",
+			type: "entity.named",
+			spans: [
+				Object.freeze({
+					viewId: sourceViewId,
+					span: Object.freeze({
+						start: entity.startCU,
+						end: entity.endCU,
+						unit: "utf16-code-unit" as const,
+					}),
+				}),
+			],
+			value: {
+				type: entity.type,
+				text: entity.text,
+				modelLabel: entity.modelLabel,
+			},
+			features: { entityType: entity.type },
+			evidence: Object.freeze({
+				mode: "statistical" as const,
+				exactness: "E1" as const,
+				producer: "@ismail-elkorchi/text-computing",
+				packageName: "@ismail-elkorchi/text-computing",
+				packageVersion,
+				resourceIds: Object.freeze([result.modelResourceId]),
+				statisticalModelIds: Object.freeze([result.artifactId]),
+				inputViewIds: Object.freeze([sourceViewId]),
+			}),
+			score: Object.freeze({
+				kind: "weight" as const,
+				scale: "mean-token-probability",
+				value: entity.score,
+			}),
+		})),
+	);
+}
+
 function searchTokenSummary(
 	token: SearchToken,
 	viewId: string,
@@ -567,6 +529,7 @@ function evidenceForTasks(
 		NonNullable<TextComputingDocumentAnalysisOptions["tasks"]>[number]
 	>,
 	quality: QualityReport | undefined,
+	entityExecution: TextComputingEntityRuntimeResult | undefined,
 ): readonly TextComputingEvidence[] {
 	const componentPackageNames = Object.freeze(
 		[...(pack.manifest.components ?? [])]
@@ -597,11 +560,33 @@ function evidenceForTasks(
 					...(slot.resourceIds ?? []),
 					...(slot.bindings ?? []).map((binding) => binding.resourceId),
 				]),
+				artifactIds: uniqueSorted(slot.artifactIds ?? []),
 				componentPackageNames,
 			});
 		});
 	return Object.freeze([
 		...slotEvidence,
+		...(entityExecution === undefined
+			? []
+			: [
+					Object.freeze({
+						id: `${pack.manifest.id}:entities:${entityExecution.artifactId}`,
+						kind: "model-execution" as const,
+						task: "entities" as const,
+						packageName: pack.manifest.packageName,
+						packId: pack.manifest.id,
+						resourceIds: Object.freeze([entityExecution.modelResourceId]),
+						artifactIds: Object.freeze([entityExecution.artifactId]),
+						componentPackageNames,
+						modelResourceId: entityExecution.modelResourceId,
+						executorId: entityExecution.executorId,
+						executorVersion: entityExecution.executorVersion,
+						artifact: entityExecution.artifact,
+						modelChecksum: entityExecution.modelChecksum,
+						vocabularyChecksum: entityExecution.vocabularyChecksum,
+						executionProvider: entityExecution.executionProvider,
+					}),
+				]),
 		...(quality === undefined
 			? []
 			: [
@@ -612,6 +597,7 @@ function evidenceForTasks(
 						packageName: pack.manifest.packageName,
 						packId: pack.manifest.id,
 						resourceIds: Object.freeze([]),
+						artifactIds: Object.freeze([]),
 						componentPackageNames,
 						reportId: quality.id,
 					}),
@@ -735,6 +721,8 @@ export function createDocumentRuntime(
 	const {
 		pack,
 		reader,
+		artifactReader,
+		entityExecutor,
 		languageTag,
 		openSegmentation,
 		openNormalization,
@@ -746,7 +734,7 @@ export function createDocumentRuntime(
 	const analyzeDocument = async (
 		sourceDocument: TextDocument,
 		options: TextComputingDocumentAnalysisOptions = {},
-	): Promise<TextComputingDocument> => {
+	): Promise<AnalyzedDocument> => {
 		const source = sourceView(sourceDocument);
 		const text = source.text;
 		const sourceViewId = source.id;
@@ -766,9 +754,6 @@ export function createDocumentRuntime(
 			? mentionCandidates(text, lexicalUnits)
 			: Object.freeze([]);
 		const entityLinking = options.entityLinking ?? {};
-		const entityMentions = tasks.has("kb")
-			? entityMentionTexts(normalizedDocument, entityLinking)
-			: Object.freeze([]);
 		const rawMorphologyForms = words
 			.filter((segment) => segment.isWordLike !== false)
 			.map((segment) => segment.text);
@@ -783,35 +768,24 @@ export function createDocumentRuntime(
 			rawMorphologyForms,
 			normalizedByRaw,
 		);
-		const [lexiconMatchesByText, morphologyAnalysesByText, documentKb] =
-			await Promise.all([
-				tasks.has("lexicon")
-					? lookupManyFromPackAsync(pack, lexiconQueryForms, {
-							...readerOption(reader),
-							language: languageTag,
-							script: pack.manifest.targets.scripts?.[0] ?? "Zyyy",
-							maxResults: options.lexiconMaxResults ?? 5,
-						})
-					: new Map<string, readonly LexicalMatch[]>(),
-				tasks.has("morphology")
-					? documentMorphologyAnalyses(
-							pack,
-							morphologyQueryForms,
-							reader,
-							options.morphologyMaxResults,
-						)
-					: new Map<string, readonly MorphologyAnalysis[]>(),
-				tasks.has("kb") && entityMentions.length > 0
-					? knowledgeBaseSliceFromPack(pack, {
-							...readerOption(reader),
-							mentions: entityMentions,
-							language: entityLinking.language ?? languageTag,
-							...(entityLinking.maxEditDistance === undefined
-								? {}
-								: { maxEditDistance: entityLinking.maxEditDistance }),
-						})
-					: undefined,
-			]);
+		const [lexiconMatchesByText, morphologyAnalysesByText] = await Promise.all([
+			tasks.has("lexicon")
+				? lookupManyFromPackAsync(pack, lexiconQueryForms, {
+						...readerOption(reader),
+						language: languageTag,
+						script: pack.manifest.targets.scripts?.[0] ?? "Zyyy",
+						maxResults: options.lexiconMaxResults ?? 5,
+					})
+				: new Map<string, readonly LexicalMatch[]>(),
+			tasks.has("morphology")
+				? documentMorphologyAnalyses(
+						pack,
+						morphologyQueryForms,
+						reader,
+						options.morphologyMaxResults,
+					)
+				: new Map<string, readonly MorphologyAnalysis[]>(),
+		]);
 		const lexicalUnitAnalyses: readonly LexicalUnitAnalysis[] = Object.freeze(
 			words.map((segment, index) => {
 				const normalizedText =
@@ -838,33 +812,6 @@ export function createDocumentRuntime(
 				});
 			}),
 		);
-		const annotatedDocument = addAnalysisLayers(
-			normalizedDocument,
-			lexicalUnitAnalyses,
-			tasks,
-			sourceViewId,
-		);
-		const entityLinkedDocument =
-			documentKb === undefined
-				? annotatedDocument
-				: linkEntities(annotatedDocument, documentKb, {
-						...entityLinking,
-						viewId: sourceViewId,
-						mentionSource: "annotations",
-						language: entityLinking.language ?? languageTag,
-					});
-		const quality = tasks.has("quality")
-			? await (async () => {
-					const profile =
-						options.quality?.profile ??
-						mergeQualityProfiles(await openQualityProfiles());
-					return analyzeDocumentQuality(entityLinkedDocument, {
-						...options.quality,
-						...(profile === undefined ? {} : { profile }),
-						producer: options.quality?.producer ?? pack.manifest.packageName,
-					});
-				})()
-			: undefined;
 		const tokenDrafts = lexicalUnitAnalyses.map(
 			(analysis, index): TextComputingToken =>
 				Object.freeze({
@@ -886,57 +833,150 @@ export function createDocumentRuntime(
 						),
 					),
 					entities: Object.freeze([]),
+					entityLinks: Object.freeze([]),
 				}),
 		);
-		const entities = entityCandidatesFromDocument(
-			entityLinkedDocument,
-			tokenDrafts,
-		);
-		const entitiesByTokenId = new Map<string, TextComputingEntitySummary[]>();
-		for (const entity of entities) {
-			for (const tokenId of entity.tokenIds) {
-				entitiesByTokenId.set(tokenId, [
-					...(entitiesByTokenId.get(tokenId) ?? []),
-					entity,
-				]);
-			}
-		}
-		const tokens = Object.freeze(
-			tokenDrafts.map((token) =>
-				Object.freeze({
-					...token,
-					entities: Object.freeze(entitiesByTokenId.get(token.id) ?? []),
-				}),
+		const entityExecution = tasks.has("entities")
+			? await recognizeEntities(
+					{
+						pack,
+						reader,
+						artifactReader,
+						executor: entityExecutor,
+						languageTag,
+					},
+					text,
+					sourceViewId,
+					(startCU, endCU) => entityTokenIds(tokenDrafts, startCU, endCU),
+				)
+			: undefined;
+		const annotatedDocument = addEntityLayer(
+			addAnalysisLayers(
+				normalizedDocument,
+				lexicalUnitAnalyses,
+				tasks,
+				sourceViewId,
 			),
+			entityExecution,
+			sourceViewId,
 		);
+		const entityMentions = tasks.has("kb")
+			? entityMentionTexts(annotatedDocument, entityLinking)
+			: Object.freeze([]);
+		const documentKb =
+			tasks.has("kb") && entityMentions.length > 0
+				? await knowledgeBaseSliceFromPack(pack, {
+						...readerOption(reader),
+						mentions: entityMentions,
+						language: entityLinking.language ?? languageTag,
+						...(entityLinking.maxEditDistance === undefined
+							? {}
+							: { maxEditDistance: entityLinking.maxEditDistance }),
+					})
+				: undefined;
+		let entityLinkedDocument =
+			documentKb === undefined
+				? annotatedDocument
+				: linkEntities(annotatedDocument, documentKb, {
+						...entityLinking,
+						viewId: sourceViewId,
+						mentionSource: "annotations",
+						language: entityLinking.language ?? languageTag,
+					});
+		const linkLayerId = entityLinking.layerId ?? "link.entity";
+		if (
+			tasks.has("kb") &&
+			entityLinkedDocument.layers[linkLayerId] === undefined
+		) {
+			entityLinkedDocument = addAnalysisLayer(
+				entityLinkedDocument,
+				linkLayerId,
+				"link.entity",
+				sourceViewId,
+				[],
+			);
+		}
+		const quality = tasks.has("quality")
+			? await (async () => {
+					const profile =
+						options.quality?.profile ??
+						mergeQualityProfiles(await openQualityProfiles());
+					return analyzeDocumentQuality(entityLinkedDocument, {
+						...options.quality,
+						...(profile === undefined ? {} : { profile }),
+						producer: options.quality?.producer ?? pack.manifest.packageName,
+					});
+				})()
+			: undefined;
+
 		const qualityResult = qualitySummary(
 			quality ?? emptyQualityReport(entityLinkedDocument),
 		);
-		const evidence = evidenceForTasks(pack, tasks, quality);
-		let result: TextComputingDocument;
-		result = {
-			text,
-			sourceViewId,
-			languageTag,
-			sentences,
-			tokens,
-			lexicalUnits,
-			lemmas: Object.freeze(tokens.flatMap((token) => token.lemmas)),
-			morphology: Object.freeze(tokens.flatMap((token) => token.morphology)),
-			entities,
-			searchTokens: Object.freeze(
-				analyzer === undefined
-					? []
-					: [...analyzer.analyze(searchView.view.text)].map((token) =>
-							searchTokenSummary(token, searchView.view.id),
-						),
-			),
-			quality: qualityResult,
-			evidence,
-			toTextDoc: () => entityLinkedDocument,
-			toJSON: () => documentJson(result),
-		} satisfies TextComputingDocument;
-		return Object.freeze(result);
+		const evidence = evidenceForTasks(pack, tasks, quality, entityExecution);
+		let result = entityLinkedDocument;
+		const segments = [
+			["sentence.text-computing", "sentence", sentences],
+			["lexical.text-computing", "lexical-unit", lexicalUnits],
+		] as const;
+		for (const [id, type, values] of segments) {
+			result = addAnalysisLayer(
+				result,
+				id,
+				type,
+				sourceViewId,
+				values.map((segment, index) => ({
+					id: `${id}:${index}`,
+					layer: id,
+					type,
+					spans: [annotationSpan(segment, sourceViewId)],
+					value: {
+						granularity: segment.granularity,
+						...(segment.source === undefined ? {} : { source: segment.source }),
+						...(segment.isWordLike === undefined
+							? {}
+							: { isWordLike: segment.isWordLike }),
+					},
+					evidence: analysisEvidence("algorithm", [], sourceViewId),
+				})),
+			);
+		}
+		if (analyzer !== undefined) {
+			result = addAnalysisLayer(
+				result,
+				"search.text-computing",
+				"search.token",
+				searchView.view.id,
+				[...analyzer.analyze(searchView.view.text)].map((token, index) => ({
+					id: `search.text-computing:${index}`,
+					layer: "search.text-computing",
+					type: "search.token",
+					spans: [
+						{
+							viewId: searchView.view.id,
+							span: {
+								start: token.startCU,
+								end: token.endCU,
+								unit: "utf16-code-unit" as const,
+							},
+						},
+					],
+					value: searchTokenSummary(token, searchView.view.id),
+					evidence: analysisEvidence("algorithm", [], searchView.view.id),
+				})),
+			);
+		}
+		return withAnalysis({
+			...result,
+			metadata: {
+				...result.metadata,
+				analysis: {
+					sourceViewId,
+					languageTag,
+					quality: qualityResult,
+					evidence,
+				},
+			},
+		});
 	};
 
 	const analyzeText = (

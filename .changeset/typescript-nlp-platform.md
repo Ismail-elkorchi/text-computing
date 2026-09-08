@@ -1,13 +1,5 @@
 ---
-"@ismail-elkorchi/text-computing": patch
-"@ismail-elkorchi/textdata": minor
-"@ismail-elkorchi/textkb": patch
-"@ismail-elkorchi/textlex": patch
-"@ismail-elkorchi/textnorm": patch
-"@ismail-elkorchi/textpack": minor
-"@ismail-elkorchi/textparallel": patch
-"@ismail-elkorchi/textquality": patch
-"@ismail-elkorchi/textsearch": patch
+"@ismail-elkorchi/text-computing": minor
 "@ismail-elkorchi/textpack-ar": minor
 "@ismail-elkorchi/textpack-en": minor
 "@ismail-elkorchi/textpack-fr": minor

@@ -1,7 +1,7 @@
 {
 	"name": "@ismail-elkorchi/text-computing",
 	"version": "0.1.0",
-	"description": "Application-facing TypeScript runtime for deployable, inspectable NLP workflows.",
+	"description": "Modular TypeScript tools for processing, analyzing, transforming, searching, and learning from text.",
 	"type": "module",
 	"sideEffects": false,
 	"exports": {
@@ -12,23 +12,644 @@
 		"./node": {
 			"types": "./dist/node.d.ts",
 			"import": "./dist/node.js"
+		},
+		"./onnx/node": {
+			"types": "./dist/onnx-node.d.ts",
+			"import": "./dist/onnx-node.js"
+		},
+		"./onnx/web": {
+			"types": "./dist/onnx-web.d.ts",
+			"import": "./dist/onnx-web.js"
+		},
+		"./unicode": {
+			"types": "./dist/unicode/index.d.ts",
+			"import": "./dist/unicode/index.js"
+		},
+		"./unicode/input": {
+			"types": "./dist/unicode/input/mod.d.ts",
+			"import": "./dist/unicode/input/mod.js"
+		},
+		"./unicode/segment": {
+			"types": "./dist/unicode/segment/mod.d.ts",
+			"import": "./dist/unicode/segment/mod.js"
+		},
+		"./unicode/facts": {
+			"types": "./dist/unicode/facts/mod.d.ts",
+			"import": "./dist/unicode/facts/mod.js"
+		},
+		"./unicode/normalize": {
+			"types": "./dist/unicode/normalize/mod.d.ts",
+			"import": "./dist/unicode/normalize/mod.js"
+		},
+		"./unicode/casefold": {
+			"types": "./dist/unicode/casefold/mod.d.ts",
+			"import": "./dist/unicode/casefold/mod.js"
+		},
+		"./unicode/linebreak": {
+			"types": "./dist/unicode/linebreak/mod.d.ts",
+			"import": "./dist/unicode/linebreak/mod.js"
+		},
+		"./unicode/bidi": {
+			"types": "./dist/unicode/bidi/mod.d.ts",
+			"import": "./dist/unicode/bidi/mod.js"
+		},
+		"./unicode/security": {
+			"types": "./dist/unicode/security/mod.d.ts",
+			"import": "./dist/unicode/security/mod.js"
+		},
+		"./unicode/hash": {
+			"types": "./dist/unicode/hash/mod.d.ts",
+			"import": "./dist/unicode/hash/mod.js"
+		},
+		"./unicode/collation": {
+			"types": "./dist/unicode/collation/mod.d.ts",
+			"import": "./dist/unicode/collation/mod.js"
+		},
+		"./unicode/integrity": {
+			"types": "./dist/unicode/integrity/mod.d.ts",
+			"import": "./dist/unicode/integrity/mod.js"
+		},
+		"./unicode/unicode": {
+			"types": "./dist/unicode/unicode/mod.d.ts",
+			"import": "./dist/unicode/unicode/mod.js"
+		},
+		"./unicode/idna": {
+			"types": "./dist/unicode/idna/mod.d.ts",
+			"import": "./dist/unicode/idna/mod.js"
+		},
+		"./document": {
+			"types": "./dist/document/mod.d.ts",
+			"import": "./dist/document/mod.js"
+		},
+		"./document/document": {
+			"types": "./dist/document/document/mod.d.ts",
+			"import": "./dist/document/document/mod.js"
+		},
+		"./document/view": {
+			"types": "./dist/document/view/mod.d.ts",
+			"import": "./dist/document/view/mod.js"
+		},
+		"./document/span": {
+			"types": "./dist/document/span/mod.d.ts",
+			"import": "./dist/document/span/mod.js"
+		},
+		"./document/layer": {
+			"types": "./dist/document/layer/mod.d.ts",
+			"import": "./dist/document/layer/mod.js"
+		},
+		"./document/annotation": {
+			"types": "./dist/document/annotation/mod.d.ts",
+			"import": "./dist/document/annotation/mod.js"
+		},
+		"./document/graph": {
+			"types": "./dist/document/graph/mod.d.ts",
+			"import": "./dist/document/graph/mod.js"
+		},
+		"./document/query": {
+			"types": "./dist/document/query/mod.d.ts",
+			"import": "./dist/document/query/mod.js"
+		},
+		"./document/selection": {
+			"types": "./dist/document/selection/mod.d.ts",
+			"import": "./dist/document/selection/mod.js"
+		},
+		"./document/serialize": {
+			"types": "./dist/document/serialize/mod.d.ts",
+			"import": "./dist/document/serialize/mod.js"
+		},
+		"./packs": {
+			"types": "./dist/packs/index.d.ts",
+			"import": "./dist/packs/index.js"
+		},
+		"./packs/node": {
+			"types": "./dist/packs/node.d.ts",
+			"import": "./dist/packs/node.js"
+		},
+		"./lexicon": {
+			"types": "./dist/lexicon/index.d.ts",
+			"import": "./dist/lexicon/index.js"
+		},
+		"./lexicon/lexicon": {
+			"types": "./dist/lexicon/lexicon/mod.d.ts",
+			"import": "./dist/lexicon/lexicon/mod.js"
+		},
+		"./lexicon/gazetteer": {
+			"types": "./dist/lexicon/gazetteer/mod.d.ts",
+			"import": "./dist/lexicon/gazetteer/mod.js"
+		},
+		"./lexicon/term": {
+			"types": "./dist/lexicon/term/mod.d.ts",
+			"import": "./dist/lexicon/term/mod.js"
+		},
+		"./lexicon/trie": {
+			"types": "./dist/lexicon/trie/mod.d.ts",
+			"import": "./dist/lexicon/trie/mod.js"
+		},
+		"./lexicon/phrase": {
+			"types": "./dist/lexicon/phrase/mod.d.ts",
+			"import": "./dist/lexicon/phrase/mod.js"
+		},
+		"./lexicon/fuzzy": {
+			"types": "./dist/lexicon/fuzzy/mod.d.ts",
+			"import": "./dist/lexicon/fuzzy/mod.js"
+		},
+		"./lexicon/annotate": {
+			"types": "./dist/lexicon/annotate/mod.d.ts",
+			"import": "./dist/lexicon/annotate/mod.js"
+		},
+		"./finite-state": {
+			"types": "./dist/finite-state/index.d.ts",
+			"import": "./dist/finite-state/index.js"
+		},
+		"./finite-state/automaton": {
+			"types": "./dist/finite-state/automaton/mod.d.ts",
+			"import": "./dist/finite-state/automaton/mod.js"
+		},
+		"./finite-state/transducer": {
+			"types": "./dist/finite-state/transducer/mod.d.ts",
+			"import": "./dist/finite-state/transducer/mod.js"
+		},
+		"./finite-state/compile": {
+			"types": "./dist/finite-state/compile/mod.d.ts",
+			"import": "./dist/finite-state/compile/mod.js"
+		},
+		"./finite-state/regex": {
+			"types": "./dist/finite-state/regex/mod.d.ts",
+			"import": "./dist/finite-state/regex/mod.js"
+		},
+		"./finite-state/rewrite": {
+			"types": "./dist/finite-state/rewrite/mod.d.ts",
+			"import": "./dist/finite-state/rewrite/mod.js"
+		},
+		"./finite-state/lexc": {
+			"types": "./dist/finite-state/lexc/mod.d.ts",
+			"import": "./dist/finite-state/lexc/mod.js"
+		},
+		"./finite-state/twol": {
+			"types": "./dist/finite-state/twol/mod.d.ts",
+			"import": "./dist/finite-state/twol/mod.js"
+		},
+		"./finite-state/apply": {
+			"types": "./dist/finite-state/apply/mod.d.ts",
+			"import": "./dist/finite-state/apply/mod.js"
+		},
+		"./finite-state/weight": {
+			"types": "./dist/finite-state/weight/mod.d.ts",
+			"import": "./dist/finite-state/weight/mod.js"
+		},
+		"./finite-state/morph": {
+			"types": "./dist/finite-state/morph/mod.d.ts",
+			"import": "./dist/finite-state/morph/mod.js"
+		},
+		"./finite-state/spell": {
+			"types": "./dist/finite-state/spell/mod.d.ts",
+			"import": "./dist/finite-state/spell/mod.js"
+		},
+		"./rules": {
+			"types": "./dist/rules/index.d.ts",
+			"import": "./dist/rules/index.js"
+		},
+		"./rules/pattern": {
+			"types": "./dist/rules/pattern/mod.d.ts",
+			"import": "./dist/rules/pattern/mod.js"
+		},
+		"./rules/compile": {
+			"types": "./dist/rules/compile/mod.d.ts",
+			"import": "./dist/rules/compile/mod.js"
+		},
+		"./rules/match": {
+			"types": "./dist/rules/match/mod.d.ts",
+			"import": "./dist/rules/match/mod.js"
+		},
+		"./rules/cascade": {
+			"types": "./dist/rules/cascade/mod.d.ts",
+			"import": "./dist/rules/cascade/mod.js"
+		},
+		"./rules/rewrite": {
+			"types": "./dist/rules/rewrite/mod.d.ts",
+			"import": "./dist/rules/rewrite/mod.js"
+		},
+		"./rules/grammar": {
+			"types": "./dist/rules/grammar/mod.d.ts",
+			"import": "./dist/rules/grammar/mod.js"
+		},
+		"./rules/extract": {
+			"types": "./dist/rules/extract/mod.d.ts",
+			"import": "./dist/rules/extract/mod.js"
+		},
+		"./rules/constraints": {
+			"types": "./dist/rules/constraints/mod.d.ts",
+			"import": "./dist/rules/constraints/mod.js"
+		},
+		"./rules/processor": {
+			"types": "./dist/rules/processor/mod.d.ts",
+			"import": "./dist/rules/processor/mod.js"
+		},
+		"./normalization": {
+			"types": "./dist/normalization/index.d.ts",
+			"import": "./dist/normalization/index.js"
+		},
+		"./normalization/normalize": {
+			"types": "./dist/normalization/normalize/mod.d.ts",
+			"import": "./dist/normalization/normalize/mod.js"
+		},
+		"./normalization/variant": {
+			"types": "./dist/normalization/variant/mod.d.ts",
+			"import": "./dist/normalization/variant/mod.js"
+		},
+		"./normalization/noisy": {
+			"types": "./dist/normalization/noisy/mod.d.ts",
+			"import": "./dist/normalization/noisy/mod.js"
+		},
+		"./normalization/historical": {
+			"types": "./dist/normalization/historical/mod.d.ts",
+			"import": "./dist/normalization/historical/mod.js"
+		},
+		"./normalization/ocr": {
+			"types": "./dist/normalization/ocr/mod.d.ts",
+			"import": "./dist/normalization/ocr/mod.js"
+		},
+		"./normalization/transliteration": {
+			"types": "./dist/normalization/transliteration/mod.d.ts",
+			"import": "./dist/normalization/transliteration/mod.js"
+		},
+		"./normalization/spell": {
+			"types": "./dist/normalization/spell/mod.d.ts",
+			"import": "./dist/normalization/spell/mod.js"
+		},
+		"./normalization/view": {
+			"types": "./dist/normalization/view/mod.d.ts",
+			"import": "./dist/normalization/view/mod.js"
+		},
+		"./learning": {
+			"types": "./dist/learning/index.d.ts",
+			"import": "./dist/learning/index.js"
+		},
+		"./learning/features": {
+			"types": "./dist/learning/features/mod.d.ts",
+			"import": "./dist/learning/features/mod.js"
+		},
+		"./learning/vectorize": {
+			"types": "./dist/learning/vectorize/mod.d.ts",
+			"import": "./dist/learning/vectorize/mod.js"
+		},
+		"./learning/classify": {
+			"types": "./dist/learning/classify/mod.d.ts",
+			"import": "./dist/learning/classify/mod.js"
+		},
+		"./learning/sequence": {
+			"types": "./dist/learning/sequence/mod.d.ts",
+			"import": "./dist/learning/sequence/mod.js"
+		},
+		"./learning/hmm": {
+			"types": "./dist/learning/hmm/mod.d.ts",
+			"import": "./dist/learning/hmm/mod.js"
+		},
+		"./learning/crf": {
+			"types": "./dist/learning/crf/mod.d.ts",
+			"import": "./dist/learning/crf/mod.js"
+		},
+		"./learning/maxent": {
+			"types": "./dist/learning/maxent/mod.d.ts",
+			"import": "./dist/learning/maxent/mod.js"
+		},
+		"./learning/perceptron": {
+			"types": "./dist/learning/perceptron/mod.d.ts",
+			"import": "./dist/learning/perceptron/mod.js"
+		},
+		"./learning/lm": {
+			"types": "./dist/learning/lm/mod.d.ts",
+			"import": "./dist/learning/lm/mod.js"
+		},
+		"./learning/topic": {
+			"types": "./dist/learning/topic/mod.d.ts",
+			"import": "./dist/learning/topic/mod.js"
+		},
+		"./learning/cluster": {
+			"types": "./dist/learning/cluster/mod.d.ts",
+			"import": "./dist/learning/cluster/mod.js"
+		},
+		"./learning/tagger": {
+			"types": "./dist/learning/tagger/mod.d.ts",
+			"import": "./dist/learning/tagger/mod.js"
+		},
+		"./learning/parser": {
+			"types": "./dist/learning/parser/mod.d.ts",
+			"import": "./dist/learning/parser/mod.js"
+		},
+		"./learning/summary": {
+			"types": "./dist/learning/summary/mod.d.ts",
+			"import": "./dist/learning/summary/mod.js"
+		},
+		"./data": {
+			"types": "./dist/data/index.d.ts",
+			"import": "./dist/data/index.js"
+		},
+		"./data/dataset": {
+			"types": "./dist/data/dataset/mod.d.ts",
+			"import": "./dist/data/dataset/mod.js"
+		},
+		"./data/reader": {
+			"types": "./dist/data/reader/mod.d.ts",
+			"import": "./dist/data/reader/mod.js"
+		},
+		"./data/writer": {
+			"types": "./dist/data/writer/mod.d.ts",
+			"import": "./dist/data/writer/mod.js"
+		},
+		"./data/stream": {
+			"types": "./dist/data/stream/mod.d.ts",
+			"import": "./dist/data/stream/mod.js"
+		},
+		"./data/split": {
+			"types": "./dist/data/split/mod.d.ts",
+			"import": "./dist/data/split/mod.js"
+		},
+		"./data/conllu": {
+			"types": "./dist/data/conllu/mod.d.ts",
+			"import": "./dist/data/conllu/mod.js"
+		},
+		"./data/iob": {
+			"types": "./dist/data/iob/mod.d.ts",
+			"import": "./dist/data/iob/mod.js"
+		},
+		"./data/tei": {
+			"types": "./dist/data/tei/mod.d.ts",
+			"import": "./dist/data/tei/mod.js"
+		},
+		"./data/parallel": {
+			"types": "./dist/data/parallel/mod.d.ts",
+			"import": "./dist/data/parallel/mod.js"
+		},
+		"./corpus": {
+			"types": "./dist/corpus/index.d.ts",
+			"import": "./dist/corpus/index.js"
+		},
+		"./corpus/store": {
+			"types": "./dist/corpus/store/mod.d.ts",
+			"import": "./dist/corpus/store/mod.js"
+		},
+		"./corpus/textpack": {
+			"types": "./dist/corpus/textpack.d.ts",
+			"import": "./dist/corpus/textpack.js"
+		},
+		"./corpus/query": {
+			"types": "./dist/corpus/query/mod.d.ts",
+			"import": "./dist/corpus/query/mod.js"
+		},
+		"./corpus/concordance": {
+			"types": "./dist/corpus/concordance/mod.d.ts",
+			"import": "./dist/corpus/concordance/mod.js"
+		},
+		"./corpus/frequency": {
+			"types": "./dist/corpus/frequency/mod.d.ts",
+			"import": "./dist/corpus/frequency/mod.js"
+		},
+		"./corpus/ngram": {
+			"types": "./dist/corpus/ngram/mod.d.ts",
+			"import": "./dist/corpus/ngram/mod.js"
+		},
+		"./corpus/collocation": {
+			"types": "./dist/corpus/collocation/mod.d.ts",
+			"import": "./dist/corpus/collocation/mod.js"
+		},
+		"./corpus/keyness": {
+			"types": "./dist/corpus/keyness/mod.d.ts",
+			"import": "./dist/corpus/keyness/mod.js"
+		},
+		"./corpus/dispersion": {
+			"types": "./dist/corpus/dispersion/mod.d.ts",
+			"import": "./dist/corpus/dispersion/mod.js"
+		},
+		"./corpus/terms": {
+			"types": "./dist/corpus/terms/mod.d.ts",
+			"import": "./dist/corpus/terms/mod.js"
+		},
+		"./corpus/lexicography": {
+			"types": "./dist/corpus/lexicography/mod.d.ts",
+			"import": "./dist/corpus/lexicography/mod.js"
+		},
+		"./corpus/stylometry": {
+			"types": "./dist/corpus/stylometry/mod.d.ts",
+			"import": "./dist/corpus/stylometry/mod.js"
+		},
+		"./corpus/reuse": {
+			"types": "./dist/corpus/reuse/mod.d.ts",
+			"import": "./dist/corpus/reuse/mod.js"
+		},
+		"./corpus/diachronic": {
+			"types": "./dist/corpus/diachronic/mod.d.ts",
+			"import": "./dist/corpus/diachronic/mod.js"
+		},
+		"./search": {
+			"types": "./dist/search/index.d.ts",
+			"import": "./dist/search/index.js"
+		},
+		"./search/analyzer": {
+			"types": "./dist/search/analyzer/mod.d.ts",
+			"import": "./dist/search/analyzer/mod.js"
+		},
+		"./search/index": {
+			"types": "./dist/search/index/mod.d.ts",
+			"import": "./dist/search/index/mod.js"
+		},
+		"./search/query": {
+			"types": "./dist/search/query/mod.d.ts",
+			"import": "./dist/search/query/mod.js"
+		},
+		"./search/rank": {
+			"types": "./dist/search/rank/mod.d.ts",
+			"import": "./dist/search/rank/mod.js"
+		},
+		"./search/filter": {
+			"types": "./dist/search/filter/mod.d.ts",
+			"import": "./dist/search/filter/mod.js"
+		},
+		"./search/facet": {
+			"types": "./dist/search/facet/mod.d.ts",
+			"import": "./dist/search/facet/mod.js"
+		},
+		"./search/highlight": {
+			"types": "./dist/search/highlight/mod.d.ts",
+			"import": "./dist/search/highlight/mod.js"
+		},
+		"./search/suggest": {
+			"types": "./dist/search/suggest/mod.d.ts",
+			"import": "./dist/search/suggest/mod.js"
+		},
+		"./search/cql": {
+			"types": "./dist/search/cql/mod.d.ts",
+			"import": "./dist/search/cql/mod.js"
+		},
+		"./knowledge": {
+			"types": "./dist/knowledge/index.d.ts",
+			"import": "./dist/knowledge/index.js"
+		},
+		"./knowledge/kb": {
+			"types": "./dist/knowledge/kb/mod.d.ts",
+			"import": "./dist/knowledge/kb/mod.js"
+		},
+		"./knowledge/entity": {
+			"types": "./dist/knowledge/entity/mod.d.ts",
+			"import": "./dist/knowledge/entity/mod.js"
+		},
+		"./knowledge/sense": {
+			"types": "./dist/knowledge/sense/mod.d.ts",
+			"import": "./dist/knowledge/sense/mod.js"
+		},
+		"./knowledge/term": {
+			"types": "./dist/knowledge/term/mod.d.ts",
+			"import": "./dist/knowledge/term/mod.js"
+		},
+		"./knowledge/ontology": {
+			"types": "./dist/knowledge/ontology/mod.d.ts",
+			"import": "./dist/knowledge/ontology/mod.js"
+		},
+		"./knowledge/thesaurus": {
+			"types": "./dist/knowledge/thesaurus/mod.d.ts",
+			"import": "./dist/knowledge/thesaurus/mod.js"
+		},
+		"./knowledge/link": {
+			"types": "./dist/knowledge/link/mod.d.ts",
+			"import": "./dist/knowledge/link/mod.js"
+		},
+		"./knowledge/disambiguate": {
+			"types": "./dist/knowledge/disambiguate/mod.d.ts",
+			"import": "./dist/knowledge/disambiguate/mod.js"
+		},
+		"./knowledge/semantic-relations": {
+			"types": "./dist/knowledge/semantic-relations/mod.d.ts",
+			"import": "./dist/knowledge/semantic-relations/mod.js"
+		},
+		"./knowledge/textpack": {
+			"types": "./dist/knowledge/textpack.d.ts",
+			"import": "./dist/knowledge/textpack.js"
+		},
+		"./quality": {
+			"types": "./dist/quality/index.d.ts",
+			"import": "./dist/quality/index.js"
+		},
+		"./quality/document": {
+			"types": "./dist/quality/document/mod.d.ts",
+			"import": "./dist/quality/document/mod.js"
+		},
+		"./quality/corpus": {
+			"types": "./dist/quality/corpus/mod.d.ts",
+			"import": "./dist/quality/corpus/mod.js"
+		},
+		"./quality/ocr": {
+			"types": "./dist/quality/ocr/mod.d.ts",
+			"import": "./dist/quality/ocr/mod.js"
+		},
+		"./quality/noisy": {
+			"types": "./dist/quality/noisy/mod.d.ts",
+			"import": "./dist/quality/noisy/mod.js"
+		},
+		"./quality/readability": {
+			"types": "./dist/quality/readability/mod.d.ts",
+			"import": "./dist/quality/readability/mod.js"
+		},
+		"./quality/style": {
+			"types": "./dist/quality/style/mod.d.ts",
+			"import": "./dist/quality/style/mod.js"
+		},
+		"./quality/annotation": {
+			"types": "./dist/quality/annotation/mod.d.ts",
+			"import": "./dist/quality/annotation/mod.js"
+		},
+		"./quality/report": {
+			"types": "./dist/quality/report/mod.d.ts",
+			"import": "./dist/quality/report/mod.js"
+		},
+		"./parallel": {
+			"types": "./dist/parallel/index.d.ts",
+			"import": "./dist/parallel/index.js"
+		},
+		"./parallel/alignment": {
+			"types": "./dist/parallel/alignment/mod.d.ts",
+			"import": "./dist/parallel/alignment/mod.js"
+		},
+		"./parallel/sentence-align": {
+			"types": "./dist/parallel/sentence-align/mod.d.ts",
+			"import": "./dist/parallel/sentence-align/mod.js"
+		},
+		"./parallel/word-align": {
+			"types": "./dist/parallel/word-align/mod.d.ts",
+			"import": "./dist/parallel/word-align/mod.js"
+		},
+		"./parallel/translation-memory": {
+			"types": "./dist/parallel/translation-memory/mod.d.ts",
+			"import": "./dist/parallel/translation-memory/mod.js"
+		},
+		"./parallel/bilingual-lexicon": {
+			"types": "./dist/parallel/bilingual-lexicon/mod.d.ts",
+			"import": "./dist/parallel/bilingual-lexicon/mod.js"
+		},
+		"./parallel/bilingual-terms": {
+			"types": "./dist/parallel/bilingual-terms/mod.d.ts",
+			"import": "./dist/parallel/bilingual-terms/mod.js"
+		},
+		"./parallel/transfer": {
+			"types": "./dist/parallel/transfer/mod.d.ts",
+			"import": "./dist/parallel/transfer/mod.js"
+		},
+		"./parallel/parallel-corpus": {
+			"types": "./dist/parallel/parallel-corpus/mod.d.ts",
+			"import": "./dist/parallel/parallel-corpus/mod.js"
+		},
+		"./pipeline": {
+			"types": "./dist/pipeline/index.d.ts",
+			"import": "./dist/pipeline/index.js"
+		},
+		"./pipeline/processor": {
+			"types": "./dist/pipeline/processor/mod.d.ts",
+			"import": "./dist/pipeline/processor/mod.js"
+		},
+		"./pipeline/graph": {
+			"types": "./dist/pipeline/graph/mod.d.ts",
+			"import": "./dist/pipeline/graph/mod.js"
+		},
+		"./pipeline/run": {
+			"types": "./dist/pipeline/run/mod.d.ts",
+			"import": "./dist/pipeline/run/mod.js"
+		},
+		"./pipeline/stream": {
+			"types": "./dist/pipeline/stream/mod.d.ts",
+			"import": "./dist/pipeline/stream/mod.js"
+		},
+		"./pipeline/cache": {
+			"types": "./dist/pipeline/cache/mod.d.ts",
+			"import": "./dist/pipeline/cache/mod.js"
+		},
+		"./pipeline/pack": {
+			"types": "./dist/pipeline/pack/mod.d.ts",
+			"import": "./dist/pipeline/pack/mod.js"
+		},
+		"./analysis": {
+			"types": "./dist/analysis.d.ts",
+			"import": "./dist/analysis.js"
+		},
+		"./diagnostics": {
+			"types": "./dist/diagnostics.d.ts",
+			"import": "./dist/diagnostics.js"
 		}
 	},
 	"files": [
 		"dist",
 		"README.md",
-		"CHANGELOG.md"
+		"CHANGELOG.md",
+		"LICENSE"
 	],
 	"scripts": {
 		"build": "node scripts/clean-build-output.mjs dist && tsc -p tsconfig.build.json",
-		"lint": "biome check src test scripts README.md package.json tsconfig.json tsconfig.build.json tsconfig.test.node.json --files-ignore-unknown=true",
+		"lint": "biome check src test scripts docs README.md package.json tsconfig.json tsconfig.build.json tsconfig.test.node.json biome.json --files-ignore-unknown=true",
 		"check:static": "tsc -p tsconfig.build.json --noEmit --noUnusedLocals --noUnusedParameters && tsc -p tsconfig.test.node.json --noEmit --noUnusedLocals --noUnusedParameters",
 		"test:prepare": "npm --prefix ../.. run -s build",
-		"test:node:run": "node --test test/suite.ts test/runtime/node.test.ts test/consumer/en-consumer-smoke.ts test/consumer/fr-reussite-smoke.ts test/consumer/ar-consumer-smoke.ts",
-		"test:deno:run": "deno test --no-lock --no-check --allow-read test/runtime/deno.test.ts",
-		"test:bun:run": "if command -v bun >/dev/null 2>&1; then bun test test/runtime/bun.test.ts; elif [ -n \"$CI\" ]; then echo 'error: bun is required in CI' >&2; exit 1; else echo 'skip: bun not installed'; fi",
-		"test:browser:run": "node scripts/browser-smoke.mjs",
-		"test:workers:run": "node scripts/cloudflare-workers-smoke.mjs",
+		"test:node:run": "node scripts/test.mjs node",
+		"test:deno:run": "node scripts/test.mjs deno",
+		"test:bun:run": "node scripts/test.mjs bun",
+		"test:browser:run": "node --experimental-vm-modules scripts/test.mjs browser",
+		"test:workers:run": "node --experimental-vm-modules scripts/test.mjs workers",
 		"test:node": "npm run test:prepare && npm run test:node:run",
 		"test:deno": "npm run test:prepare && npm run test:deno:run",
 		"test:bun": "npm run test:prepare && npm run test:bun:run",
@@ -36,26 +657,39 @@
 		"test:workers": "npm run test:prepare && npm run test:workers:run",
 		"test:all": "npm run test:prepare && npm run test:node:run && npm run test:deno:run && npm run test:bun:run && npm run test:browser:run && npm run test:workers:run",
 		"test": "npm run test:all",
-		"prepack": "npm run build"
-	},
-	"dependencies": {
-		"@ismail-elkorchi/textdata": "0.1.0",
-		"@ismail-elkorchi/textdoc": "0.1.0",
-		"@ismail-elkorchi/textkb": "0.1.0",
-		"@ismail-elkorchi/textlex": "0.1.0",
-		"@ismail-elkorchi/textnorm": "0.1.0",
-		"@ismail-elkorchi/textpack": "0.1.0",
-		"@ismail-elkorchi/textquality": "0.1.0",
-		"@ismail-elkorchi/textsearch": "0.1.0"
+		"prepack": "npm run build",
+		"schema:validate": "node tools/schema/validate.mjs",
+		"gen:unicode": "node tools/unicode/gen-tables.js && node tools/unicode/gen-normalization.js && node tools/unicode/gen-casefold.js && node tools/unicode/gen-scripts.js && node tools/unicode/gen-security.js && node tools/uca/gen-ducet.mjs",
+		"check:pack": "node scripts/pack-audit.mjs",
+		"check:publint": "publint .",
+		"check:attw": "attw --pack . --profile strict --ignore-rules no-resolution cjs-resolves-to-esm --summary",
+		"bench:unicode": "node tools/bench/run.mjs"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.4.15",
 		"@types/node": "25.9.1",
 		"esbuild": "0.28.1",
+		"onnxruntime-node": "1.29.0",
+		"onnxruntime-web": "1.29.0",
 		"typescript": "6.0.3"
+	},
+	"peerDependencies": {
+		"onnxruntime-node": "1.29.0",
+		"onnxruntime-web": "1.29.0"
+	},
+	"peerDependenciesMeta": {
+		"onnxruntime-node": {
+			"optional": true
+		},
+		"onnxruntime-web": {
+			"optional": true
+		}
 	},
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
+	},
+	"engines": {
+		"node": ">=24"
 	}
 }

@@ -1,0 +1,40 @@
+{
+  "artifactFile": "model_quantized.onnx",
+  "artifactId": "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized",
+  "format": "onnx",
+  "inputs": {
+    "attentionMask": "attention_mask",
+    "inputIds": "input_ids",
+    "tokenTypeIds": "token_type_ids"
+  },
+  "maxSequenceLength": 512,
+  "output": {
+    "labels": [
+      "O",
+      "B-DATE",
+      "I-DATE",
+      "B-PER",
+      "I-PER",
+      "B-ORG",
+      "I-ORG",
+      "B-LOC",
+      "I-LOC"
+    ],
+    "logits": "logits"
+  },
+  "schemaVersion": "1",
+  "task": "entities",
+  "tokenizer": {
+    "doLowerCase": false,
+    "specialTokens": {
+      "cls": "[CLS]",
+      "pad": "[PAD]",
+      "sep": "[SEP]",
+      "unknown": "[UNK]"
+    },
+    "stripAccents": false,
+    "tokenizeChineseCharacters": true,
+    "type": "bert-wordpiece",
+    "vocabularyResourceId": "ner-ar-vocabulary"
+  }
+}

@@ -1,0 +1,79 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://github.com/Ismail-elkorchi/text-computing/schemas/text-computing-ner-model.schema.json",
+	"title": "TextComputingNerModel",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"schemaVersion",
+		"task",
+		"format",
+		"artifactId",
+		"artifactFile",
+		"tokenizer",
+		"inputs",
+		"output",
+		"maxSequenceLength"
+	],
+	"properties": {
+		"schemaVersion": { "const": "1" },
+		"task": { "const": "entities" },
+		"format": { "const": "onnx" },
+		"artifactId": { "type": "string", "minLength": 1 },
+		"artifactFile": { "type": "string", "minLength": 1 },
+		"tokenizer": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"type",
+				"vocabularyResourceId",
+				"doLowerCase",
+				"stripAccents",
+				"tokenizeChineseCharacters",
+				"specialTokens"
+			],
+			"properties": {
+				"type": { "const": "bert-wordpiece" },
+				"vocabularyResourceId": { "type": "string", "minLength": 1 },
+				"doLowerCase": { "type": "boolean" },
+				"stripAccents": { "type": "boolean" },
+				"tokenizeChineseCharacters": { "type": "boolean" },
+				"specialTokens": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": ["unknown", "cls", "sep", "pad"],
+					"properties": {
+						"unknown": { "type": "string", "minLength": 1 },
+						"cls": { "type": "string", "minLength": 1 },
+						"sep": { "type": "string", "minLength": 1 },
+						"pad": { "type": "string", "minLength": 1 }
+					}
+				}
+			}
+		},
+		"inputs": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["inputIds", "attentionMask"],
+			"properties": {
+				"inputIds": { "type": "string", "minLength": 1 },
+				"attentionMask": { "type": "string", "minLength": 1 },
+				"tokenTypeIds": { "type": "string", "minLength": 1 }
+			}
+		},
+		"output": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["logits", "labels"],
+			"properties": {
+				"logits": { "type": "string", "minLength": 1 },
+				"labels": {
+					"type": "array",
+					"minItems": 2,
+					"items": { "type": "string", "minLength": 1 }
+				}
+			}
+		},
+		"maxSequenceLength": { "type": "integer", "minimum": 3 }
+	}
+}

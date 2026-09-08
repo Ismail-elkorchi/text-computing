@@ -3,7 +3,7 @@
 Generated self-contained French Capability Pack.
 
 This package is a generated, data-only Capability Pack in the textpack format.
-Use `@ismail-elkorchi/text-computing` for application-facing NLP task APIs.
+Use `@ismail-elkorchi/text-computing` and its public modules to work with these resources.
 It is generated from pinned source snapshots by `tools/textpack-forge`.
 All resources are included directly; installing this package does not install component packs.
 

@@ -4,11 +4,10 @@ Thanks for helping improve Text Computing. The repository is organized around
 three concepts: the Text Computing runtime, data-only Capability Packs, and the
 Textpack Forge supply chain.
 
-Application-facing runtime work belongs in `packages/text-computing/`.
-Capability Pack contracts and generated packs live in `packages/textpack/` and
-`packages/textpacks/*`. Generated outputs are produced by
-`tools/textpack-forge`; other `packages/*` workspaces are implementation modules
-and expert extension APIs.
+All runtime implementation work belongs in `packages/text-computing/src/<domain>/`.
+Its public subpaths are one supported library. Capability Pack contracts live in
+`packages/text-computing/src/packs/`; generated data packages live in
+`packages/textpacks/*`. Forge owns their generated output.
 
 **Prerequisites**
 - Node.js 24+
@@ -25,7 +24,9 @@ npm ci
 npm run build
 ```
 
-Build emits `.d.ts` via TypeScript and ESM JS via esbuild.
+Build emits ESM JavaScript, declarations, and source maps with TypeScript. Relative source imports use `.ts`; the compiler rewrites extensions in emitted code.
+Builds consume committed pack data; they do not regenerate source snapshots.
+Run `npm run forge:verify` for the separate supply-chain drift check, also run in CI.
 
 **Schema validation**
 ```sh
@@ -34,7 +35,7 @@ npm run schema:validate
 
 Validates repository-level schemas against their declared JSON Schema drafts,
 validates generated Capability Packs, validates engine schema registries such
-as `packages/textfacts/schemas/*.schema.json`, and enforces I-JSON safety.
+as `packages/text-computing/schemas/*.schema.json`, and enforces I-JSON safety.
 
 **Multilingual NLP evaluation**
 ```sh
@@ -62,7 +63,7 @@ node tools/build-external-nlp-evaluation.mjs <download-directory> fixtures/nlp-b
 - `fixtures/` and `schemas/` contain repository-level validation material.
 - `packages/*/README.md` and `packages/*/docs/` contain package-level usage and reference documentation.
 - `packages/textpacks/*` packages are generated, data-only Capability Packs. Do not add handwritten runtime facades, loaders, processors, task engines, or network behavior there.
-- `@ismail-elkorchi/text-computing` is the application-facing NLP entrypoint. Engine workspaces remain expert APIs.
+- The root and public modules are equally supported APIs. Keep implementation imports relative and cross-domain dependencies acyclic. Use one `TextDocument` and one `TextProcessor` contract.
 - Capability bindings identify slots, roles, schemas, and resources. They must
   not encode the npm package that implements an executor.
 
@@ -78,14 +79,30 @@ npm run check:static
 
 Runs TypeScript static checks for shipped source (`noUnusedLocals` + `noUnusedParameters`) without emitting artifacts.
 
+**Runtime regression tests**
+
+```sh
+npm test
+npm -w @ismail-elkorchi/text-computing run test:browser
+npm -w @ismail-elkorchi/text-computing run test:workers
+npm run check:pack
+```
+
+The unified runner preserves the module suites. Packaging checks exercise the
+published export map in an isolated consumer; bundle checks keep optional
+inference backends out of unrelated imports.
+Browser and Worker smoke bundles run in isolated Web-API contexts without
+Node globals or network access. They do not replace deployment testing in an
+actual browser or edge runtime.
+
 **Updating Unicode tables**
 ```sh
 npm run gen:unicode
 ```
 
 That script downloads the pinned Unicode data files (17.0.0) and regenerates compact tables under:
-- `packages/textfacts/src/unicode/generated` (UAX #29 + emoji + Indic)
-- `packages/textfacts/src/normalize/generated` (UAX #15 normalization data)
+- `packages/text-computing/src/unicode/unicode/generated` (UAX #29 + emoji + Indic)
+- `packages/text-computing/src/unicode/normalize/generated` (UAX #15 normalization data)
 
 **Updating Capability Packs**
 ```sh
@@ -104,8 +121,7 @@ license, evaluation, and integrity gates.
 - Strict TypeScript
 - No Node-only runtime APIs in shipped code
 - Deterministic outputs: always define ordering and tie-breaks
-- No backward compatibility layers for removed alpha APIs unless a public
-  release contract explicitly requires them.
+- No backward compatibility layers or dead transitional code for removed alpha APIs.
 
 **Pull request template**
 - Use [`.github/pull_request_template.md`](.github/pull_request_template.md) for PR structure and required fields.

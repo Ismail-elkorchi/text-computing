@@ -1,0 +1,36 @@
+{
+  "diagnostics": [
+    {
+      "diagnosticId": "ner-ar-domain-scope",
+      "message": "Held-out evidence covers Arabic Wikipedia PER, ORG, and LOC spans; dialectal and domain-specific fitness remains unestablished.",
+      "metadata": {
+        "dataset": "AQMAR official test feature split"
+      },
+      "severity": "warning",
+      "task": "entities.recognize"
+    }
+  ],
+  "evaluationRecordIds": [
+    "eval:ner-ar:aqmar-exact-span-f1"
+  ],
+  "kind": "quality-profile",
+  "languageTag": "ar",
+  "metrics": [
+    {
+      "metricId": "exact-span-f1",
+      "name": "exactSpanF1",
+      "unit": "ratio",
+      "value": 0.518919
+    }
+  ],
+  "profileId": "ner-ar-model-quality",
+  "schemaVersion": "1",
+  "script": "Arab",
+  "thresholds": [
+    {
+      "metricId": "exact-span-f1",
+      "operator": "gte",
+      "value": 0.5
+    }
+  ]
+}

@@ -779,6 +779,50 @@
 				"Unicode CLDR core data, cldr-core npm package 48.2.0."
 			],
 			"schemaId": "textquality.profile.v1"
+		},
+		{
+			"id": "ner-ar-model",
+			"kind": "statistical-model",
+			"path": "resources/ner-ar.model.json",
+			"format": "json",
+			"license": "AFL-3.0",
+			"citations": [
+				"Davlan BERT multilingual cased NER HRL model and Xenova ONNX conversion."
+			],
+			"schemaId": "text-computing.ner-model.v1"
+		},
+		{
+			"id": "ner-ar-vocabulary",
+			"kind": "lexicon",
+			"path": "resources/ner-ar.vocab.txt.gz.b64",
+			"format": "text/plain",
+			"license": "AFL-3.0",
+			"citations": [
+				"Multilingual BERT cased WordPiece vocabulary."
+			],
+			"schemaId": "text-computing.wordpiece-vocabulary.v1"
+		},
+		{
+			"id": "ner-ar-evaluation",
+			"kind": "quality-profile",
+			"path": "resources/ner-ar.evaluation.json",
+			"format": "json",
+			"license": "AFL-3.0 AND CC-BY-SA-3.0",
+			"citations": [
+				"AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
+			],
+			"schemaId": "text-computing.ner-evaluation.v1"
+		},
+		{
+			"id": "ner-ar-quality-profile",
+			"kind": "quality-profile",
+			"path": "resources/ner-ar.quality-profile.json",
+			"format": "json",
+			"license": "AFL-3.0 AND CC-BY-SA-3.0",
+			"citations": [
+				"AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
+			],
+			"schemaId": "textquality.profile.v1"
 		}
 	],
 	"capabilitySlots": [
@@ -834,6 +878,41 @@
 			"notes": [
 				"Large corpus payloads are explicit forge acquisitions, not part of the ordinary language package."
 			]
+		},
+		{
+			"slot": "entities",
+			"status": "task-supported",
+			"tier": "model-backed",
+			"resourceIds": [
+				"ner-ar-model",
+				"ner-ar-vocabulary"
+			],
+			"artifactIds": [
+				"artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized"
+			],
+			"bindings": [
+				{
+					"role": "primary",
+					"resourceId": "ner-ar-model",
+					"schemaId": "text-computing.ner-model.v1",
+					"required": true
+				},
+				{
+					"role": "table",
+					"resourceId": "ner-ar-vocabulary",
+					"schemaId": "text-computing.wordpiece-vocabulary.v1",
+					"required": true
+				}
+			],
+			"readerRequired": true,
+			"notes": [
+				"Named entity recognition requires an explicit ONNX executor and model artifact reader; no network access or weaker fallback is implicit.",
+				"Runs quantized ONNX token classification through an explicit application-supplied artifact reader and executor.",
+				"Held-out AQMAR exact-span F1 is gated at 0.50; broader Arabic domains and dialects are not claimed."
+			],
+			"capabilities": {
+				"extraction": "statistical"
+			}
 		},
 		{
 			"slot": "foundation",
@@ -1165,7 +1244,9 @@
 				"wikidata-ar-quality",
 				"wikidata-ar-quality-profile",
 				"ar-search-quality",
-				"ar-search-quality-profile"
+				"ar-search-quality-profile",
+				"ner-ar-evaluation",
+				"ner-ar-quality-profile"
 			],
 			"bindings": [
 				{
@@ -1230,6 +1311,18 @@
 				},
 				{
 					"role": "quality",
+					"resourceId": "ner-ar-evaluation",
+					"schemaId": "text-computing.ner-evaluation.v1",
+					"required": true
+				},
+				{
+					"role": "quality",
+					"resourceId": "ner-ar-quality-profile",
+					"schemaId": "textquality.profile.v1",
+					"required": true
+				},
+				{
+					"role": "quality",
 					"resourceId": "wikidata-ar-quality-profile",
 					"schemaId": "textquality.profile.v1",
 					"required": true
@@ -1249,7 +1342,8 @@
 				"Generated quality profile records source counts, accepted records, and transform warnings.",
 				"Generated quality profile records lexical-entry, sense, synset, and relation counts.",
 				"Generated quality profile records local row counts, upstream checksum sidecar evidence, and extract-scope limitations.",
-				"Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations."
+				"Generated quality evidence records the executable analyzer profile, transform integrity, and explicit scope limitations.",
+				"Pinned task evidence identifies the exact artifact, held-out split, sample, metric, and domain limitations."
 			]
 		},
 		{
@@ -1292,7 +1386,7 @@
 			],
 			"readerRequired": true,
 			"notes": [
-				"The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as expert morphology data and are not presented as executed dictionary segmentation."
+				"The built-in segmentation adapter uses its Unicode word baseline for Arabic. CAMeL Morph tokenization schemes remain available as morphology data and are not presented as executed dictionary segmentation."
 			],
 			"capabilities": {
 				"segmentation": "profile"
@@ -1348,14 +1442,18 @@
 			]
 		}
 	],
-	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0",
+	"license": "Unicode-3.0 AND LicenseRef-IANA-Language-Subtag-Registry AND CC-BY-4.0 AND CC0-1.0 AND AFL-3.0 AND CC-BY-SA-3.0",
 	"citations": [
 		"IANA Language Subtag Registry, File-Date 2026-05-05.",
 		"Unicode Character Database 17.0.0.",
 		"Unicode CLDR core data, cldr-core npm package 48.2.0.",
 		"CAMeL Morph MSA LREC-COLING 2024 release.",
 		"Arabic WordNet 4.1.0.",
-		"Wikidata main structured data dump, 2026-06-08."
+		"Wikidata main structured data dump, 2026-06-08.",
+		"Davlan BERT multilingual cased NER HRL model and Xenova ONNX conversion.",
+		"AQMAR Arabic Wikipedia Named Entity Corpus 1.0.",
+		"Multilingual BERT cased WordPiece vocabulary.",
+		"AQMAR Arabic Wikipedia Named Entity Corpus 1.0 official test split."
 	],
 	"gapNotes": [
 		{
@@ -1379,8 +1477,8 @@
 	],
 	"generated": {
 		"forgeVersion": "0.1.0",
-		"lockfileChecksum": "sha256:0f3b3b639c8736f6bf21ce1275847d9d5e24907b193fa549604faf67c0c77fbf",
-		"generatedAt": "2026-06-12T00:00:00.000Z",
+		"lockfileChecksum": "sha256:0ef2740736c1bbb8b502d47c8521d5778b98a5377cc24fd19f8cd544323961f2",
+		"generatedAt": "2026-09-01T00:00:00.000Z",
 		"generatorCommand": "node tools/textpack-forge/cli.mjs build"
 	},
 	"artifacts": [
@@ -1411,6 +1509,35 @@
 					"path": "wikidata-20260608-all.json.gz",
 					"sizeBytes": 142291512349,
 					"checksum": "sha1:7a1165f121e50eca8f2e11674971d7f2d3c47b98"
+				}
+			]
+		},
+		{
+			"artifactId": "artifact:text-computing:ner:bert-multilingual-cased-hrl:quantized",
+			"sourceIds": [
+				"source:huggingface:xenova-bert-multilingual-ner"
+			],
+			"version": "263e82c06569c8c2ac46238a7ae5107598934234",
+			"profile": "full",
+			"sizeBytes": 178495423,
+			"mediaType": "application/onnx",
+			"checksum": {
+				"algorithm": "sha256",
+				"value": "5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9"
+			},
+			"licenseExpression": "AFL-3.0",
+			"redistributionPolicy": "redistributable-with-attribution",
+			"retrieval": {
+				"kind": "huggingface",
+				"uri": "https://huggingface.co/Xenova/bert-base-multilingual-cased-ner-hrl/resolve/263e82c06569c8c2ac46238a7ae5107598934234/onnx/model_quantized.onnx",
+				"instructions": "Fetch explicitly and verify the declared byte length and SHA-256 checksum before inference."
+			},
+			"cacheKey": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9",
+			"expectedFiles": [
+				{
+					"path": "model_quantized.onnx",
+					"sizeBytes": 178495423,
+					"checksum": "sha256:5b65139844be260b624a2a13782b01d122e613d64ce16ed0ba4d82e0b816f1a9"
 				}
 			]
 		}

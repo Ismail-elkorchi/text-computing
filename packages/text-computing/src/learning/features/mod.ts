@@ -1,0 +1,25 @@
+export type {
+	FeatureContext,
+	FeatureExtractor,
+	FeatureExtractorOutput,
+	FeatureMap,
+	FeatureOptions,
+	FeatureRecord,
+	FeatureSpec,
+	FeatureVector,
+} from "../internal/core.ts";
+export {
+	affixFeatureSpec,
+	annotationFeatureSpec,
+	charNgramFeatureSpec,
+	defaultFeatureSpecs,
+	extractFeatures,
+	fstFeatureSpec,
+	gazetteerFeatureSpec,
+	lexiconFeatureSpec,
+	posFeatureSpec,
+	shapeFeatureSpec,
+	textFeatureSpec,
+	tokenWindowFeatureSpec,
+	wordNgramFeatureSpec,
+} from "../internal/core.ts";

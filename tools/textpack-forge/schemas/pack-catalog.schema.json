@@ -33,6 +33,7 @@
 							"domain",
 							"historical-noisy",
 							"kb",
+							"model",
 							"parallel",
 							"artifact-backed",
 							"license-isolated"
