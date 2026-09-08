@@ -59,6 +59,11 @@ jobs:
           blocked = {"moderate", "high", "critical"}
           failures = []
           for change in changes:
+              change_type = change.get("change_type")
+              if change_type == "removed":
+                  continue
+              if change_type != "added":
+                  raise SystemExit(f"unexpected dependency change type: {change_type!r}")
               for vulnerability in change.get("vulnerabilities") or []:
                   severity = str(vulnerability.get("severity", "")).lower()
                   if severity in blocked:
